@@ -1,11 +1,9 @@
 package main
 
 import (
-	"context"
 	"log"
 	"net/http"
 	"os"
-	"os/signal"
 	"time"
 
 	"github.com/huavanthong/microservice-golang/product-api/handlers"
@@ -49,4 +47,4 @@ func main() {
 			os.Exit(1)
 		}
 	}()
-
+}

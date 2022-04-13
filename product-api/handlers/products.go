@@ -13,7 +13,7 @@ type Products struct {
 }
 
 // NewProducts creates a products handler with the given logger
-func (p *Products) NewProducts(l *log.Logger) *Products {
+func NewProducts(l *log.Logger) *Products {
 	return &Products{l}
 }
 
@@ -24,12 +24,12 @@ func (p *Products) ServerHTTP(rw http.ResponseWriter, r *http.Request) {
 	// handle the request for a list of products
 	if r.Method == http.MethodGet {
 		p.getProduct(rw, r)
+		return
 	}
 
 	// catch all
 	// if no method is satisfied return an error
 	rw.WriteHeader(http.StatusMethodNotAllowed)
-
 }
 
 func (p *Products) getProduct(rw http.ResponseWriter, r *http.Request) {
