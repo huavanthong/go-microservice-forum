@@ -2,6 +2,7 @@ package data
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"time"
 )
@@ -32,11 +33,60 @@ func (p *Products) ToJSON(w io.Writer) error {
 	return e.Encode(p)
 }
 
+// FromJson to decode json from Reader
+func (p *Product) FromJSON(r io.Reader) error {
+	e := json.NewDecoder(r)
+	return e.Decode(p)
+}
+
+/************************ Method for Product ************************/
 // GetProducts returns a list of products
 func GetProducts() Products {
 	return productList
 }
 
+// AddProduct addies a product to list
+func AddProduct(p *Product) {
+	p.ID = getNextID()
+	productList = append(productList, p)
+}
+
+// UpdateProduct updates info to product
+func UpdateProduct(id int, p *Product) error {
+
+	// find pos in productList from id
+	_, pos, err := findProduct(id)
+	if err != nil {
+		return err
+	}
+
+	// update info product
+	p.ID = id
+	productList[pos] = p
+
+	return nil
+}
+
+/************************ Internal function for Product ************************/
+func getNextID() int {
+	// get ID at the last product in productList
+	lp := productList[len(productList)-1]
+	return lp.ID + 1
+}
+
+var ErrProductNotFound = fmt.Errorf("Product not found")
+
+func findProduct(id int) (*Product, int, error) {
+
+	for i, p := range productList {
+		if p.ID == id {
+			return p, i, nil
+		}
+	}
+	return nil, -1, ErrProductNotFound
+}
+
+/************************ Storage Product ************************/
 // productList is a hard coded list of products for this
 // example data source
 var productList = []*Product{
