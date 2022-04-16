@@ -1,13 +1,8 @@
 package data
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"regexp"
 	"time"
-
-	"github.com/go-playground/validator"
 )
 
 /************************ Define structure product ************************/
@@ -23,32 +18,8 @@ type Product struct {
 	DeletedOn   string  `json:"-"`
 }
 
-// Products is a collection of Product
+// Products defines a slice of Product
 type Products []*Product
-
-/************************ Validation ************************/
-func (p *Product) Validate() error {
-	// Validate-Step2: create a object for this validator
-	validate := validator.New()
-
-	// Validate-Step3: register a customer validator function
-	validate.RegisterValidation("sku", validateSKU)
-
-	// Validate-Step4: validate structure product
-	return validate.Struct(p)
-}
-
-func validateSKU(fl validator.FieldLevel) bool {
-	// sku is of format abc-absd-dfsdf
-	re := regexp.MustCompile(`[a-z]+-[a-z]+-[a-z]+`)
-	matches := re.FindAllString(fl.Field().String(), -1)
-
-	if len(matches) != 1 {
-		return false
-	}
-
-	return true
-}
 
 /************************ Method for Product ************************/
 // GetProducts returns a list of products
