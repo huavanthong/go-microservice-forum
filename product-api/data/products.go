@@ -42,6 +42,10 @@ type Product struct {
 	// required: true
 	// pattern: [a-z]+-[a-z]+-[a-z]+
 	SKU string `json:"sku" validate:"sku"`
+
+	CreatedOn string `json:"-"`
+	UpdatedOn string `json:"-"`
+	DeletedOn string `json:"-"`
 }
 
 // Products defines a slice of Product
@@ -68,24 +72,22 @@ func GetProductByID(id int) (*Product, error) {
 
 /************ POST ************/
 // AddProduct addies a product to list
-func AddProduct(p *Product) {
+func AddProduct(p Product) {
 	p.ID = getNextID()
-	productList = append(productList, p)
+	productList = append(productList, &p)
 }
 
 /************ PUT ************/
 // UpdateProduct updates info to product
-func UpdateProduct(id int, p *Product) error {
+func UpdateProduct(p Product) error {
 
-	// find pos in productList from id
-	_, pos, err := findProduct(id)
-	if err != nil {
-		return err
+	i := findIndexByProductID(p.ID)
+	if i == -1 {
+		return ErrProductNotFound
 	}
 
-	// update info product
-	p.ID = id
-	productList[pos] = p
+	// update the product in the DB
+	productList[i] = &p
 
 	return nil
 }
