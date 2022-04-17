@@ -32,6 +32,13 @@ func main() {
 	// create a logger for the server from the default logger
 	sl := l.StandardLogger(&hclog.StandardLoggerOptions{InferLevels: true})
 
+	// create the storage class, use local storage
+	// max filesize 5MB
+	stor, err := files.NewLocal(*basePath, 1024*1000*5)
+	if err != nil {
+		l.Error("Unable to create storage", "error", err)
+		os.Exit(1)
+	}
 	// create a new server
 	s := http.Server{
 		Addr:         *bindAddress,      // configure the bind address
