@@ -1,3 +1,3 @@
 window.global = {
-    api_location: 'http://localhost:9090'
+    api_location: 'http://localhost:8080'
 }
