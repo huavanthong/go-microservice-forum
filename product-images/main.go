@@ -39,6 +39,25 @@ func main() {
 		l.Error("Unable to create storage", "error", err)
 		os.Exit(1)
 	}
+
+	// create the handlers
+	fh := handlers.NewFiles(stor, l)
+
+	// create a new serve mux and register the handlers
+	sm := mux.NewRouter()
+
+	// filename regex: {filename:[a-zA-Z]+\\.[a-z]{3}}
+	// problem with FileServer is that it is dumb
+	ph := sm.Methods(http.MethodPost).Subrouter()
+	ph.HandleFunc("/images/{id:[0-9]+}/{filename:[a-zA-Z]+\\.[a-z]{3}}", fh.ServeHTTP)
+
+	// get files
+	gh := sm.Methods(http.MethodGet).Subrouter()
+	gh.Handle(
+		"/images/{id:[0-9]+}/{filename:[a-zA-Z]+\\.[a-z]{3}}",
+		http.StripPrefix("/images/", http.FileServer(http.Dir(*basePath))),
+	)
+
 	// create a new server
 	s := http.Server{
 		Addr:         *bindAddress,      // configure the bind address
