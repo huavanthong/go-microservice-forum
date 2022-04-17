@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/hashicorp/go-hclog"
-	"github.com/nicholasjackson/building-microservices-youtube/product-images/files"
+	"github.com/huavanthong/microservice-golang/product-images/files"
 )
 
 // Files is a handler for reading and writing files

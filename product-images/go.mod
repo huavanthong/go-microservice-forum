@@ -1,4 +1,4 @@
-module github.com/nicholasjackson/building-microservices-youtube/product-images
+module github.com/huavanthong/microservice-golang/product-images
 
 go 1.13
 
