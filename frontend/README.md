@@ -94,3 +94,14 @@ use yarn to run project
 ```
 yarn start
 ```
+
+## Docker
+to build frontend image on docker
+```
+docker build -t frontend .
+```
+
+to run frontend image on docker
+```
+docker run -p 80:3000 -it frontend
+```

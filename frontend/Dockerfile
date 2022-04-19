@@ -1,9 +1,25 @@
+## We specify the base image we need for our frontend application
 FROM node:16-alpine
 
-WORKDIR /product-api
+## We create /frontend directory within our image.
+## This directory will hold our frontend source files.
+WORKDIR /frontend
 
-COPY package*.json ./
+## We copy package configuration to ./frontend
+COPY package*.json ./frontend
 
-RUN npm i
+## We copy everything in the root directory 
+## into our /frontend direcotry
+COPY . /frontend 
 
-COPY . .
+## Install npm
+RUN npm install
+
+## Because yarn is avalable on npm source, we can ignore yarn
+# RUN npm install --global yarn
+
+## Install react-script for nodejs
+RUN npm install react-scripts
+
+## Start yarn
+CMD yarn run start
