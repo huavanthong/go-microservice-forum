@@ -1,3 +1,11 @@
+# Table of Contents
+* [Getting Started](#getting-started)
+
+
+# Question
+* [How do you change the default port to another on ReacJS?](#change-port)
+
+-------------------------------------------------
 # [Muse Ant Design Dashboard](https://demos.creative-tim.com/muse-ant-design-dashboard/#/dashboard?ref=readme-madd)
 
 ![version](https://img.shields.io/badge/version-1.0.0-blue.svg) [![GitHub issues open](https://img.shields.io/github/issues/creativetimofficial/muse-ant-design-dashboard.svg)](https://github.com/creativetimofficial/muse-ant-design-dashboard/issues?q=is%3Aopen+is%3Aissue) [![GitHub issues closed](https://img.shields.io/github/issues-closed-raw/creativetimofficial/material-tailwind-dashboard-react.svg?maxAge=2592000)](https://github.com/creativetimofficial/muse-ant-design-dashboard/issues?q=is%3Aissue+is%3Aclosed)
@@ -52,7 +60,7 @@ Quick start options:
 
 Muse Ant Design Dashboard build using Material Tailwind and the documentation of Material Tailwind is hosted at [website](https://demos.creative-tim.com/muse-ant-design-dashboard/#/docs/overview?ref=readme-madd).
 
-### What's included
+### File structure
 
 Within the download you'll find the following directories and files:
 
@@ -79,7 +87,7 @@ Muse Ant Design Dashboard
     │   │   │   ├── SignIn.js
     │   │   │   ├── SignUp.js
     │   │   │   └── Tables.js
-    │   │   ├── App.js
+    │   │   ├── App.js 
     │   │   └── index.js
     │   ├── CHANGELOG.md
     │   ├── LICENSE
@@ -141,3 +149,22 @@ Dribbble: <https://dribbble.com/creativetim>
 Google+: <https://plus.google.com/+CreativetimPage>
 
 Instagram: <https://instagram.com/creativetimofficial>
+
+## Getting Started
+After clone this project:
+```
+yarn install
+```
+
+to run
+```
+yarn start
+```
+
+## Question
+#### Change port
+to change port, you can update at .env file
+```
+PORT=4000
+```
+More details: [here](https://scriptverse.academy/tutorials/reactjs-change-port-number.html)
