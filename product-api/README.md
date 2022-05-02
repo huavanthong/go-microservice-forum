@@ -60,13 +60,35 @@ To run API on server with format json
 ```
 curl localhost:8080/ | jq
 ```
-
-To run API on server
+#### GET method
+To get all products on server
 ```
-curl -X GET localhost:8080/ 
-curl localhost:8080/ -X POST -d '{"Name": "New Product", "Price": 1.23, "SKU":"abc-def-ghi"}'
+curl -X GET localhost:8080/products
 ```
 
+To get a specific product on server
+```
+curl -X GET localhost:8080/products/1
+```
+#### PUT method
+To update a product by specific Id
+```
+curl localhost:8080/products/1 -X PUT -d '{"name": "Tea", "price": 1.0, "sku":"aada-sdd-ddf"}'
+```
+#### POST method
+To post a new product to server
+```
+curl -X POST localhost:8080/products -d '{"name": "New Product", "Price": 1.0, "sku":"aada-sdd-ddf"}'
+```
+##### For testing POST method
+```
+curl localhost:8080/products -X POST -d '{"name": "Tea", "Price": 1.0, "sku":"aada-sdd"}'
+curl localhost:8080/products -X POST -d '{"name": "Water"}'
+```
+#### DELETE method
+```
+curl -X DELETE localhost:8080/products/1
+```
 ## Swagger
 To generate swagger.yaml file
 ```
