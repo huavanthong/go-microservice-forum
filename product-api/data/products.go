@@ -72,9 +72,9 @@ func GetProductByID(id int) (*Product, error) {
 
 /************ POST ************/
 // AddProduct addies a product to list
-func AddProduct(p Product) {
+func AddProduct(p *Product) {
 	p.ID = getNextID()
-	productList = append(productList, &p)
+	productList = append(productList, p)
 }
 
 /************ PUT ************/
