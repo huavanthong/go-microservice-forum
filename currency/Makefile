@@ -1,4 +1,4 @@
-.PHONY: protos
+.PHONY: proto
 
-protos:
-	 protoc -I protos/ protos/currency.proto --go_out=plugins=grpc:protos/currency
+proto:
+	 protoc --proto_path=proto ./proto/currency.proto --go_out=. --go-grpc_out=.
