@@ -22,7 +22,7 @@ type Products struct {
 }
 
 // NewProducts returns a new products handler with the given logger
-func NewProducts(l *log.Logger, v *data.Validation, cc *protos.CurrencyClient) *Products {
+func NewProducts(l *log.Logger, v *data.Validation, cc protos.CurrencyClient) *Products {
 	return &Products{l, v, cc}
 }
 
