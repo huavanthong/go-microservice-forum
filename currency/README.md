@@ -3,7 +3,7 @@ The currency service is a gRPC service which provides up to date exchange rates 
 
 1. To install protoc for server. [here](#install-protos)
 2. To build out *.pb.go. [here](#build-protos)
-3. 
+3. To run server and use it. [here](#getting-started)
 
 ## Install protos
 To build the gRPC client and server interfaces, first install protoc:
@@ -41,3 +41,48 @@ protoc --proto_path=proto ./proto/currency.proto --go_out=. --go-grpc_out=.
 - go-grpc_out: will build out file *_grpc.pb.go
 - Please understand the difference between them
 
+## Getting Started
+### Install grpccurl
+To test the system install `grpccurl` which is a command line tool which can interact with gRPC API's
+```
+go get github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+```
+More details: [here](https://github.com/fullstorydev/grpcurl)
+
+### List Services
+```
+grpcurl --plaintext localhost:9092 list
+Currency
+grpc.reflection.v1alpha.ServerReflection
+```
+
+### List Methods
+```
+grpcurl --plaintext localhost:9092 list Currency        
+Currency.GetRate
+```
+
+### Method detail for GetRate
+```
+grpcurl --plaintext localhost:9092 describe Currency.GetRate
+Currency.GetRate is a method:
+rpc GetRate ( .RateRequest ) returns ( .RateResponse );
+```
+
+### RateRequest detail
+```
+grpcurl --plaintext localhost:9092 describe .RateRequest    
+RateRequest is a message:
+message RateRequest {
+  string Base = 1 [json_name = "base"];
+  string Destination = 2 [json_name = "destination"];
+}
+```
+
+### Execute a request
+```
+grpcurl --plaintext -d '{"base": "GBP", "destination": "USD"}' localhost:9092 Currency/GetRate
+{
+  "rate": 0.5
+}
+```
