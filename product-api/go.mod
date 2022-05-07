@@ -15,3 +15,5 @@ require (
 	google.golang.org/grpc v1.46.0
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )
+
+replace github.com/huavanthong/microservice-golang/currency => ../currency
