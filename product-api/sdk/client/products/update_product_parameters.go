@@ -16,7 +16,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/nicholasjackson/building-microservices-youtube/product-api/sdk/models"
+	"github.com/huavanthong/microservice-golang/product-api/sdk/models"
 )
 
 // NewUpdateProductParams creates a new UpdateProductParams object
