@@ -11,4 +11,5 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/nicholasjackson/env v0.6.0
+	google.golang.org/grpc v1.46.0
 )
