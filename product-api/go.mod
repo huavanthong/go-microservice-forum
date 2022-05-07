@@ -9,6 +9,7 @@ require (
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.8.0
+	github.com/huavanthong/microservice-golang/currency v0.0.0-20220507034548-1beb3ecf07a1
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/nicholasjackson/env v0.6.0
 	google.golang.org/grpc v1.46.0

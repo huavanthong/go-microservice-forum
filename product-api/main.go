@@ -13,14 +13,14 @@ import (
 
 	gohandlers "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
-	protos "github.com/huavanthong/microservice-golang/currency/proto"
+	protos "github.com/huavanthong/microservice-golang/currency/proto/currency"
 	"github.com/huavanthong/microservice-golang/product-api/data"
 	"github.com/huavanthong/microservice-golang/product-api/handlers"
 	"github.com/nicholasjackson/env"
 )
 
 // declare environment server
-var bindAddress = env.String("BIND_ADDRESS", false, ":8080", "Bind address for the server")
+var bindAddress = env.String("BIND_ADDRESS", false, ":9090", "Bind address for the server")
 
 func main() {
 
