@@ -8,12 +8,13 @@ import (
 )
 
 type Currency struct {
+	protos.UnimplementedCurrencyServer
 	log hclog.Logger
 }
 
 // NewCurrency creates a new Currency server
 func NewCurrency(l hclog.Logger) *Currency {
-	return &Currency{l}
+	return &Currency{log: l}
 }
 
 // GetRate
