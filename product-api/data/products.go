@@ -128,29 +128,29 @@ func (p *ProductsDB) GetProductByID(id int, currency string) (*Product, error) {
 
 /************ POST ************/
 // AddProduct addies a product to list
-func AddProduct(p *Product) {
-	p.ID = getNextID()
-	productList = append(productList, p)
+func (p *ProductsDB) AddProduct(pr *Product) {
+	pr.ID = getNextID()
+	productList = append(productList, pr)
 }
 
 /************ PUT ************/
 // UpdateProduct updates info to product
-func UpdateProduct(p Product) error {
+func (p *ProductsDB) UpdateProduct(pr Product) error {
 
-	i := findIndexByProductID(p.ID)
+	i := findIndexByProductID(pr.ID)
 	if i == -1 {
 		return ErrProductNotFound
 	}
 
 	// update the product in the DB
-	productList[i] = &p
+	productList[i] = &pr
 
 	return nil
 }
 
 /************ DELETE ************/
 // DeleteProduct deletes a product from the database
-func DeleteProduct(id int) error {
+func (p *ProductsDB) DeleteProduct(id int) error {
 	i := findIndexByProductID(id)
 	if i == -1 {
 		return ErrProductNotFound
