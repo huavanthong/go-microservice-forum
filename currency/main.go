@@ -29,7 +29,7 @@ func main() {
 	gs := grpc.NewServer()
 
 	// create an instance of the Currency server
-	c := server.NewCurrency(log)
+	c := server.NewCurrency(rates, log)
 
 	// register the currency server
 	protos.RegisterCurrencyServer(gs, c)
