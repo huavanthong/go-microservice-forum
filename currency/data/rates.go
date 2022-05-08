@@ -14,7 +14,7 @@ type ExchangeRates struct {
 	rates map[string]float64
 }
 
-func NewExchangeRates(l hclog.Logger) (*ExchangeRates, error) {
+func NewRates(l hclog.Logger) (*ExchangeRates, error) {
 	// create a object for exchange rates
 	er := &ExchangeRates{log: l, rates: map[string]float64{}}
 
@@ -70,6 +70,6 @@ type Cubes struct {
 
 // define structure adapt value in vxml
 type Cube struct {
-	Currency string  `xml:"currency, attr`
-	Rate     float64 `xml:"rate, attr"`
+	Currency string `xml:"currency, attr`
+	Rate     string `xml:"rate, attr"`
 }
