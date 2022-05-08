@@ -24,6 +24,24 @@ func NewRates(l hclog.Logger) (*ExchangeRates, error) {
 	return er, err
 }
 
+// GetRate: expose API to calcuate exchange rate for base and dest
+func (e *ExchangeRates) GetRate(base, dest string) (float64, error) {
+
+	// get rate the currency for base
+	br, ok := e.rates[base]
+	if !ok {
+		return 0, fmt.Errorf("Rate not found for currency %s", base)
+	}
+
+	// get rate the currency for dest
+	dr, ok := e.rates[dest]
+	if !ok {
+		return 0, fmt.Errorf("Rate not found for currency %s", dest)
+	}
+
+	return dr / br, nil
+}
+
 // define internal value to getRates
 func (e *ExchangeRates) getRates() error {
 	// using http to get the exchange rate of currency from european central bank
