@@ -12,6 +12,7 @@ require (
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.8.0
+	github.com/hashicorp/go-hclog v0.12.1
 	github.com/huavanthong/microservice-golang v0.0.0-20220507071640-37bc3cd59bc1 // indirect
 	github.com/huavanthong/microservice-golang/currency v0.0.0-20220507034548-1beb3ecf07a1
 	github.com/leodido/go-urn v1.2.1 // indirect

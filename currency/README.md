@@ -4,6 +4,7 @@ The currency service is a gRPC service which provides up to date exchange rates 
 1. To install protoc for server. [here](#install-protos)
 2. To build out *.pb.go. [here](#build-protos)
 3. To run server and use it. [here](#getting-started)
+4. To test package data. [here](#data-package)
 
 ## Install protos
 To build the gRPC client and server interfaces, first install protoc:
@@ -85,4 +86,11 @@ grpcurl --plaintext -d '{"base": "GBP", "destination": "USD"}' localhost:9092 Cu
 {
   "rate": 0.5
 }
+```
+
+## Data package
+To test our data package
+```
+cd currency/data
+go test
 ```
