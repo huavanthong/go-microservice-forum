@@ -89,5 +89,5 @@ type Cubes struct {
 // define structure adapt value in vxml
 type Cube struct {
 	Currency string `xml:"currency, attr`
-	Rate     string `xml:"rate, attr"`
+	Rate     string `xml:"rate,attr"`
 }
