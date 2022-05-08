@@ -16,11 +16,14 @@ import (
 
 // Delete handles DELETE requests and removes items from the database
 func (p *Products) Delete(rw http.ResponseWriter, r *http.Request) {
+
+	rw.Header().Add("Content-Type", "application/json")
+
 	id := getProductID(r)
 
 	p.l.Debug("Deleting record", "id", id)
 
-	err := data.DeleteProduct(id)
+	err := p.productDB.DeleteProduct(id)
 	if err == data.ErrProductNotFound {
 		p.l.Error("Unable to delete record id does not exist")
 

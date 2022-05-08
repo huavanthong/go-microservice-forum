@@ -68,7 +68,7 @@ func NewProductsDB(c protos.CurrencyClient, l hclog.Logger) *ProductsDB {
 /************************ Method for Product ************************/
 /************ GET ************/
 // GetProducts returns a list of products
-func (p *ProductsDB) GetProducts(currency string) (Products, err) {
+func (p *ProductsDB) GetProducts(currency string) (Products, error) {
 
 	// if currency is empty, it return productList with the default of
 	// base currency
