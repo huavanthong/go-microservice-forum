@@ -13,9 +13,8 @@ import (
 
 // ListAll handles GET requests and returns all current products
 func (p *Products) ListAll(rw http.ResponseWriter, r *http.Request) {
-
-	// set logger for debug
-	p.l.Println("[DEBUG] get all records")
+  
+	p.l.Debug("Get all records")
 
 	// set applicatin type to display data on client side
 	rw.Header().Add("Content-Type", "application/json")
@@ -54,10 +53,10 @@ func (p *Products) ListSingle(rw http.ResponseWriter, r *http.Request) {
 	// get id from request
 	id := getProductID(r)
 
+	p.l.Debug("Get record", "id", id)
+
 	// get a currency value based on a query command existed in URL on request
 	cur := r.URL.Query().Get("currency")
-
-	p.l.Println("[DEBUG] get record id", id)
 
 	// find product by id with currency
 	prod, err := p.productDB.GetProductByID(id, cur)

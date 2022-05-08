@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/hashicorp/go-hclog"
 	"google.golang.org/grpc"
 
 	gohandlers "github.com/gorilla/handlers"
@@ -27,7 +28,12 @@ func main() {
 	env.Parse()
 
 	// create logger only for product-api
-	l := log.New(os.Stdout, "products-api", log.LstdFlags)
+	// changer logger from:
+	// l := log.New(os.Stdout, "products-api", log.LstdFlags)
+	// to:
+	l := hclog.Default()
+
+	// create a object to validate data on
 	v := data.NewValidation()
 
 	// create a new connection to the currency service
@@ -80,12 +86,12 @@ func main() {
 
 	// create a new server
 	s := http.Server{
-		Addr:         *bindAddress,      // configure the bind address
-		Handler:      ch(sm),            // set the default handler
-		ErrorLog:     l,                 // set the logger for the server
-		ReadTimeout:  5 * time.Second,   // max time to read request from the client
-		WriteTimeout: 10 * time.Second,  // max time to write response to the client
-		IdleTimeout:  120 * time.Second, // max time for connections using TCP Keep-Alive
+		Addr:         *bindAddress,                                     // configure the bind address
+		Handler:      ch(sm),                                           // set the default handler
+		ErrorLog:     l.StandardLogger(&hclog.StandardLoggerOptions{}), // set the logger for the server
+		ReadTimeout:  5 * time.Second,                                  // max time to read request from the client
+		WriteTimeout: 10 * time.Second,                                 // max time to write response to the client
+		IdleTimeout:  120 * time.Second,                                // max time for connections using TCP Keep-Alive
 	}
 
 	// start the server
