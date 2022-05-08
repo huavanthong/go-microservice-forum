@@ -18,3 +18,14 @@ func NewExchangeRates(l hclog.Logger) (*ExchangeRates, error) {
 
 	return er, err
 }
+
+// for multiple Cube values
+type Cubes struct {
+	CubeData []Cube `xml:"Cube>Cube>Cube"`
+}
+
+// define structure adapt value in vxml
+type Cube struct {
+	Currency string  `xml:"currency, attr`
+	Rate     float64 `xml:"rate, attr"`
+}
