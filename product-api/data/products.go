@@ -1,6 +1,7 @@
 package data
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -67,7 +68,15 @@ func NewProductsDB(c protos.CurrencyClient, l hclog.Logger) *ProductsDB {
 /************************ Method for Product ************************/
 /************ GET ************/
 // GetProducts returns a list of products
-func GetProducts() Products {
+func (p *ProductsDB) GetProducts(currency string) (Products, err) {
+
+	// if currency not define, it return productList with USD currency
+	if currency == "" {
+		return productList, nil
+	}
+
+	rate, err := p.get
+
 	return productList
 }
 
@@ -145,6 +154,16 @@ func findIndexByProductID(id int) int {
 	}
 
 	return -1
+}
+
+func (p *ProductsDB) getRate(destination string) (float64, error) {
+	rr := &protos.RateRequest{
+		Base:        protos.Currencies(protos.Currencies_value["EUR"]),
+		Destination: protos.Currencies(protos.Currencies_value[destination]),
+	}
+
+	resp, err := p.currency.GetRate(context.Background(), rr)
+	return resp.Rate, err
 }
 
 /************************ Storage Product ************************/
