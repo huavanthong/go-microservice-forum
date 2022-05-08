@@ -27,7 +27,7 @@ type Product struct {
 	//
 	// required: true
 	// max length: 255
-	Name string `json:"name" validate:"required"`
+	Name string `json:"name" validate:"required,gt=0"`
 
 	// the description for this poduct
 	//
@@ -39,7 +39,7 @@ type Product struct {
 	//
 	// required: true
 	// min: 0.01
-	Price float32 `json:"price" validate:"required,gt=0"`
+	Price float64 `json:"price" validate:"required,gt=0"`
 
 	// the SKU for the product
 	//
@@ -75,9 +75,24 @@ func (p *ProductsDB) GetProducts(currency string) (Products, err) {
 		return productList, nil
 	}
 
-	rate, err := p.get
+	// calculate exchange rate between base: Euro and dest: currency
+	rate, err := p.getRate(currency)
+	if err != nil {
+		p.log.Error("Unable to get rate", "currency", currency, "error", err)
+	}
 
-	return productList
+	// create a slice of emplty product
+	pr := Products{}
+	// loop in productList to update to the new currency
+	for _, p := range productList {
+		// get a product
+		np := *p
+		// update it
+		np.Price = np.Price * rate
+		// push to a temp storage of product
+		pr = append(pr, &np)
+	}
+	return pr, nil
 }
 
 // GetProductByID returns a single product which matches the id from the
@@ -157,6 +172,7 @@ func findIndexByProductID(id int) int {
 }
 
 func (p *ProductsDB) getRate(destination string) (float64, error) {
+	// define base currency is Euro
 	rr := &protos.RateRequest{
 		Base:        protos.Currencies(protos.Currencies_value["EUR"]),
 		Destination: protos.Currencies(protos.Currencies_value[destination]),
