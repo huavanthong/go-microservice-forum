@@ -87,6 +87,22 @@ grpcurl --plaintext -d '{"base": "GBP", "destination": "USD"}' localhost:9092 Cu
   "rate": 0.5
 }
 ```
+### Execute a request for SubscribeRates
+
+The parameter `-d @` means that gRPCurl will read the messages from StdIn.
+
+```
+grpcurl --plaintext --msg-template -d @ localhost:9092 Currency/SubscribeRates 
+```
+
+You can send a message to the server using the following payload
+
+```
+{
+  "Base": "EUR",
+  "Destination": "EUR"
+}
+```
 
 ## Data package
 To test our data package
