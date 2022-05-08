@@ -1,10 +1,8 @@
 package handlers
 
 import (
-	"context"
 	"net/http"
 
-	protos "github.com/huavanthong/microservice-golang/currency/proto/currency"
 	"github.com/huavanthong/microservice-golang/product-api/data"
 )
 
@@ -49,12 +47,20 @@ func (p *Products) ListAll(rw http.ResponseWriter, r *http.Request) {
 
 // ListSingle handles GET requests
 func (p *Products) ListSingle(rw http.ResponseWriter, r *http.Request) {
+
+	// set applicatin type to display data on client side
+	rw.Header().Add("Content-Type", "application/json")
+
+	// get id from request
 	id := getProductID(r)
+
+	// get a currency value based on a query command existed in URL on request
+	cur := r.URL.Query().Get("currency")
 
 	p.l.Println("[DEBUG] get record id", id)
 
-	// find product by id
-	prod, err := data.GetProductByID(id)
+	// find product by id with currency
+	prod, err := p.productDB.GetProductByID(id, cur)
 
 	switch err {
 	case nil:
@@ -72,22 +78,6 @@ func (p *Products) ListSingle(rw http.ResponseWriter, r *http.Request) {
 		data.ToJSON(&GenericError{Message: err.Error()}, rw)
 		return
 	}
-
-	rr := &protos.RateRequest{
-		Base:        protos.Currencies(protos.Currencies_value["EUR"]),
-		Destination: protos.Currencies(protos.Currencies_value["GBP"]),
-	}
-
-	resp, err := p.cc.GetRate(context.Background(), rr)
-	if err != nil {
-		p.l.Println("[Error] error getting new rate", err)
-		data.ToJSON(&GenericError{Message: err.Error()}, rw)
-		return
-	}
-
-	p.l.Printf("Resp %#v", resp)
-
-	prod.Price = prod.Price * resp.Rate
 
 	// convert message response to json
 	err = data.ToJSON(prod, rw)
