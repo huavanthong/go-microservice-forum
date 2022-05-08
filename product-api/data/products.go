@@ -70,7 +70,8 @@ func NewProductsDB(c protos.CurrencyClient, l hclog.Logger) *ProductsDB {
 // GetProducts returns a list of products
 func (p *ProductsDB) GetProducts(currency string) (Products, err) {
 
-	// if currency not define, it return productList with USD currency
+	// if currency is empty, it return productList with the default of
+	// base currency
 	if currency == "" {
 		return productList, nil
 	}
@@ -81,13 +82,13 @@ func (p *ProductsDB) GetProducts(currency string) (Products, err) {
 		p.log.Error("Unable to get rate", "currency", currency, "error", err)
 	}
 
-	// create a slice of emplty product
+	// create a array to contain the rate products
 	pr := Products{}
-	// loop in productList to update to the new currency
+	// loop in productList to update to the product with rate
 	for _, p := range productList {
 		// get a product
 		np := *p
-		// update it
+		// update it's currency with rate
 		np.Price = np.Price * rate
 		// push to a temp storage of product
 		pr = append(pr, &np)
@@ -98,13 +99,31 @@ func (p *ProductsDB) GetProducts(currency string) (Products, err) {
 // GetProductByID returns a single product which matches the id from the
 // database.
 // If a product is not found this function returns a ProductNotFound error
-func GetProductByID(id int) (*Product, error) {
+func (p *ProductsDB) GetProductByID(id int, currency string) (*Product, error) {
+	// find product by id
 	i := findIndexByProductID(id)
 	if id == -1 {
 		return nil, ErrProductNotFound
 	}
 
-	return productList[i], nil
+	// if currency is empty, it return productList with the default of
+	// base currency
+	if currency == "" {
+		return productList[i], nil
+	}
+
+	// calculate exchange rate between base: Euro and dest: currency
+	rate, err := p.getRate(currency)
+	if err != nil {
+		p.log.Error("Unable to get rate", "currency", currency, "error", err)
+	}
+
+	// get product in list
+	np := *productList[i]
+	// update it's currency with rate
+	np.Price = np.Price * rate
+
+	return &np, nil
 }
 
 /************ POST ************/
