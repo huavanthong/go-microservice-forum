@@ -3,6 +3,9 @@ package data
 import (
 	"fmt"
 	"time"
+
+	"github.com/hashicorp/go-hclog"
+	protos "github.com/huavanthong/microservice-golang/currency/proto/currency"
 )
 
 /************************ Define structure product ************************/
@@ -50,6 +53,16 @@ type Product struct {
 
 // Products defines a slice of Product
 type Products []*Product
+
+// ProductsDB: defines a DB of Product with the currency service
+type ProductsDB struct {
+	currency protos.CurrencyClient
+	log      hclog.Logger
+}
+
+func NewProductsDB(c protos.CurrencyClient, l hclog.Logger) *ProductsDB {
+	return &ProductsDB{c, l}
+}
 
 /************************ Method for Product ************************/
 /************ GET ************/
