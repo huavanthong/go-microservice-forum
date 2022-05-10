@@ -6,7 +6,7 @@
 package daos
 
 import (
-	"../models"
+	"github.com/huavanthong/microservice-golang/user-api/models"
 )
 
 // User manages User CRUD

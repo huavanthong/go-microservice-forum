@@ -10,10 +10,10 @@ import (
 	"net/http"
 	"os"
 
-	"./common"
-	"./controllers"
-	"./databases"
 	"github.com/gin-gonic/gin"
+	"github.com/huavanthong/microservice-golang/user-api/common"
+	"github.com/huavanthong/microservice-golang/user-api/controllers"
+	"github.com/huavanthong/microservice-golang/user-api/databases"
 )
 
 // Main manages main golang application
