@@ -18,6 +18,14 @@ type Currency struct {
 
 // NewCurrency creates a new Currency server
 func NewCurrency(r *data.ExchangeRates, l hclog.Logger) *Currency {
+
+	go func() {
+		ru := r.MonitorRates{5 * time.Second}
+		for range ru {
+			l.Info("Got Updated rates")
+		}
+	}()
+
 	return &Currency{rates: r, log: l}
 }
 
