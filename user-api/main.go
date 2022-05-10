@@ -12,6 +12,7 @@ import (
 
 	"./common"
 	"./controllers"
+	"./databases"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,6 +25,12 @@ func (m *Main) initServer() error {
 	var err error
 	// Load config file
 	err = common.LoadConfig()
+	if err != nil {
+		return err
+	}
+
+	// Initialize User database
+	err = databases.Database.Init()
 	if err != nil {
 		return err
 	}
@@ -52,10 +59,12 @@ func main() {
 	// init application
 	m := Main{}
 
-	// Initialize server
+	// initialize server
 	if m.initServer() != nil {
 		return
 	}
+	// init server failed, Close connection to DB
+	defer databases.Database.Close()
 
 	// init a controllers
 	c := controllers.User{}
