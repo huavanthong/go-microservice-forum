@@ -6,21 +6,62 @@
 package main
 
 import (
+	"io"
 	"net/http"
+	"os"
 
+	"./common"
 	"./controllers"
 	"github.com/gin-gonic/gin"
 )
 
+// Main manages main golang application
+type Main struct {
+	router *gin.Engine
+}
+
+func (m *Main) initServer() error {
+	var err error
+	// Load config file
+	err = common.LoadConfig()
+	if err != nil {
+		return err
+	}
+
+	// Setting Gin logger
+	if common.Config.EnableGinFileLog {
+		f, _ := os.Create("logs/gin.log")
+		if common.Config.EnableGinConsoleLog {
+			gin.DefaultWriter = io.MultiWriter(os.Stdout, f)
+		} else {
+			gin.DefaultWriter = io.MultiWriter(f)
+		}
+	} else {
+		if !common.Config.EnableGinConsoleLog {
+			gin.DefaultWriter = io.MultiWriter()
+		}
+	}
+
+	m.router = gin.Default()
+
+	return nil
+}
+
 func main() {
-	// init a router from gin
-	r := gin.Default()
+
+	// init application
+	m := Main{}
+
+	// Initialize server
+	if m.initServer() != nil {
+		return
+	}
 
 	// init a controllers
 	c := controllers.User{}
 
 	// simple group: v1
-	v1 := gin.router.Group("/api/v1")
+	v1 := m.router.Group("/api/v1")
 	{
 		admin := v1.Group("/admin")
 		{
@@ -39,9 +80,10 @@ func main() {
 
 	}
 
-	r.GET("/testserver", func(c *gin.Context) {
+	m.router.GET("/testserver", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})
 
-	r.Run(":8080")
+	m.router.Run(common.Config.Port)
+
 }
