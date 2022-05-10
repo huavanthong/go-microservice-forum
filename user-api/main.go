@@ -8,34 +8,39 @@ package main
 import (
 	"net/http"
 
+	"./controllers"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	// init a router from gin
 	r := gin.Default()
 
-	r.GET("/users", func(c *gin.Context) {
+	// init a controllers
+	c := controllers.User{}
+
+	// simple group: v1
+	v1 := gin.router.Group("/api/v1")
+	{
+		admin := v1.Group("/admin")
+		{
+			admin.POST("/auth", c.Authenticate)
+		}
+
+		user := v1.Group("/users")
+
+		// Todo: Implement APIs need to be authenticated
+		user.POST("", c.AddUser)
+		user.GET("/list", c.ListUsers)
+		user.GET("detail/:id", c.GetUserByID)
+		user.GET("/", c.GetUserByParams)
+		user.DELETE(":id", c.DeleteUserByID)
+		user.PATCH("", c.UpdateUser)
+
+	}
+
+	r.GET("/testserver", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
-	})
-
-	r.POST("/users", func(c *gin.Context) {
-		c.String(http.StatusOK, "post a user")
-	})
-
-	r.PATCH("/users", func(c *gin.Context) {
-		c.String(http.StatusOK, "update a user")
-	})
-
-	r.GET("/users/detail/:id", func(c *gin.Context) {
-		c.String(http.StatusOK, "get a specific user")
-	})
-
-	r.GET("/users/list", func(c *gin.Context) {
-		c.String(http.StatusOK, "get a list of user")
-	})
-
-	r.DELETE("/users/:id", func(c *gin.Context) {
-		c.String(http.StatusOK, "delete a user")
 	})
 
 	r.Run(":8080")
