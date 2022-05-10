@@ -1,5 +1,10 @@
 {
     "port": ":8808",
     "enableGinConsoleLog": true,
-    "enableGinFileLog": true
+    "enableGinFileLog": true,
+
+    "mgAddrs": "127.0.0.1:27017",
+    "mgDbName": "go-microservices",
+    "mgDbUsername": "",
+    "mgDbPassword": ""
 }
