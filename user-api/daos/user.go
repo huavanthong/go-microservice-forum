@@ -85,20 +85,64 @@ func (u *User) DeleteByID(id string) error {
 // Login User
 func (u *User) Login(name string, password string) (models.User, error) {
 
-	return models.User{}, nil
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbName.Copy()
+	defer sessionCopy.Close()
+
+	// get a collection to execute the query against.
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
+
+	var user models.User
+	err := collection.Find(bson.M{"$and": []bson.M{
+		bson.M{"name": name},
+		bson.M{"password": password}},
+	}).One(&user)
+
+	return user, err
 }
 
 // Insert adds a new User into database'
 func (u *User) Insert(user models.User) error {
-	return nil
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbSession.Copy()
+
+	// get a collection to execute the query against.
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
+
+	// insert a new user from argument
+	err := collection.Insert(&user)
+	return err
+
 }
 
 // Delete remove an existing User
 func (u *User) Delete(user models.User) error {
-	return nil
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbSession.Copy()
+	defer sessionCopy.Close()
+
+	// get a collection to execute the query against.
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
+
+	// remove a user match entired info
+	err := collection.Remove(&user)
+	return err
 }
 
 // Update modifies an existing User
 func (u *User) Update(user models.User) error {
-	return nil
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbSession.Copy()
+	defer sessionCopy.Close()
+
+	// get a collection to execute the query against.
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
+
+	// update user by id
+	err := collection.UpdateId(user.ID, &user)
+	return err
 }
