@@ -6,8 +6,13 @@
 package controllers
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/daos"
+	"github.com/huavanthong/microservice-golang/user-api/models"
 	"github.com/huavanthong/microservice-golang/user-api/utils"
 )
 
@@ -25,12 +30,34 @@ func (u *User) AddUser(ctx *gin.Context) {
 
 }
 
+// ListUsers get all users exist in DB
 func (u *User) ListUsers(ctx *gin.Context) {
+	var users []models.User
+	users, err := u.userDAO.GetAll()
+
+	if err == nil {
+		ctx.JSON(http.StatusOK, users)
+	} else {
+		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+		fmt.Errorf("[ERROR]: ", err)
+	}
 
 }
 
 func (u *User) GetUserByID(ctx *gin.Context) {
 
+	// get id from context
+	id := ctx.Params.ByName("id")
+
+	// find user by id
+	user, err := u.userDAO.GetByID(id)
+
+	if err == nil {
+		ctx.JSON(http.StatusOK, user)
+	} else {
+		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+		fmt.Errorf("[ERROR]: ", err)
+	}
 }
 
 func (u *User) GetUserByParams(ctx *gin.Context) {
