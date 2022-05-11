@@ -23,6 +23,9 @@ type Configuration struct {
 	MgDbName     string `json:"mgDbName"`
 	MgDbUsername string `json:"mgDbUsername"`
 	MgDbPassword string `json:"mgDbPassword"`
+
+	JwtSecretPassword string `json:"jwtSecretPassword"`
+	Issuer            string `json:"issuer"`
 }
 
 // Config shares the global configuration

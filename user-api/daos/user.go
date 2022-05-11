@@ -50,7 +50,7 @@ func (u *User) GetByID(id string) (models.User, error) {
 	defer sessionCopy.Close()
 
 	// get a collection to execute the query against
-	collection := sessionCopy.DB(databases.Database.Databasename).C(common.User)
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
 	// find a user by id
 	var user models.User
@@ -74,7 +74,7 @@ func (u *User) DeleteByID(id string) error {
 	defer sessionCopy.Close()
 
 	// get a collection to execute the query against
-	collection := sessionCopy.DB(databases.Database.Databasename).C(common.User)
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
 	// delete user by id
 	err = collection.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
@@ -87,7 +87,7 @@ func (u *User) Login(name string, password string) (models.User, error) {
 
 	// copy for a newsession with original authentication
 	// to access to MongoDB.
-	sessionCopy := databases.Database.MgDbName.Copy()
+	sessionCopy := databases.Database.MgDbSession.Copy()
 	defer sessionCopy.Close()
 
 	// get a collection to execute the query against.
