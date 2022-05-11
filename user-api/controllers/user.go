@@ -7,9 +7,14 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/huavanthong/microservice-golang/user-api/daos"
+	"github.com/huavanthong/microservice-golang/user-api/utils"
 )
 
+// Define user manages
 type User struct {
+	utils   utils.Utils
+	userDAO daos.User
 }
 
 func (u *User) Authenticate(ctx *gin.Context) {
