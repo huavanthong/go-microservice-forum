@@ -7,9 +7,12 @@
     "logMaxSize": 10,
     "logMaxBackups": 10,
     "logMaxAge": 30,
-    
+
     "mgAddrs": "127.0.0.1:27017",
     "mgDbName": "go-microservices",
     "mgDbUsername": "",
-    "mgDbPassword": ""
+    "mgDbPassword": "",
+
+    "jwtSecretPassword": "giaolinh",
+    "issuer": "hvthong"
 }

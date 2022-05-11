@@ -24,7 +24,29 @@ type User struct {
 }
 
 func (u *User) Authenticate(ctx *gin.Context) {
+	username := ctx.PostForm("user")
+	password := ctx.PostForm("password")
 
+	// var user models.User
+	var err error
+	_, err = u.userDAO.Login(username, password)
+
+	if err == nil {
+		var tokenString string
+		// Generate token string
+		tokenString, err = u.utils.GenerateJWT(username, "")
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+			fmt.Errorf("[ERROR]: ", err)
+			return
+		}
+
+		token := models.Token{tokenString}
+		// Return token string to the client
+		ctx.JSON(http.StatusOK, token)
+	} else {
+		ctx.JSON(http.StatusUnauthorized, models.Error{common.StatusCodeUnknown, err.Error()})
+	}
 }
 
 func (u *User) AddUser(ctx *gin.Context) {
