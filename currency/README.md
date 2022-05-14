@@ -105,8 +105,20 @@ You can send a message to the server using the following payload
 ```
 
 ## Data package
-To test our data package
+Reference: 
+* [guideline for testing](https://www.digitalocean.com/community/tutorials/how-to-write-unit-tests-in-go-using-go-test-and-the-testing-package)
+### Entering to place want to test
+To want to test data on currency package
 ```
 cd currency/data
+```
+### For testing
+For running the testing data
+```
 go test
+```
+
+For a additional detail info
+```
+go test -v
 ```
