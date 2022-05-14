@@ -19,15 +19,36 @@ type Currency struct {
 
 // NewCurrency creates a new Currency server
 func NewCurrency(r *data.ExchangeRates, l hclog.Logger) *Currency {
+	c := &Currency{r, l, make(map[protos.Currency_SubscribeRatesServer][]*protos.RateRequest)}
+	go c.handleUpdates()
 
-	go func() {
-		ru := r.MonitorRates{5 * time.Second}
-		for range ru {
-			l.Info("Got Updated rates")
+	return c
+}
+
+// Implement handler for MonitorRates
+func (c *Currency) handleUpdates() {
+	ru := c.rates.MonitorRates(5 * time.Second)
+	for range ru {
+		c.log.Info("Got Updated rates")
+
+		// loop over subscribed clients
+		for k, v := range c.subscriptions {
+
+			// loop over subscribed rates
+			for _, rr := range v {
+				r, err := c.rates.GetRate(rr.GetBase().String(), rr.GetDestination().String())
+				if err != nil {
+					c.log.Error("Unable to get update rate", "base", rr.GetBase().String(), "destination", rr.GetDestination().String())
+				}
+
+				err = k.Send(&protos.RateResponse{Base: rr.Base, Destination: rr.Destination, Rate: r})
+				if err != nil {
+					c.log.Error("Unable to send updated rate", "base", rr.GetBase().String(), "destination", rr.GetDestination().String())
+				}
+			}
 		}
-	}()
 
-	return &Currency{rates: r, log: l, subscriptions: make(map[protos.Currency_SubscribeRatesServer][]*protos.RateRequest)}
+	}
 }
 
 // GetRate implements the CurrencyServer GetRate method and returns the currency exchange rate
