@@ -71,6 +71,28 @@ func NewProductsDB(c protos.CurrencyClient, l hclog.Logger) *ProductsDB {
 	return pb
 }
 
+// Implement handler to update exchange rates from the currency service.
+func (p *ProductsDB) handleUpdates() {
+	sub, err := p.currency.SubscribeRates(context.Background())
+	if err != nil {
+		p.log.Error("Unable to subscribe for rates", "error", err)
+	}
+
+	p.client = sub
+
+	for {
+		rr, err := sub.Recv()
+		p.log.Info("Recieved updated rate from server", "dest", rr.GetDestination().String())
+
+		if err != nil {
+			p.log.Error("Error receiving message", "error", err)
+			return
+		}
+
+		p.rates[rr.Destination.String()] = rr.Rate
+	}
+}
+
 /************************ Method for Product ************************/
 /************ GET ************/
 // GetProducts returns a list of products
