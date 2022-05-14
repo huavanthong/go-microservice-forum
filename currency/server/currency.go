@@ -62,7 +62,7 @@ func (c *Currency) GetRate(ctx context.Context, rr *protos.RateRequest) (*protos
 		return nil, err
 	}
 
-	return &protos.RateResponse{Rate: rate}, nil
+	return &protos.RateResponse{Base: rr.Base, Destination: rr.Destination, Rate: rate}, nil
 }
 
 func (c *Currency) SubscribeRates(src protos.Currency_SubscribeRatesServer) error {
