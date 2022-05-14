@@ -19,7 +19,13 @@ type Currency struct {
 
 // NewCurrency creates a new Currency server
 func NewCurrency(r *data.ExchangeRates, l hclog.Logger) *Currency {
-	c := &Currency{r, l, make(map[protos.Currency_SubscribeRatesServer][]*protos.RateRequest)}
+	// init object
+	c := &Currency{
+		rates:         r,
+		log:           l,
+		subscriptions: make(map[protos.Currency_SubscribeRatesServer][]*protos.RateRequest)}
+
+	// call handler to update
 	go c.handleUpdates()
 
 	return c
