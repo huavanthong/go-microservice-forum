@@ -11,10 +11,10 @@ import (
 )
 
 type Currency struct {
-	protos.UnimplementedCurrencyServer
-	rates         *data.ExchangeRates
-	log           hclog.Logger
-	subscriptions map[protos.Currency_SubscribeRatesServer][]*protos.RateRequest
+	protos.UnimplementedCurrencyServer                                                                // Specific currency structure implement CurrencyServer
+	rates                              *data.ExchangeRates                                            // Exchange rates getting from European Central Bank
+	log                                hclog.Logger                                                   // Logger for Currency struct
+	subscriptions                      map[protos.Currency_SubscribeRatesServer][]*protos.RateRequest // For subscriber
 }
 
 // NewCurrency creates a new Currency server
@@ -23,7 +23,7 @@ func NewCurrency(r *data.ExchangeRates, l hclog.Logger) *Currency {
 	c := &Currency{
 		rates:         r,
 		log:           l,
-		subscriptions: make(map[protos.Currency_SubscribeRatesServer][]*protos.RateRequest)}
+		subscriptions: make(map[protos.Currency_SubscribeRatesServer][]*protos.RateRequest)} // Allocate subscriber handler
 
 	// call handler to update
 	go c.handleUpdates()

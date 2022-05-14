@@ -52,7 +52,9 @@ func (e *ExchangeRates) GetRate(base, dest string) (float64, error) {
 func (e *ExchangeRates) MonitorRates(interval time.Duration) chan struct{} {
 	ret := make(chan struct{})
 
+	// We use goroutine because we want to wait it forever
 	go func() {
+		// Register time with a period
 		ticker := time.NewTicker(interval)
 		for {
 			select {
