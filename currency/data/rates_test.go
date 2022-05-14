@@ -8,6 +8,9 @@ import (
 	protos "github.com/huavanthong/microservice-golang/currency/proto/currency"
 )
 
+/*********************************************************************
+Testing
+/*********************************************************************/
 /*********************** NewRates ***********************/
 // Case 1: Normal case
 func TestNewRates(t *testing.T) {
@@ -40,4 +43,25 @@ func TestGetRate(t *testing.T) {
 	}
 
 	fmt.Printf("GetRates: from %#v to %#v: %#v", rr.GetBase().String(), rr.GetDestination().String(), rate)
+}
+
+// Benchmark 1:
+// 			Measure time for GetRates
+func BenchmarkGetRate(b *testing.B) {
+
+	// NewRates: create a handler ExchangeRates
+	tr, _ := NewRates(hclog.Default())
+
+	// define base currency is GBP
+	rr := &protos.RateRequest{
+		Base:        protos.Currencies(protos.Currencies_value["EUR"]),
+		Destination: protos.Currencies(protos.Currencies_value["USD"]),
+	}
+
+	for i := 0; i < b.N; i++ {
+		rate, _ := tr.GetRate(rr.GetBase().String(), rr.GetDestination().String())
+
+		fmt.Printf("GetRates: from %#v to %#v: %#v", rr.GetBase().String(), rr.GetDestination().String(), rate)
+
+	}
 }

@@ -122,3 +122,23 @@ For a additional detail info
 ```
 go test -v
 ```
+### For coverage testing
+To get a result of coverage in data package
+```
+go test -cover
+```
+
+```
+go test -coverprofile=coverage.out
+```
+
+### For benchmarks testing
+Run testing for benckmark
+```
+go test -bench=.
+```
+
+You can also declare benchmark functions explicitly:
+```
+go test -bench=Add
+```
