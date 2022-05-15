@@ -24,6 +24,16 @@ func TestNewRates(t *testing.T) {
 	fmt.Printf("Rates %#v", tr.rates)
 }
 
+// Benchmark 2:
+// 			Measure time for GetRates
+func BenchmarkNewRates(b *testing.B) {
+
+	for i := 0; i < b.N; i++ {
+		tr, _ := NewRates(hclog.Default())
+		fmt.Printf("Rates %#v", tr.rates)
+	}
+}
+
 /*********************** GetRate ***********************/
 // Case 1: Normal case
 // 			Get exchange rates from GBP to USD

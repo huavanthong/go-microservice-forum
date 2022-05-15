@@ -1,10 +1,14 @@
 # Introduction
 The currency service is a gRPC service which provides up to date exchange rates and currency conversion capabilities.
 
+# Table of Contents
 1. To install protoc for server. [here](#install-protos)
 2. To build out *.pb.go. [here](#build-protos)
 3. To run server and use it. [here](#getting-started)
 4. To test package data. [here](#data-package)
+5. To get coverage result. [here](#for-coverage-testing)
+6. To get benchmark result. [here](#for-benchmarks-testing)
+
 
 ## Install protos
 To build the gRPC client and server interfaces, first install protoc:
@@ -112,6 +116,7 @@ To want to test data on currency package
 ```
 cd currency/data
 ```
+More details: [here]()
 ### For testing
 For running the testing data
 ```
@@ -128,10 +133,26 @@ To get a result of coverage in data package
 go test -cover
 ```
 
+#### Windows
+To get coverage result analytics
+```
+go test -coverprofile=coverage
+```
+
+To get html template from coverage result
+```
+go tool cover -html=coverage
+```
+#### Linux
+To get coverage result analytics
 ```
 go test -coverprofile=coverage.out
 ```
 
+To get html template from coverage result
+```
+go tool cover -html=coverage.out
+```
 ### For benchmarks testing
 Run testing for benckmark
 ```
@@ -140,5 +161,6 @@ go test -bench=.
 
 You can also declare benchmark functions explicitly:
 ```
-go test -bench=Add
+go test -bench=NewRates
+go test -bench=GetRate
 ```
