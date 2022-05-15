@@ -18,6 +18,7 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/nicholasjackson/building-microservices-youtube/product-api v0.0.0-20211011132451-0cd586295712
 	github.com/nicholasjackson/env v0.6.0
+	github.com/stretchr/testify v1.7.0
 	google.golang.org/grpc v1.46.0
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 )
