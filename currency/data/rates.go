@@ -122,6 +122,8 @@ func (e *ExchangeRates) getRates() error {
 		e.rates[c.Currency] = r
 	}
 
+	// because e.rates lack of the euro currency
+	// and we set it to base currency.
 	e.rates["EUR"] = 1
 
 	return nil
@@ -134,6 +136,6 @@ type Cubes struct {
 
 // define structure adapt value in vxml
 type Cube struct {
-	Currency string `xml:"currency, attr`
+	Currency string `xml:"currency,attr"`
 	Rate     string `xml:"rate,attr"`
 }
