@@ -1,10 +1,14 @@
 # Introduction
 The currency service is a gRPC service which provides up to date exchange rates and currency conversion capabilities.
 
+# Table of Contents
 1. To install protoc for server. [here](#install-protos)
 2. To build out *.pb.go. [here](#build-protos)
 3. To run server and use it. [here](#getting-started)
 4. To test package data. [here](#data-package)
+5. To get coverage result. [here](#for-coverage-testing)
+6. To get benchmark result. [here](#for-benchmarks-testing)
+
 
 ## Install protos
 To build the gRPC client and server interfaces, first install protoc:
@@ -87,10 +91,76 @@ grpcurl --plaintext -d '{"base": "GBP", "destination": "USD"}' localhost:9092 Cu
   "rate": 0.5
 }
 ```
+### Execute a request for SubscribeRates
+
+The parameter `-d @` means that gRPCurl will read the messages from StdIn.
+
+```
+grpcurl --plaintext --msg-template -d @ localhost:9092 Currency/SubscribeRates 
+```
+
+You can send a message to the server using the following payload
+
+```
+{
+  "Base": "EUR",
+  "Destination": "EUR"
+}
+```
 
 ## Data package
-To test our data package
+Reference: 
+* [guideline for testing](https://www.digitalocean.com/community/tutorials/how-to-write-unit-tests-in-go-using-go-test-and-the-testing-package)
+### Entering to place want to test
+To want to test data on currency package
 ```
 cd currency/data
+```
+More details: [here]()
+### For testing
+For running the testing data
+```
 go test
+```
+
+For a additional detail info
+```
+go test -v
+```
+### For coverage testing
+To get a result of coverage in data package
+```
+go test -cover
+```
+
+#### Windows
+To get coverage result analytics
+```
+go test -coverprofile=coverage
+```
+
+To get html template from coverage result
+```
+go tool cover -html=coverage
+```
+#### Linux
+To get coverage result analytics
+```
+go test -coverprofile=coverage.out
+```
+
+To get html template from coverage result
+```
+go tool cover -html=coverage.out
+```
+### For benchmarks testing
+Run testing for benckmark
+```
+go test -bench=.
+```
+
+You can also declare benchmark functions explicitly:
+```
+go test -bench=NewRates
+go test -bench=GetRate
 ```

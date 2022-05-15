@@ -57,12 +57,44 @@ type Products []*Product
 
 // ProductsDB: defines a DB of Product with the currency service
 type ProductsDB struct {
-	currency protos.CurrencyClient
-	log      hclog.Logger
+	currency protos.CurrencyClient                // For registration a currency service
+	log      hclog.Logger                         // For logger
+	rates    map[string]float64                   // For a specific exchanges rates
+	client   protos.Currency_SubscribeRatesClient // For client want to subscribe a interval updated exchanges rates
 }
 
 func NewProductsDB(c protos.CurrencyClient, l hclog.Logger) *ProductsDB {
-	return &ProductsDB{c, l}
+	pb := &ProductsDB{c, l, make(map[string]float64), nil}
+
+	go pb.handleUpdates()
+
+	return pb
+}
+
+// Implement handler to update exchange rates from the currency service.
+func (p *ProductsDB) handleUpdates() {
+	// call subscriber handler from the currency service.
+	sub, err := p.currency.SubscribeRates(context.Background())
+	if err != nil {
+		p.log.Error("Unable to subscribe for rates", "error", err)
+	}
+
+	// assign subscriber handler to client.
+	// right now, client can follow any changes on currency
+	p.client = sub
+
+	// wait updating
+	for {
+		rr, err := sub.Recv()
+		p.log.Info("Recieved updated rate from server", "dest", rr.GetDestination().String())
+
+		if err != nil {
+			p.log.Error("Error receiving message", "error", err)
+			return
+		}
+
+		p.rates[rr.Destination.String()] = rr.Rate
+	}
 }
 
 /************************ Method for Product ************************/
@@ -128,29 +160,29 @@ func (p *ProductsDB) GetProductByID(id int, currency string) (*Product, error) {
 
 /************ POST ************/
 // AddProduct addies a product to list
-func AddProduct(p *Product) {
-	p.ID = getNextID()
-	productList = append(productList, p)
+func (p *ProductsDB) AddProduct(pr *Product) {
+	pr.ID = getNextID()
+	productList = append(productList, pr)
 }
 
 /************ PUT ************/
 // UpdateProduct updates info to product
-func UpdateProduct(p Product) error {
+func (p *ProductsDB) UpdateProduct(pr Product) error {
 
-	i := findIndexByProductID(p.ID)
+	i := findIndexByProductID(pr.ID)
 	if i == -1 {
 		return ErrProductNotFound
 	}
 
 	// update the product in the DB
-	productList[i] = &p
+	productList[i] = &pr
 
 	return nil
 }
 
 /************ DELETE ************/
 // DeleteProduct deletes a product from the database
-func DeleteProduct(id int) error {
+func (p *ProductsDB) DeleteProduct(id int) error {
 	i := findIndexByProductID(id)
 	if i == -1 {
 		return ErrProductNotFound
