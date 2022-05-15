@@ -57,12 +57,44 @@ type Products []*Product
 
 // ProductsDB: defines a DB of Product with the currency service
 type ProductsDB struct {
-	currency protos.CurrencyClient
-	log      hclog.Logger
+	currency protos.CurrencyClient                // For registration a currency service
+	log      hclog.Logger                         // For logger
+	rates    map[string]float64                   // For a specific exchanges rates
+	client   protos.Currency_SubscribeRatesClient // For client want to subscribe a interval updated exchanges rates
 }
 
 func NewProductsDB(c protos.CurrencyClient, l hclog.Logger) *ProductsDB {
-	return &ProductsDB{c, l}
+	pb := &ProductsDB{c, l, make(map[string]float64), nil}
+
+	go pb.handleUpdates()
+
+	return pb
+}
+
+// Implement handler to update exchange rates from the currency service.
+func (p *ProductsDB) handleUpdates() {
+	// call subscriber handler from the currency service.
+	sub, err := p.currency.SubscribeRates(context.Background())
+	if err != nil {
+		p.log.Error("Unable to subscribe for rates", "error", err)
+	}
+
+	// assign subscriber handler to client.
+	// right now, client can follow any changes on currency
+	p.client = sub
+
+	// wait updating
+	for {
+		rr, err := sub.Recv()
+		p.log.Info("Recieved updated rate from server", "dest", rr.GetDestination().String())
+
+		if err != nil {
+			p.log.Error("Error receiving message", "error", err)
+			return
+		}
+
+		p.rates[rr.Destination.String()] = rr.Rate
+	}
 }
 
 /************************ Method for Product ************************/
