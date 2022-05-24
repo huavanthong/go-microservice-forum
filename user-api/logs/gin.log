@@ -1,0 +1,28 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] POST   /api/v1/admin/auth        --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).Authenticate-fm (3 handlers)
+[GIN-debug] POST   /api/v1/users             --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).AddUser-fm (3 handlers)
+[GIN-debug] GET    /api/v1/users/list        --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).ListUsers-fm (3 handlers)
+[GIN-debug] GET    /api/v1/users/detail/:id  --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).GetUserByID-fm (3 handlers)
+[GIN-debug] GET    /api/v1/users/            --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).GetUserByParams-fm (3 handlers)
+[GIN-debug] DELETE /api/v1/users/:id         --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).DeleteUserByID-fm (3 handlers)
+[GIN-debug] PATCH  /api/v1/users             --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).UpdateUser-fm (3 handlers)
+[GIN-debug] GET    /testserver               --> main.main.func1 (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8808
+[GIN] 2022/05/24 - 14:59:06 | 200 |       706.1µs |       127.0.0.1 | GET      "/api/v1/users/list"
+[GIN] 2022/05/24 - 15:06:12 | 200 |      7.0471ms |             ::1 | GET      "/api/v1/users/list"
+[GIN] 2022/05/24 - 15:08:05 | 200 |       427.9µs |             ::1 | GET      "/api/v1/users/list?id=628c847d96e5f01924296021"
+[GIN] 2022/05/24 - 15:08:13 | 200 |       932.7µs |             ::1 | GET      "/api/v1/users/list?id=628c847d96e5f01924296022"
+[GIN] 2022/05/24 - 15:08:23 | 200 |       585.9µs |             ::1 | GET      "/api/v1/users/list?id=628c847d96e5f0192421213213"
+[GIN] 2022/05/24 - 15:08:28 | 200 |       636.3µs |             ::1 | GET      "/api/v1/users/list?id=12321321"
+[GIN] 2022/05/24 - 15:08:50 | 404 |            0s |             ::1 | GET      "/api/v1/detail/?id=628c847d96e5f01924296021"
+[GIN] 2022/05/24 - 15:09:18 | 404 |            0s |             ::1 | GET      "/api/v1/user/detail/?id=628c847d96e5f01924296021"
+[GIN] 2022/05/24 - 15:09:22 | 404 |            0s |             ::1 | GET      "/api/v1/user/detail?id=628c847d96e5f01924296021"
+[GIN] 2022/05/24 - 15:09:35 | 404 |            0s |       127.0.0.1 | GET      "/api/v1/users/detail?id=628c847d96e5f01924296021"
+[GIN] 2022/05/24 - 15:10:07 | 404 |            0s |             ::1 | GET      "/api/v1/user/detail/628c847d96e5f01924296021"

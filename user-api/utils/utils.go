@@ -1,7 +1,7 @@
 /*
  * @File: utils.utils.go
  * @Description: Reusable stuffs for services
- * @Author: Hua Van Thong (seedotech@gmail.com)
+ * @Author: Hua Van Thong (huavanthong14@gmail.com)
  */
 package utils
 
