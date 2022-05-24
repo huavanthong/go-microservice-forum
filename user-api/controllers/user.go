@@ -25,6 +25,8 @@ type User struct {
 }
 
 func (u *User) Authenticate(ctx *gin.Context) {
+
+	// get parameter value from request through PostForm
 	username := ctx.PostForm("user")
 	password := ctx.PostForm("password")
 
