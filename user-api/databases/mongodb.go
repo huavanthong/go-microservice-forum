@@ -10,6 +10,7 @@ import (
 
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/models"
+	log "github.com/sirupsen/logrus"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -39,7 +40,7 @@ func (db *MongoDB) Init() error {
 	db.MgDbSession, err = mgo.DialWithInfo(dialInfo)
 
 	if err != nil {
-		panic("Can't connect to mongo, go error: ")
+		log.Debug("Can't connect to mongo, go error: ", err)
 		return err
 	}
 
