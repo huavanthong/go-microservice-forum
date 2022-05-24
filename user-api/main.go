@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gin-gonic/contrib/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/controllers"
@@ -75,19 +76,22 @@ func main() {
 		admin := v1.Group("/admin")
 		{
 			admin.POST("/auth", c.Authenticate)
-			admin.POST("/auth/login", c.Login)
-			admin.POST("/auth/register", c.Register)
+			// admin.POST("/auth/login", c.Login)
+			// admin.POST("/auth/register", c.Register)
 		}
 
 		user := v1.Group("/users")
 
 		// Todo: Implement APIs need to be authenticated
-		user.POST("", c.AddUser)
-		user.GET("/list", c.ListUsers)
-		user.GET("detail/:id", c.GetUserByID)
-		user.GET("/", c.GetUserByParams)
-		user.DELETE(":id", c.DeleteUserByID)
-		user.PATCH("", c.UpdateUser)
+		user.Use(jwt.Auth(common.Config.JwtSecretPassword))
+		{
+			user.POST("", c.AddUser)
+			user.GET("/list", c.ListUsers)
+			user.GET("detail/:id", c.GetUserByID)
+			user.GET("/", c.GetUserByParams)
+			user.DELETE(":id", c.DeleteUserByID)
+			user.PATCH("", c.UpdateUser)
+		}
 
 	}
 
