@@ -14,6 +14,7 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api/daos"
 	"github.com/huavanthong/microservice-golang/user-api/models"
 	"github.com/huavanthong/microservice-golang/user-api/utils"
+	log "github.com/sirupsen/logrus"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -37,7 +38,7 @@ func (u *User) Authenticate(ctx *gin.Context) {
 		tokenString, err = u.utils.GenerateJWT(username, "")
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
-			fmt.Errorf("[ERROR]: ", err)
+			log.Debug("[ERROR]: ", err)
 			return
 		}
 
@@ -72,10 +73,10 @@ func (u *User) AddUser(ctx *gin.Context) {
 	// write response
 	if err == nil {
 		ctx.JSON(http.StatusOK, models.Message{"Successfully"})
-		fmt.Errorf("Registered a new user = " + user.Name + ", password = " + user.Password)
+		log.Debug("Registered a new user = " + user.Name + ", password = " + user.Password)
 	} else {
 		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
-		fmt.Errorf("[ERROR]: ", err)
+		log.Debug("[ERROR]: ", err)
 	}
 }
 
@@ -93,7 +94,7 @@ func (u *User) ListUsers(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, users)
 	} else {
 		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
-		fmt.Errorf("[ERROR]: ", err)
+		log.Debug("[ERROR]: ", err)
 	}
 
 }
