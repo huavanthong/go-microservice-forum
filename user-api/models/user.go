@@ -7,8 +7,11 @@ package models
 
 import (
 	"errors"
+	"html"
+	"strings"
 
 	"github.com/huavanthong/microservice-golang/user-api/common"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -35,4 +38,29 @@ func (a AddUser) Validate() error {
 	default:
 		return nil
 	}
+}
+
+// Check SQL injection hacking
+func CheckSQLInjection(data AddUser) AddUser {
+
+	var newUser AddUser
+	newUser.Name = Santize(data.Name)
+	newUser.Password = Santize(data.Password)
+}
+
+// Hash a password with bcrypt
+func Hash(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+// Client compare a submit password
+func CheckPasswordHash(hashedPassword, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+}
+
+// Avoid SQL Injection by using santize
+func Santize(data string) string {
+	data = html.EscapeString(strings.TrimSpace(data))
+	return data
 }

@@ -53,7 +53,7 @@ func (u *User) Authenticate(ctx *gin.Context) {
 }
 
 func (u *User) AddUser(ctx *gin.Context) {
-	// bind user info to json
+	// bind user info to json getting context
 	var addUser models.AddUser
 	if err := ctx.ShouldBindJSON(&addUser); err != nil {
 		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
@@ -66,8 +66,11 @@ func (u *User) AddUser(ctx *gin.Context) {
 		return
 	}
 
+	// check sql injection hacking
+	newUser := models.CheckSQLInjection(addUser)
+
 	// create user from models
-	user := models.User{bson.NewObjectId(), addUser.Name, addUser.Password}
+	user := models.User{bson.NewObjectId(), newUser.Name, newUser.Password}
 
 	// insert user to DB
 	err := u.userDAO.Insert(user)

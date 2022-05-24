@@ -11,6 +11,7 @@ require (
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.8.1
 	github.com/swaggo/swag v1.8.2
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 )
