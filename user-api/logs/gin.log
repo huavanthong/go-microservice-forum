@@ -15,14 +15,8 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8808
-[GIN] 2022/05/24 - 14:59:06 | 200 |       706.1µs |       127.0.0.1 | GET      "/api/v1/users/list"
-[GIN] 2022/05/24 - 15:06:12 | 200 |      7.0471ms |             ::1 | GET      "/api/v1/users/list"
-[GIN] 2022/05/24 - 15:08:05 | 200 |       427.9µs |             ::1 | GET      "/api/v1/users/list?id=628c847d96e5f01924296021"
-[GIN] 2022/05/24 - 15:08:13 | 200 |       932.7µs |             ::1 | GET      "/api/v1/users/list?id=628c847d96e5f01924296022"
-[GIN] 2022/05/24 - 15:08:23 | 200 |       585.9µs |             ::1 | GET      "/api/v1/users/list?id=628c847d96e5f0192421213213"
-[GIN] 2022/05/24 - 15:08:28 | 200 |       636.3µs |             ::1 | GET      "/api/v1/users/list?id=12321321"
-[GIN] 2022/05/24 - 15:08:50 | 404 |            0s |             ::1 | GET      "/api/v1/detail/?id=628c847d96e5f01924296021"
-[GIN] 2022/05/24 - 15:09:18 | 404 |            0s |             ::1 | GET      "/api/v1/user/detail/?id=628c847d96e5f01924296021"
-[GIN] 2022/05/24 - 15:09:22 | 404 |            0s |             ::1 | GET      "/api/v1/user/detail?id=628c847d96e5f01924296021"
-[GIN] 2022/05/24 - 15:09:35 | 404 |            0s |       127.0.0.1 | GET      "/api/v1/users/detail?id=628c847d96e5f01924296021"
-[GIN] 2022/05/24 - 15:10:07 | 404 |            0s |             ::1 | GET      "/api/v1/user/detail/628c847d96e5f01924296021"
+[GIN] 2022/05/24 - 16:26:52 | 401 |       835.1µs |             ::1 | POST     "/api/v1/admin/auth?user=hvthong&password=1234"
+[GIN] 2022/05/24 - 16:27:00 | 200 |      1.1193ms |             ::1 | GET      "/api/v1/users/list"
+[GIN-debug] redirecting request 307: /api/v1/users --> /api/v1/users
+[GIN] 2022/05/24 - 16:27:35 | 200 |     14.8838ms |             ::1 | POST     "/api/v1/users"
+[GIN] 2022/05/24 - 16:27:50 | 401 |       654.3µs |             ::1 | POST     "/api/v1/admin/auth?user=giaolinh&password=1234"
