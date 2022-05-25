@@ -1,3 +1,9 @@
+/*
+ * @File: models.profiles.go
+ * @Description: Define profile for user
+ * @Author: Hua Van Thong (huavanthong14@gmail.com)
+ */
+
 package models
 
 import "gopkg.in/mgo.v2/bson"

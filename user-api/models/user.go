@@ -1,7 +1,7 @@
 /*
  * @File: models.user.go
  * @Description: Defines User model
- * @Author: Nguyen Truong Duong (seedotech@gmail.com)
+ * @Author: Hua Van Thong (huavanthong14@gmail.com)
  */
 package models
 
