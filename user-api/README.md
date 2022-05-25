@@ -48,6 +48,13 @@ Register a new user.
 ![ảnh](https://user-images.githubusercontent.com/50081052/170009455-3d0ec92e-3fb1-42d6-bcfc-845f9f5b2ff6.png)
 
 
+### Use CRUD API from server
+Khi xây dựng các API, các mô hình cung cấp bốn loại chức năng cơ bản. Mô hình phải có khả năng **Create, Read, Update, và Delete** tài nguyên. Các nhà khoa học máy tính thường gọi tên các các chức năng này bằng từ viết tắt CRUD. Qua đó, ta có các API như sau:
+1. To read all users from server. Refer: [ListUsers](#get-list-of-users)
+2. Other, please refer to source.
+#### Get list of users
+From token that we get from [Authenticate](#login-with-user), insert to Postman, and call **ListUsers()**.  
+![ảnh](https://user-images.githubusercontent.com/50081052/170165272-ff2aa5b2-d15d-44dc-8bad-13230bd2913f.png)
 
 
 ## Answer Questions

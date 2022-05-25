@@ -76,8 +76,8 @@ func main() {
 		admin := v1.Group("/admin")
 		{
 			admin.POST("/auth", c.Authenticate)
-			admin.POST("/auth/login", c.Login)
-			admin.POST("/auth/register", c.Register)
+			// admin.POST("/auth/login", c.Login)
+			// admin.POST("/auth/register", c.Register)
 		}
 
 		user := v1.Group("/users")

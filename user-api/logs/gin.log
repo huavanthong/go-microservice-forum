@@ -15,4 +15,7 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8808
-[GIN] 2022/05/24 - 16:45:50 | 401 |         516µs |             ::1 | POST     "/api/v1/admin/auth?user=admin&password=admin"
+[GIN] 2022/05/25 - 09:10:55 | 401 |        53.5µs |             ::1 | GET      "/api/v1/users/list"
+Error #01: no token present in request
+[GIN] 2022/05/25 - 09:10:59 | 200 |      1.1333ms |             ::1 | POST     "/api/v1/admin/auth"
+[GIN] 2022/05/25 - 09:12:04 | 200 |      1.0103ms |             ::1 | GET      "/api/v1/users/list"

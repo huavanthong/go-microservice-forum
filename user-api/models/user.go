@@ -46,6 +46,8 @@ func CheckSQLInjection(data AddUser) AddUser {
 	var newUser AddUser
 	newUser.Name = Santize(data.Name)
 	newUser.Password = Santize(data.Password)
+
+	return newUser
 }
 
 // Hash a password with bcrypt
