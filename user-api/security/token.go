@@ -1,9 +1,9 @@
 /*
- * @File: models.token.go
+ * @File: security.token.go
  * @Description: Defines Token information will be returned to the clients
- * @Author: Nguyen Truong Duong (seedotech@gmail.com)
+ * @Author: Hua Van Thong (huavanthong14@gmail.com)
  */
-package models
+package security
 
 // Token string
 type Token struct {

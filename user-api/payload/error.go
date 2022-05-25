@@ -1,9 +1,9 @@
 /*
- * @File: models.token.go
+ * @File: payload.token.go
  * @Description: Defines Error information will be returned to the clients
- * @Author: Nguyen Truong Duong (seedotech@gmail.com)
+ * @Author: Hua Van Thong (huavanthong14@gmail.com)
  */
-package models
+package payload
 
 // Error defines the response error
 type Error struct {
