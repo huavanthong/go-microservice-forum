@@ -1,5 +1,5 @@
 /*
- * @File: payload.token.go
+ * @File: payload.error.go
  * @Description: Defines Error information will be returned to the clients
  * @Author: Hua Van Thong (huavanthong14@gmail.com)
  */

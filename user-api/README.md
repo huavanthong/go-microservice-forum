@@ -19,7 +19,10 @@ This user-api folder is a user microservice. It include some below feautures:
 ├───controllers
 ├───daos
 ├───databases
+├───logs
 ├───models
+├───payload
+├───security
 └───utils
 ```
 Those folders contain:
@@ -28,9 +31,15 @@ Those folders contain:
 * **controllers:** where to expose RESTful API for client.
 * **daos:** where data access to object on mongoDB.
 * **databases:** storage for DB.
+* **logs:** log file.
 * **models:** corresponds to all the data-related logic that the user works with.
+* **payload:** contain message request/response.
+* **security:** contain authentication getting from user.
 * **utils:** implement some utilities for server
 
+# Design Database for User microservice
+* This db is designed for improve user service in the future.
+![ảnh](https://user-images.githubusercontent.com/50081052/170174069-745c221e-134e-43e2-9c68-111684c91935.png)
 
 ## Getting Started
 

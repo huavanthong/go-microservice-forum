@@ -11,14 +11,15 @@ import (
 	"strings"
 
 	"github.com/huavanthong/microservice-golang/user-api/common"
+
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
 )
 
 // User information
 type User struct {
-	ID       bson.ObjectId `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7"`
-	Name     string        `bson:"name" json:"name" example:"raycad"`
+	ID       bson.ObjectId `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7" `
+	Name     string        `bson:"name" json:"name" example:"raycad" `
 	Password string        `bson:"password" json:"password" example:"raycad"`
 }
 
@@ -29,25 +30,28 @@ type AddUser struct {
 }
 
 // Validate user
-func (a AddUser) Validate() error {
+func (a *AddUser) Validate() error {
+
+	// check sql injection hacking
+	a.CheckSQLInjection(*a)
+
 	switch {
 	case len(a.Name) == 0:
 		return errors.New(common.ErrNameEmpty)
 	case len(a.Password) == 0:
 		return errors.New(common.ErrPasswordEmpty)
+
 	default:
 		return nil
 	}
+
 }
 
 // Check SQL injection hacking
-func CheckSQLInjection(data AddUser) AddUser {
+func (a *AddUser) CheckSQLInjection(data AddUser) {
 
-	var newUser AddUser
-	newUser.Name = Santize(data.Name)
-	newUser.Password = Santize(data.Password)
-
-	return newUser
+	(*a).Name = Santize(data.Name)
+	(*a).Password = Santize(data.Password)
 }
 
 // Hash a password with bcrypt
