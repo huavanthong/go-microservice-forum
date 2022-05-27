@@ -102,6 +102,12 @@ func (u *User) Login(name string, password string) (models.User, error) {
 		bson.M{"password": password}},
 	}).One(&user)
 
+	// 	"go.mongodb.org/mongo-driver/mongo"
+	// var result bson.M
+	// err2 := collection.FindOne(bson.M{"name": name}).Decode(&result)
+	// fmt.Println(err2, result)
+	// fmt.Println(result["name"])
+
 	return user, err
 }
 
