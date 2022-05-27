@@ -15,5 +15,4 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8808
-[GIN-debug] redirecting request 307: /api/v1/users --> /api/v1/users
-[GIN] 2022/05/27 - 17:04:23 | 200 |    864.6409ms |             ::1 | POST     "/api/v1/users"
+[GIN] 2022/05/27 - 18:06:12 | 401 |       2.083ms |             ::1 | POST     "/api/v1/admin/auth?user=ntgiaolinh&password=$2a$14$WvFG6HG3jgTL/fS130XjHu/Ndn7YRGap6UIe720PCQxPszpDPFZdu"

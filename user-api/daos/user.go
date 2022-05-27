@@ -7,6 +7,7 @@ package daos
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
@@ -96,17 +97,29 @@ func (u *User) Login(name string, password string) (models.User, error) {
 	// get a collection to execute the query against.
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
+	/********* Design 1: Get user info with username and password *********/
 	var user models.User
 	err := collection.Find(bson.M{"$and": []bson.M{
 		bson.M{"name": name},
 		bson.M{"password": password}},
 	}).One(&user)
 
-	// 	"go.mongodb.org/mongo-driver/mongo"
-	// var result bson.M
-	// err2 := collection.FindOne(bson.M{"name": name}).Decode(&result)
-	// fmt.Println(err2, result)
-	// fmt.Println(result["name"])
+	/********* Design 2: Get user info only with username, then check password by bcrypt *********/
+	var result bson.M
+	err = collection.Find(bson.M{"name": name}).One(&result)
+	fmt.Println(err, result)
+	fmt.Println(result["name"])
+
+	// convert interface to string
+	hashedPassword := fmt.Sprintf("%v", result["password"])
+	fmt.Println("Check 0: ", hashedPassword)
+
+	err = security.CheckPasswordHash(hashedPassword, password)
+	fmt.Println("Check 1", err)
+
+	if err != nil {
+		return user, err
+	}
 
 	return user, err
 }

@@ -138,7 +138,7 @@ func TestAbnormalCaseInvalidFormatColor(t *testing.T) {
 	assert.Len(t, err, 1)
 }
 
-func TestAbnormalCaseLackCountryInfo(t *testing.T) {
+func TestAbnormalCaseMissingCountryReturnsErr(t *testing.T) {
 
 	address := &Address{
 		Street:   "Kinh Duong Vuong",
@@ -148,23 +148,23 @@ func TestAbnormalCaseLackCountryInfo(t *testing.T) {
 		// Country:  "Viet Nam", // ============> error
 	}
 
-	profile := &Profiles{
-		ProfileID:      1,
-		ProfileName:    "Personal Profile",
-		FirstName:      "Thong",
-		LastName:       "Hua Van",
-		Email:          "Badger.Smith@gmail.com",
-		AccountID:      1,
-		Age:            30,
-		PhoneNumber:    "0908354129",
-		DefaultProfile: "Personal Profile",
-		FavouriteColor: "#ff0000",
-		Addresses:      []*Address{address},
-	}
+	// profile := &Profiles{
+	// 	ProfileID:      1,
+	// 	ProfileName:    "Personal Profile",
+	// 	FirstName:      "Thong",
+	// 	LastName:       "Hua Van",
+	// 	Email:          "Badger.Smith@gmail.com",
+	// 	AccountID:      1,
+	// 	Age:            30,
+	// 	PhoneNumber:    "0908354129",
+	// 	DefaultProfile: "Personal Profile",
+	// 	FavouriteColor: "#ff0000",
+	// 	Addresses:      []*Address{address},
+	// }
 
 	v := utils.NewValidation()
 
-	err := v.Validate(profile)
+	err := v.Validate(address)
 
 	assert.Len(t, err, 1)
 }
