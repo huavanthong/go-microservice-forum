@@ -10,7 +10,7 @@ This user-api folder is a user microservice. It include some below feautures:
 * How do you open MongoDB Driver on local machine?
 * When you need to generate JWT Token for a user?
 * How do you enable logger for GIN Framework? or Server? What the difference of them?
-* In building-microservice-go book, Chapter 8: Security, it remind that we never storing passwords in plain text in a datastore. How do you implement this feature? Refer: [here]()
+* In building-microservice-go book, Chapter 8: Security, it remind that we never storing passwords in plain text in a datastore. How do you implement this feature? Refer: [here](#hashing-password)
 
 # Project Structure
 ```
@@ -92,4 +92,6 @@ func Santize(data string) string{
 	return data
 }
 ```
-More details hacking with SQL injection. Refer: [here](https://www.meisternote.com/app/note/uMUTsPEJzQbx/sql-injection)
+More details:
+* About hacking with SQL injection. Refer: [here](https://www.meisternote.com/app/note/uMUTsPEJzQbx/sql-injection)
+* About implementing login with hash password. Refer: [here](https://www.meisternote.com/app/note/MKInhQGqLw4m/security-for-login)

@@ -6,9 +6,12 @@
 package daos
 
 import (
+	"errors"
+
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
 	"github.com/huavanthong/microservice-golang/user-api/models"
+	"github.com/huavanthong/microservice-golang/user-api/security"
 	"github.com/huavanthong/microservice-golang/user-api/utils"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -104,6 +107,13 @@ func (u *User) Login(name string, password string) (models.User, error) {
 
 // Insert adds a new User into database'
 func (u *User) Insert(user models.User) error {
+
+	// hash password using bcrypt
+	password, serr := security.Hash(user.Password)
+	if serr != nil {
+		return errors.New(common.ErrHashPasswordFail)
+	}
+
 	// copy for a newsession with original authentication
 	// to access to MongoDB.
 	sessionCopy := databases.Database.MgDbSession.Copy()
@@ -111,8 +121,12 @@ func (u *User) Insert(user models.User) error {
 	// get a collection to execute the query against.
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
+	// update data for new user
+	var newUser models.User = user
+	newUser.Password = password
+
 	// insert a new user from argument
-	err := collection.Insert(&user)
+	err := collection.Insert(&newUser)
 	return err
 
 }

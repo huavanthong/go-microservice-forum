@@ -41,9 +41,10 @@ const (
 
 // Status Text
 const (
-	ErrNameEmpty      = "Name is empty"
-	ErrPasswordEmpty  = "Password is empty"
-	ErrNotObjectIDHex = "String is not a valid hex representation of an ObjectId"
+	ErrNameEmpty        = "Name is empty"
+	ErrPasswordEmpty    = "Password is empty"
+	ErrHashPasswordFail = "Hash password failed"
+	ErrNotObjectIDHex   = "String is not a valid hex representation of an ObjectId"
 )
 
 // Status Code
