@@ -89,6 +89,9 @@ func (u *User) DeleteByID(id string) error {
 // Login User
 func (u *User) Login(name string, password string) (models.User, error) {
 
+	var err error
+	var user models.User
+
 	// copy for a newsession with original authentication
 	// to access to MongoDB.
 	sessionCopy := databases.Database.MgDbSession.Copy()
@@ -98,27 +101,26 @@ func (u *User) Login(name string, password string) (models.User, error) {
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
 	/********* Design 1: Get user info with username and password *********/
-	var user models.User
-	err := collection.Find(bson.M{"$and": []bson.M{
-		bson.M{"name": name},
-		bson.M{"password": password}},
-	}).One(&user)
+	if name == "admin" {
+		err = collection.Find(bson.M{"$and": []bson.M{
+			bson.M{"name": name},
+			bson.M{"password": password}},
+		}).One(&user)
 
-	/********* Design 2: Get user info only with username, then check password by bcrypt *********/
-	var result bson.M
-	err = collection.Find(bson.M{"name": name}).One(&result)
-	fmt.Println(err, result)
-	fmt.Println(result["name"])
+	} else {
+		/********* Design 2: Get user info only with username, then check password by bcrypt *********/
+		var result bson.M
+		err = collection.Find(bson.M{"name": name}).One(&result)
+		fmt.Println(err, result)
+		fmt.Println(result["name"])
 
-	// convert interface to string
-	hashedPassword := fmt.Sprintf("%v", result["password"])
-	fmt.Println("Check 0: ", hashedPassword)
+		// convert interface to string
+		hashedPassword := fmt.Sprintf("%v", result["password"])
 
-	err = security.CheckPasswordHash(hashedPassword, password)
-	fmt.Println("Check 1", err)
-
-	if err != nil {
-		return user, err
+		err = security.CheckPasswordHash(hashedPassword, password)
+		if err != nil {
+			return user, err
+		}
 	}
 
 	return user, err
