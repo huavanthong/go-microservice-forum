@@ -11,6 +11,7 @@ This user-api folder is a user microservice. It include some below feautures:
 * When you need to generate JWT Token for a user?
 * How do you enable logger for GIN Framework? or Server? What the difference of them?
 * In building-microservice-go book, Chapter 8: Security, it remind that we never storing passwords in plain text in a datastore. How do you implement this feature? Refer: [here](#hashing-password)
+* Implement **Unit Test** with Gin framework? Refer: [here](https://circleci.com/blog/gin-gonic-testing/)
 
 # Project Structure
 ```
