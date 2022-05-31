@@ -7,7 +7,7 @@
 package models
 
 // User contains user information
-type Profiles struct {
+type Profile struct {
 	ProfileID      int        `bson:"profileid" json:"id" validate:"required,gt=0" example:"1"`
 	ProfileName    string     `bson:"profilename" json:"profilename"`
 	FirstName      string     `bson:"firstname" json:"firstname" validate:"required"`

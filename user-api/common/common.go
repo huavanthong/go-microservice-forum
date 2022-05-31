@@ -35,8 +35,9 @@ var (
 
 // COLLECTIONs of the database table
 const (
-	ColUsers  = "users"
-	ColMovies = "movies"
+	ColUsers   = "users"
+	ColMovies  = "movies"
+	ColProfile = "profiles"
 )
 
 // Status Text
