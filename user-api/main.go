@@ -97,9 +97,9 @@ func main() {
 		profile := v1.Group("/profile")
 		profile.Use(jwt.Auth(common.Config.JwtSecretPassword))
 		{
-			profile.POST("", profile.AddProfile)
-			profile.GET("", profile.GetProfileByUserId)
-			profile.PUT("", profile.UpdateProfileByUserId)
+			profile.POST(":userid", profile.AddProfile)
+			profile.GET(":userid", profile.GetProfileByUserId)
+			profile.PUT(":userid", profile.UpdateProfileByUserId)
 			profile.DELETE(":userid", profile.DeteleProfileByUserId)
 
 		}

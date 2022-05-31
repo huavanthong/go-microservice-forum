@@ -36,7 +36,7 @@ func (p *Profile) GetProfileByUserId() (models.Profile, error) {
 }
 
 // Insert adds a new profile by specific user into database'
-func (u *Profile) Insert(profile models.Profile) error {
+func (p *Profile) Insert(profile models.Profile) error {
 
 	// copy for a newsession with original authentication
 	// to access to MongoDB.
@@ -49,4 +49,42 @@ func (u *Profile) Insert(profile models.Profile) error {
 	err := collection.Insert(&profile)
 	return err
 
+}
+
+// DeleteByID finds a Profile by user id
+func (p *Profile) DeleteByUserID(id string) error {
+
+	// validate user id
+	err := p.utils.ValidateObjectID(id)
+	if err != nil {
+		return err
+	}
+
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbSession.Copy()
+	defer sessionCopy.Close()
+
+	// get a collection to execute the query against
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
+
+	// delete user by id
+	err = collection.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+
+	return err
+}
+
+// Update modifies an existing User
+func (p *Profile) Update(profile models.Profile) error {
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbSession.Copy()
+	defer sessionCopy.Close()
+
+	// get a collection to execute the query against.
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
+
+	// update user by id
+	err := collection.UpdateId(profile.ID, &profile)
+	return err
 }

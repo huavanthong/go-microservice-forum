@@ -6,6 +6,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,13 +20,31 @@ import (
 
 // Define profile manages
 type Profile struct {
-	utils       utils.Utils
-	profileDaos daos.Profile
+	utils      utils.Utils
+	profileDAO daos.Profile
 }
 
-func (u *Profile) AddProfile(ctx *gin.Context) {
+// GetProfileByUserId get a profile by user id in DB
+func (u *Profile) GetProfileByUserId(ctx *gin.Context) {
+
+	// filter parameter id from context
+	id := ctx.Params.ByName("userid")
+
+	// find user by id
+	user, err := u.profileDAO.GetProfileByUserId(id)
+
+	// write response
+	if err == nil {
+		ctx.JSON(http.StatusOK, user)
+	} else {
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
+		fmt.Errorf("[ERROR]: ", err)
+	}
+}
+
+func (p *Profile) AddProfile(ctx *gin.Context) {
 	// bind profile info to json getting context
-	var p models.Profile
+	var mp models.Profile
 	if err := ctx.ShouldBindJSON(&p); err != nil {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
@@ -51,19 +70,19 @@ func (u *Profile) AddProfile(ctx *gin.Context) {
 	// create profile from models
 	profile := models.Profile{
 		bson.NewObjectId(),
-		p.ProfileName,
-		p.FirstName,
-		p.LastName,
-		p.Email,
-		p.AccountID,
-		p.Age,
-		p.PhoneNumber,
-		p.DefaultProfile,
-		p.FavouriteColor,
+		mp.ProfileName,
+		mp.FirstName,
+		mp.LastName,
+		mp.Email,
+		mp.AccountID,
+		mp.Age,
+		mp.PhoneNumber,
+		mp.DefaultProfile,
+		mp.FavouriteColor,
 		address}
 
 	// insert user to DB
-	err = u.profileDaos.Insert(profile)
+	err = p.profileDAO.Insert(profile)
 
 	// write response
 	if err == nil {
@@ -72,5 +91,43 @@ func (u *Profile) AddProfile(ctx *gin.Context) {
 	} else {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		log.Debug("[ERROR]: ", err)
+	}
+}
+
+func (p *Profile) DeteleProfileByUserId(ctx *gin.Context) {
+	// filter parameter id context
+	id := ctx.Params.ByName("userid")
+
+	// delete user by id
+	err := p.profileDAO.DeleteByUserID(id)
+
+	// write response
+	if err == nil {
+		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
+	} else {
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
+		fmt.Errorf("[ERROR]: ", err)
+	}
+}
+
+func (p *Profile) UpdateProfileByUserId(ctx *gin.Context) {
+
+	// bind user data to json
+	var profile models.Profile
+	if err := ctx.ShouldBindJSON(&profile); err != nil {
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
+		return
+	}
+
+	// update user by user
+	err := p.profileDAO.Update(profile)
+
+	// write response
+	if err == nil {
+		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
+		fmt.Errorf("Update a new user = " + profile.Name + ", password = " + profile.Password)
+	} else {
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
+		fmt.Errorf("[ERROR]: ", err)
 	}
 }
