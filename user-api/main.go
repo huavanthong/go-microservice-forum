@@ -75,9 +75,10 @@ func main() {
 	{
 		admin := v1.Group("/admin")
 		{
-			admin.POST("/auth", c.Authenticate)
-			// admin.POST("/auth/login", c.Login)
-			// admin.POST("/auth/register", c.Register)
+			admin.POST("/auth/signin", c.Authenticate)
+			admin.POST("/auth/signin/social", c.AuthSocial)
+			admin.POST("/auth/signin/webadmin", c.AuthWebAdmin)
+
 		}
 
 		user := v1.Group("/users")
@@ -85,12 +86,19 @@ func main() {
 		// Todo: Implement APIs need to be authenticated
 		user.Use(jwt.Auth(common.Config.JwtSecretPassword))
 		{
-			user.POST("", c.AddUser)
+			user.POST("/register", c.AddUser)
 			user.GET("/list", c.ListUsers)
 			user.GET("detail/:id", c.GetUserByID)
 			user.GET("/", c.GetUserByParams)
 			user.DELETE(":id", c.DeleteUserByID)
 			user.PATCH("", c.UpdateUser)
+		}
+
+		profile := v1.Group("/profile/:userid")
+		profile.Use(jwt.Auth(common.Config.JwtSecretPassword))
+		{
+			profile.POST("")
+			profile.GET("/list")
 		}
 
 	}
