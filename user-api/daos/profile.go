@@ -19,18 +19,25 @@ type Profile struct {
 }
 
 // GetProfileByUserId gets the profile by specific user id
-func (p *Profile) GetProfileByUserId() (models.Profile, error) {
+func (p *Profile) GetProfileByUserId(userid string) (models.Profile, error) {
+
+	// validate user id
+	err := p.utils.ValidateObjectID(userid)
+	if err != nil {
+		return models.Profile{}, err
+	}
+
 	// copy for a newsession with original authentication
 	// to access to MongoDB.
 	sessionCopy := databases.Database.MgDbSession.Copy()
 	defer sessionCopy.Close()
 
-	// get a collection to execute the query against.
-	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
+	// get a collection to execute the query against
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
-	// query all users in MongoDB and store it to array
+	// find a user by id
 	var profile models.Profile
-	err := collection.Find(bson.M{}).All(&profile)
+	err = collection.FindId(bson.ObjectIdHex(userid)).One(&profile)
 
 	return profile, err
 }
@@ -85,6 +92,6 @@ func (p *Profile) Update(profile models.Profile) error {
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
 
 	// update user by id
-	err := collection.UpdateId(profile.ID, &profile)
+	err := collection.UpdateId(profile.ProfileID, &profile)
 	return err
 }

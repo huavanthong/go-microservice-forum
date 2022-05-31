@@ -6,19 +6,21 @@
 
 package models
 
+import "gopkg.in/mgo.v2/bson"
+
 // User contains user information
 type Profile struct {
-	ProfileID      int        `bson:"profileid" json:"id" validate:"required,gt=0" example:"1"`
-	ProfileName    string     `bson:"profilename" json:"profilename"`
-	FirstName      string     `bson:"firstname" json:"firstname" validate:"required"`
-	LastName       string     `bson:"lastname" json:"lastname" validate:"required"`
-	Email          string     `bson:"email" json:"email" validate:"required,email"`
-	AccountID      int        `bson:"accountid" json:"accountid" validate:"required"`
-	Age            uint8      `bson:"age" json:"age" validate:"gte=0,lte=130"`
-	PhoneNumber    string     `bson:"phonenumber" json:"phonenumber" validate:"required"`
-	DefaultProfile string     `bson:"defaultprofile" json:"defaultprofile"`
-	FavouriteColor string     `bson:"favouritecolor" json:"favouritecolor" validate:"iscolor" example:"#000-"` // alias for 'hexcolor|rgb|rgba|hsl|hsla'
-	Addresses      []*Address `bson:"addresses" json"addresses" validate:"required,dive,required"`             // a person can have a home and cottage...
+	ProfileID      bson.ObjectId `bson:"_profileid" json:"profileid" validate:"required,gt=0" example:"1"`
+	ProfileName    string        `bson:"profilename" json:"profilename"`
+	FirstName      string        `bson:"firstname" json:"firstname" validate:"required"`
+	LastName       string        `bson:"lastname" json:"lastname" validate:"required"`
+	Email          string        `bson:"email" json:"email" validate:"required,email"`
+	AccountID      int           `bson:"accountid" json:"accountid" validate:"required"`
+	Age            uint8         `bson:"age" json:"age" validate:"gte=0,lte=130"`
+	PhoneNumber    string        `bson:"phonenumber" json:"phonenumber" validate:"required"`
+	DefaultProfile string        `bson:"defaultprofile" json:"defaultprofile"`
+	FavouriteColor string        `bson:"favouritecolor" json:"favouritecolor" validate:"iscolor" example:"#000-"` // alias for 'hexcolor|rgb|rgba|hsl|hsla'
+	Addresses      []*Address    `bson:"addresses" json"addresses" validate:"required,dive,required"`             // a person can have a home and cottage...
 }
 
 // Address houses a users address information

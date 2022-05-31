@@ -6,11 +6,13 @@
 package controllers
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/user-api/common"
+	"github.com/huavanthong/microservice-golang/user-api/daos"
 	"github.com/huavanthong/microservice-golang/user-api/models"
 	"github.com/huavanthong/microservice-golang/user-api/payload"
 	"github.com/huavanthong/microservice-golang/user-api/utils"
@@ -28,10 +30,10 @@ type Profile struct {
 func (u *Profile) GetProfileByUserId(ctx *gin.Context) {
 
 	// filter parameter id from context
-	id := ctx.Params.ByName("userid")
+	userId := ctx.Params.ByName("userid")
 
 	// find user by id
-	user, err := u.profileDAO.GetProfileByUserId(id)
+	user, err := u.profileDAO.GetProfileByUserId(userId)
 
 	// write response
 	if err == nil {
@@ -45,7 +47,7 @@ func (u *Profile) GetProfileByUserId(ctx *gin.Context) {
 func (p *Profile) AddProfile(ctx *gin.Context) {
 	// bind profile info to json getting context
 	var mp models.Profile
-	if err := ctx.ShouldBindJSON(&p); err != nil {
+	if err := ctx.ShouldBindJSON(&mp); err != nil {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
 	}
@@ -53,9 +55,10 @@ func (p *Profile) AddProfile(ctx *gin.Context) {
 	// validate data on profile of user
 	v := utils.NewValidation()
 
-	err := v.Validate(p)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
+	verr := v.Validate(mp)
+	if verr != nil {
+		err1 := errors.New("Todo: Fix this issue")
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err1.Error()})
 		return
 	}
 
@@ -79,17 +82,18 @@ func (p *Profile) AddProfile(ctx *gin.Context) {
 		mp.PhoneNumber,
 		mp.DefaultProfile,
 		mp.FavouriteColor,
-		address}
+		[]*models.Address{address}}
 
 	// insert user to DB
-	err = p.profileDAO.Insert(profile)
+	err := p.profileDAO.Insert(profile)
 
 	// write response
 	if err == nil {
 		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
-		log.Debug("Create profile = " + profile.Name + ", password = " + profile.Password)
+		log.Debug("Create profile name = " + profile.ProfileName + ", firstname = " + profile.FirstName)
 	} else {
-		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
+		err1 := errors.New("Todo: Fix this issue")
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err1.Error()})
 		log.Debug("[ERROR]: ", err)
 	}
 }
@@ -125,7 +129,7 @@ func (p *Profile) UpdateProfileByUserId(ctx *gin.Context) {
 	// write response
 	if err == nil {
 		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
-		fmt.Errorf("Update a new user = " + profile.Name + ", password = " + profile.Password)
+		fmt.Errorf("Update profile name = " + profile.ProfileName + ", firtname = " + profile.FirstName)
 	} else {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		fmt.Errorf("[ERROR]: ", err)

@@ -68,16 +68,17 @@ func main() {
 	defer databases.Database.Close()
 
 	// init a controllers
-	c := controllers.User{}
+	u := controllers.User{}
+	p := controllers.Profile{}
 
 	// simple group: v1
 	v1 := m.router.Group("/api/v1")
 	{
 		admin := v1.Group("/admin")
 		{
-			admin.POST("/auth/signin", c.Authenticate)
-			admin.POST("/auth/signin/social", c.AuthSocial)
-			admin.POST("/auth/signin/webadmin", c.AuthWebAdmin)
+			admin.POST("/auth/signin", u.Authenticate)
+			// admin.POST("/auth/signin/social", c.AuthSocial)
+			// admin.POST("/auth/signin/webadmin", c.AuthWebAdmin)
 
 		}
 
@@ -86,21 +87,21 @@ func main() {
 		// Todo: Implement APIs need to be authenticated
 		user.Use(jwt.Auth(common.Config.JwtSecretPassword))
 		{
-			user.POST("", c.AddUser)
-			user.GET("/list", c.ListUsers)
-			user.GET("detail/:id", c.GetUserByID)
-			user.GET("/", c.GetUserByParams)
-			user.DELETE(":id", c.DeleteUserByID)
-			user.PATCH("", c.UpdateUser)
+			user.POST("", u.AddUser)
+			user.GET("/list", u.ListUsers)
+			user.GET("detail/:id", u.GetUserByID)
+			user.GET("/", u.GetUserByParams)
+			user.DELETE(":id", u.DeleteUserByID)
+			user.PATCH("", u.UpdateUser)
 		}
 
 		profile := v1.Group("/profile")
 		profile.Use(jwt.Auth(common.Config.JwtSecretPassword))
 		{
-			profile.POST(":userid", profile.AddProfile)
-			profile.GET(":userid", profile.GetProfileByUserId)
-			profile.PUT(":userid", profile.UpdateProfileByUserId)
-			profile.DELETE(":userid", profile.DeteleProfileByUserId)
+			profile.POST(":userid", p.AddProfile)
+			profile.GET(":userid", p.GetProfileByUserId)
+			profile.PUT(":userid", p.UpdateProfileByUserId)
+			profile.DELETE(":userid", p.DeteleProfileByUserId)
 
 		}
 
