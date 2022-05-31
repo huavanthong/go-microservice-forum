@@ -170,7 +170,7 @@ func (u *User) UpdateUser(ctx *gin.Context) {
 	// write response
 	if err == nil {
 		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
-		fmt.Errorf("Registered a new user = " + user.Name + ", password = " + user.Password)
+		fmt.Errorf("Update a new user = " + user.Name + ", password = " + user.Password)
 	} else {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		fmt.Errorf("[ERROR]: ", err)
