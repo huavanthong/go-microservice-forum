@@ -86,7 +86,7 @@ func main() {
 		// Todo: Implement APIs need to be authenticated
 		user.Use(jwt.Auth(common.Config.JwtSecretPassword))
 		{
-			user.POST("/register", c.AddUser)
+			user.POST("", c.AddUser)
 			user.GET("/list", c.ListUsers)
 			user.GET("detail/:id", c.GetUserByID)
 			user.GET("/", c.GetUserByParams)
@@ -94,11 +94,14 @@ func main() {
 			user.PATCH("", c.UpdateUser)
 		}
 
-		profile := v1.Group("/profile/:userid")
+		profile := v1.Group("/profile")
 		profile.Use(jwt.Auth(common.Config.JwtSecretPassword))
 		{
-			profile.POST("")
-			profile.GET("/list")
+			profile.POST("", profile.AddProfile)
+			profile.GET("", profile.GetProfileByUserId)
+			profile.PUT("", profile.UpdateProfileByUserId)
+			profile.DELETE(":userid", profile.DeteleProfileByUserId)
+
 		}
 
 	}
