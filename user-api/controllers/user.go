@@ -13,6 +13,8 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/daos"
 	"github.com/huavanthong/microservice-golang/user-api/models"
+	"github.com/huavanthong/microservice-golang/user-api/payload"
+	"github.com/huavanthong/microservice-golang/user-api/security"
 	"github.com/huavanthong/microservice-golang/user-api/utils"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/mgo.v2/bson"
@@ -25,6 +27,8 @@ type User struct {
 }
 
 func (u *User) Authenticate(ctx *gin.Context) {
+
+	// get parameter value from request through PostForm
 	username := ctx.PostForm("user")
 	password := ctx.PostForm("password")
 
@@ -37,30 +41,30 @@ func (u *User) Authenticate(ctx *gin.Context) {
 		// Generate token string
 		tokenString, err = u.utils.GenerateJWT(username, "")
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+			ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 			log.Debug("[ERROR]: ", err)
 			return
 		}
 
-		token := models.Token{tokenString}
+		token := security.Token{tokenString}
 		// Return token string to the client
 		ctx.JSON(http.StatusOK, token)
 	} else {
-		ctx.JSON(http.StatusUnauthorized, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusUnauthorized, payload.Error{common.StatusCodeUnknown, err.Error()})
 	}
 }
 
 func (u *User) AddUser(ctx *gin.Context) {
-	// bind user info to json
+	// bind user info to json getting context
 	var addUser models.AddUser
 	if err := ctx.ShouldBindJSON(&addUser); err != nil {
-		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
 	}
 
 	// validate data on user
 	if err := addUser.Validate(); err != nil {
-		ctx.JSON(http.StatusBadRequest, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
 	}
 
@@ -72,10 +76,10 @@ func (u *User) AddUser(ctx *gin.Context) {
 
 	// write response
 	if err == nil {
-		ctx.JSON(http.StatusOK, models.Message{"Successfully"})
+		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
 		log.Debug("Registered a new user = " + user.Name + ", password = " + user.Password)
 	} else {
-		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		log.Debug("[ERROR]: ", err)
 	}
 }
@@ -93,7 +97,7 @@ func (u *User) ListUsers(ctx *gin.Context) {
 	if err == nil {
 		ctx.JSON(http.StatusOK, users)
 	} else {
-		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		log.Debug("[ERROR]: ", err)
 	}
 
@@ -112,7 +116,7 @@ func (u *User) GetUserByID(ctx *gin.Context) {
 	if err == nil {
 		ctx.JSON(http.StatusOK, user)
 	} else {
-		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		fmt.Errorf("[ERROR]: ", err)
 	}
 }
@@ -130,7 +134,7 @@ func (u *User) GetUserByParams(ctx *gin.Context) {
 	if err == nil {
 		ctx.JSON(http.StatusOK, user)
 	} else {
-		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		fmt.Errorf("[ERROR]: ", err)
 	}
 }
@@ -144,9 +148,9 @@ func (u *User) DeleteUserByID(ctx *gin.Context) {
 
 	// write response
 	if err == nil {
-		ctx.JSON(http.StatusOK, models.Message{"Successfully"})
+		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
 	} else {
-		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		fmt.Errorf("[ERROR]: ", err)
 	}
 }
@@ -156,7 +160,7 @@ func (u *User) UpdateUser(ctx *gin.Context) {
 	// bind user data to json
 	var user models.User
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
 	}
 
@@ -165,10 +169,10 @@ func (u *User) UpdateUser(ctx *gin.Context) {
 
 	// write response
 	if err == nil {
-		ctx.JSON(http.StatusOK, models.Message{"Successfully"})
-		fmt.Errorf("Registered a new user = " + user.Name + ", password = " + user.Password)
+		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
+		fmt.Errorf("Update a new user = " + user.Name + ", password = " + user.Password)
 	} else {
-		ctx.JSON(http.StatusInternalServerError, models.Error{common.StatusCodeUnknown, err.Error()})
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		fmt.Errorf("[ERROR]: ", err)
 	}
 }

@@ -1,1 +1,10 @@
 {"level":"debug","msg":"Registered a new user = giaolinh, password = 1234","time":"2022-05-24T16:27:35+07:00"}
+{"level":"debug","msg":"Registered a new user = giao linh 1 = 1, password = 1234","time":"2022-05-25T09:22:58+07:00"}
+{"level":"debug","msg":"Registered a new user = giao linh 1 = 1, password = 1234","time":"2022-05-25T09:30:23+07:00"}
+{"level":"debug","msg":"Registered a new user = giao linh 1 = 1, password = 1234","time":"2022-05-25T09:31:58+07:00"}
+{"level":"debug","msg":"Registered a new user = giao linh  or 1=1, password = 1234","time":"2022-05-25T09:34:58+07:00"}
+{"level":"debug","msg":"Registered a new user = giao linh  or 1\u0026amp;1, password = 1234","time":"2022-05-25T09:35:49+07:00"}
+{"level":"debug","msg":"[ERROR]: ObjectIDs must be exactly 12 bytes long (got 0)","time":"2022-05-27T16:59:59+07:00"}
+{"level":"debug","msg":"[ERROR]: ObjectIDs must be exactly 12 bytes long (got 0)","time":"2022-05-27T17:01:19+07:00"}
+{"level":"debug","msg":"Registered a new user = ntgiaolinh, password = 1234","time":"2022-05-27T17:04:23+07:00"}
+{"level":"debug","msg":"Registered a new user = ntgiaolinh, password = 1234","time":"2022-05-29T14:49:52+07:00"}

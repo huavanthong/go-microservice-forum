@@ -1,9 +1,9 @@
 /*
- * @File: models.message.go
+ * @File: payload.message.go
  * @Description: Defines Message information will be returned to the clients
- * @Author: Nguyen Truong Duong (seedotech@gmail.com)
+ * @Author: Hua Van Thong (huavanthong14@gmail.com)
  */
-package models
+package payload
 
 // Message defines the response message
 type Message struct {

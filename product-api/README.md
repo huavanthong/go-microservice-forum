@@ -4,7 +4,9 @@ This project will help you implement a microservice project.
 # Question
 * [What is the redox middleware?]()
 # Table of Contents
-* [How to implement a validate for product-api]
+1. How to implement a validate for product-api. [here](#desin-validate-in-the-same-of-product)
+2. How to implement a validate for product-api. [here](#desin-validate-in-the-same-of-product)
+
 
 # Design
 ### Desin validate in the same of product 

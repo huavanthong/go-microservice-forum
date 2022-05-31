@@ -6,9 +6,13 @@
 package daos
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
 	"github.com/huavanthong/microservice-golang/user-api/models"
+	"github.com/huavanthong/microservice-golang/user-api/security"
 	"github.com/huavanthong/microservice-golang/user-api/utils"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -85,6 +89,9 @@ func (u *User) DeleteByID(id string) error {
 // Login User
 func (u *User) Login(name string, password string) (models.User, error) {
 
+	var err error
+	var user models.User
+
 	// copy for a newsession with original authentication
 	// to access to MongoDB.
 	sessionCopy := databases.Database.MgDbSession.Copy()
@@ -93,17 +100,41 @@ func (u *User) Login(name string, password string) (models.User, error) {
 	// get a collection to execute the query against.
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
-	var user models.User
-	err := collection.Find(bson.M{"$and": []bson.M{
-		bson.M{"name": name},
-		bson.M{"password": password}},
-	}).One(&user)
+	/********* Design 1: Get user info with username and password *********/
+	if name == "admin" {
+		err = collection.Find(bson.M{"$and": []bson.M{
+			bson.M{"name": name},
+			bson.M{"password": password}},
+		}).One(&user)
+
+	} else {
+		/********* Design 2: Get user info only with username, then check password by bcrypt *********/
+		var result bson.M
+		err = collection.Find(bson.M{"name": name}).One(&result)
+		fmt.Println(err, result)
+		fmt.Println(result["name"])
+
+		// convert interface to string
+		hashedPassword := fmt.Sprintf("%v", result["password"])
+
+		err = security.CheckPasswordHash(hashedPassword, password)
+		if err != nil {
+			return user, err
+		}
+	}
 
 	return user, err
 }
 
 // Insert adds a new User into database'
 func (u *User) Insert(user models.User) error {
+
+	// hash password using bcrypt
+	password, serr := security.Hash(user.Password)
+	if serr != nil {
+		return errors.New(common.ErrHashPasswordFail)
+	}
+
 	// copy for a newsession with original authentication
 	// to access to MongoDB.
 	sessionCopy := databases.Database.MgDbSession.Copy()
@@ -111,8 +142,12 @@ func (u *User) Insert(user models.User) error {
 	// get a collection to execute the query against.
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
+	// update data for new user
+	var newUser models.User = user
+	newUser.Password = password
+
 	// insert a new user from argument
-	err := collection.Insert(&user)
+	err := collection.Insert(&newUser)
 	return err
 
 }
