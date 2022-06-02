@@ -10,7 +10,7 @@
     "host": "127.0.0.1:8808",
     "basePath": "/api/v1",
     "paths": {
-        "/admin/auth": {
+        "/admin/auth/signin": {
             "post": {
                 "security": [
                     {

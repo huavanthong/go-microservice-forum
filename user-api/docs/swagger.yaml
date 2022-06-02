@@ -50,7 +50,7 @@ info:
   title: UserManagement Service API Document
   version: "1.0"
 paths:
-  /admin/auth:
+  /admin/auth/signin:
     post:
       consumes:
       - multipart/form-data

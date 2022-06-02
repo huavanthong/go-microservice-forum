@@ -37,7 +37,7 @@ type User struct {
 // @Failure 401 {object} payload.Error
 // @Failure 500 {object} payload.Error
 // @Success 200 {object} security.Token
-// @Router /admin/auth [post]
+// @Router /admin/auth/signin [post]
 func (u *User) Authenticate(ctx *gin.Context) {
 
 	// get parameter value from request through PostForm
