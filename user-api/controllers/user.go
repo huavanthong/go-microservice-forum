@@ -34,9 +34,9 @@ type User struct {
 // @Accept  multipart/form-data
 // @Param user formData string true "Username"
 // @Param password formData string true "Password"
-// @Failure 401 {object} models.Error
-// @Failure 500 {object} models.Error
-// @Success 200 {object} models.Token
+// @Failure 401 {object} payload.Error
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} security.Token
 // @Router /admin/auth [post]
 func (u *User) Authenticate(ctx *gin.Context) {
 
@@ -74,9 +74,9 @@ func (u *User) Authenticate(ctx *gin.Context) {
 // @Produce  json
 // @Param Authorization header string true "Token"
 // @Param user body models.AddUser true "Add user"
-// @Failure 500 {object} models.Error
-// @Failure 400 {object} models.Error
-// @Success 200 {object} models.Message
+// @Failure 500 {object} payload.Error
+// @Failure 400 {object} payload.Error
+// @Success 200 {object} payload.Message
 // @Router /users [post]
 func (u *User) AddUser(ctx *gin.Context) {
 	// bind user info to json getting context
@@ -115,7 +115,7 @@ func (u *User) AddUser(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param Authorization header string true "Token"
-// @Failure 500 {object} models.Error
+// @Failure 500 {object} payload.Error
 // @Success 200 {array} models.User
 // @Router /users/list [get]
 // ListUsers get all users exist in DB
@@ -145,7 +145,7 @@ func (u *User) ListUsers(ctx *gin.Context) {
 // @Produce  json
 // @Param Authorization header string true "Token"
 // @Param id path string true "User ID"
-// @Failure 500 {object} models.Error
+// @Failure 500 {object} payload.Error
 // @Success 200 {object} models.User
 // @Router /users/detail/{id} [get]
 // GetUserByID get a user by id in DB
@@ -174,7 +174,7 @@ func (u *User) GetUserByID(ctx *gin.Context) {
 // @Produce  json
 // @Param Authorization header string true "Token"
 // @Param id query string true "User ID"
-// @Failure 500 {object} models.Error
+// @Failure 500 {object} payload.Error
 // @Success 200 {object} models.User
 // @Router /users [get]
 // GetUserByID get a user by id in DB
@@ -203,8 +203,8 @@ func (u *User) GetUserByParams(ctx *gin.Context) {
 // @Produce  json
 // @Param Authorization header string true "Token"
 // @Param id path string true "User ID"
-// @Failure 500 {object} models.Error
-// @Success 200 {object} models.Message
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} payload.Message
 // @Router /users/{id} [delete]
 func (u *User) DeleteUserByID(ctx *gin.Context) {
 	// filter parameter id context
@@ -230,8 +230,8 @@ func (u *User) DeleteUserByID(ctx *gin.Context) {
 // @Produce  json
 // @Param Authorization header string true "Token"
 // @Param user body models.User true "User ID"
-// @Failure 500 {object} models.Error
-// @Success 200 {object} models.Message
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} payload.Message
 // @Router /users [patch]
 func (u *User) UpdateUser(ctx *gin.Context) {
 
