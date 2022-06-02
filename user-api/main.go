@@ -15,6 +15,9 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/controllers"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
+
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 // Main manages main golang application
@@ -117,6 +120,8 @@ func main() {
 	m.router.GET("/testserver", func(c *gin.Context) {
 		c.String(http.StatusOK, "pong")
 	})
+
+	m.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	m.router.Run(common.Config.Port)
 
