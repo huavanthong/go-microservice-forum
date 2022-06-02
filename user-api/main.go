@@ -16,6 +16,8 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api/controllers"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
 
+	_ "github.com/huavanthong/microservice-golang/user-api/docs"
+
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
@@ -54,6 +56,12 @@ func (m *Main) initServer() error {
 	}
 
 	m.router = gin.Default()
+
+	// Design 1: cors with default
+	// m.router.Use(cors.Default())
+
+	// Design 2: customer cors
+	m.router.Use(CORSMiddleware())
 
 	return nil
 }
@@ -125,4 +133,20 @@ func main() {
 
 	m.router.Run(common.Config.Port)
 
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
