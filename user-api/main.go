@@ -55,6 +55,13 @@ func (m *Main) initServer() error {
 	return nil
 }
 
+// @title UserManagement Service API Document
+// @version 1.0
+// @description List APIs of UserManagement Service
+// @termsOfService http://swagger.io/terms/
+
+// @host 127.0.0.1:8808
+// @BasePath /api/v1
 func main() {
 
 	// init application

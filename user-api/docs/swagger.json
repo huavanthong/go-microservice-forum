@@ -1,0 +1,13 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "List APIs of UserManagement Service",
+        "title": "UserManagement Service API Document",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "127.0.0.1:8808",
+    "basePath": "/api/v1",
+    "paths": {}
+}

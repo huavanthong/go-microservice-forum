@@ -1,0 +1,10 @@
+basePath: /api/v1
+host: 127.0.0.1:8808
+info:
+  contact: {}
+  description: List APIs of UserManagement Service
+  termsOfService: http://swagger.io/terms/
+  title: UserManagement Service API Document
+  version: "1.0"
+paths: {}
+swagger: "2.0"
