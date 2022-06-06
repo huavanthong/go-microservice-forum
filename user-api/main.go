@@ -73,6 +73,7 @@ func main() {
 
 	// init a controllers
 	u := controllers.User{}
+	gu := controllers.GoogleUser{}
 	p := controllers.Profile{}
 
 	// generate google token
@@ -93,6 +94,10 @@ func main() {
 	m.router.Static("/css", "./static/css")
 	m.router.Static("/img", "./static/img")
 	m.router.LoadHTMLGlob("templates/*")
+
+	m.router.GET("/", gu.IndexHandler)
+	m.router.GET("/login", gu.LoginHandler)
+	m.router.GET("/auth", gu.AuthHandler)
 
 	// simple group: v1
 	v1 := m.router.Group("/api/v1")
