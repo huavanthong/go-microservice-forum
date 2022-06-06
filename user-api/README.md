@@ -5,6 +5,9 @@ This user-api folder is a user microservice. It include some below feautures:
 * Apply Singleton design pattern for DB.
 * Understand how to authenticate user with JWT
 
+# Architecture
+![Architecture User Microservice](./docs/images/architecture/go-architecture-layer.png)
+
 # Questions
 * How do you implement CRUB API with RESTful?
 * How do you open MongoDB Driver on local machine?
