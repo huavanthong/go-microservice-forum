@@ -18,7 +18,7 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/controllers"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
-	"github.com/huavanthong/microservice-golang/user-api/securiy/google"
+	"github.com/huavanthong/microservice-golang/user-api/security/google"
 )
 
 // Main manages main golang application

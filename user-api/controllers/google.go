@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/user-api/models"
-	googleCred "github.com/huavanthong/microservice-golang/user-api/security/creds-google"
+	googleCred "github.com/huavanthong/microservice-golang/user-api/security/google"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -24,7 +24,7 @@ func getLoginURL(state string) string {
 }
 
 func init() {
-	file, err := ioutil.ReadFile("./creds.json")
+	file, err := ioutil.ReadFile("./config/google-credentials.json")
 	if err != nil {
 		log.Printf("File error: %v\n", err)
 		os.Exit(1)
