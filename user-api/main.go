@@ -12,7 +12,9 @@ import (
 	"os"
 
 	"github.com/gin-gonic/contrib/jwt"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/controllers"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
@@ -73,10 +75,24 @@ func main() {
 	u := controllers.User{}
 	p := controllers.Profile{}
 
+	// generate google token
 	token, err := google.RandToken(64)
 	if err != nil {
 		log.Fatal("unable to generate random token: ", err)
 	}
+
+	store := sessions.NewCookieStore([]byte(token))
+	store.Options(sessions.Options{
+		Path:   "/",
+		MaxAge: 86400 * 7,
+	})
+
+	m.router.Use(gin.Logger())
+	m.router.Use(gin.Recovery())
+	m.router.Use(sessions.Sessions("goquestsession", store))
+	m.router.Static("/css", "./static/css")
+	m.router.Static("/img", "./static/img")
+	m.router.LoadHTMLGlob("templates/*")
 
 	// simple group: v1
 	v1 := m.router.Group("/api/v1")
