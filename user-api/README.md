@@ -98,7 +98,8 @@ More details:
 * About hacking with SQL injection. Refer: [here](https://www.meisternote.com/app/note/uMUTsPEJzQbx/sql-injection)
 * About implementing login with hash password. Refer: [here](https://www.meisternote.com/app/note/MKInhQGqLw4m/security-for-login)
 ### Google OAuth2 
-More details documents: [here](https://skarlso.github.io/2016/06/12/google-signin-with-go/#setup---oauth-client)
+* More details documents: [here](https://skarlso.github.io/2016/06/12/google-signin-with-go/#setup---oauth-client)
+* More details source code reference: [here](https://github.com/Skarlso/google-oauth-go-sample)
 #### Step 1: Set up Credentials
 ```go
 // Credentials which stores google ids.

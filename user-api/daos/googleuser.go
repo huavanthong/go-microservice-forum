@@ -14,7 +14,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// User manages User CRUD
+// User Info from Google
 type GoogleUser struct {
 	utils *utils.Utils
 }
@@ -27,32 +27,31 @@ func (gu *GoogleUser) SaveUser(u *models.GoogleUser) error {
 	sessionCopy := databases.Database.MgDbSession.Copy()
 	defer sessionCopy.Close()
 
-	if _, err := mdb.LoadUser(u.Email); err == nil {
+	// check the existed user
+	if _, err := gu.LoadUser(u.Email); err == nil {
 		return fmt.Errorf("user already exists")
 	}
-	c := mdb.session.DB("webadventure").C("users")
+
+	// get a collection to execute the query against.
+	c := sessionCopy.DB(databases.Database.Databasename).C("gusers")
+
 	err := c.Insert(u)
+
 	return err
 }
 
 // LoadUser get data from a user.
-func (mdb MongoDBConnection) LoadUser(Email string) (result structs.User, err error) {
-	mdb.session = mdb.GetSession()
-	defer mdb.session.Close()
-	c := mdb.session.DB("webadventure").C("users")
-	err = c.Find(bson.M{"email": Email}).One(&result)
-	return result, err
-}
+func (gu *GoogleUser) LoadUser(Email string) (u *models.GoogleUser, err error) {
 
-// GetSession return a new session if there is no previous one.
-func (mdb *MongoDBConnection) GetSession() *mgo.Session {
-	if mdb.session != nil {
-		return mdb.session.Copy()
-	}
-	session, err := mgo.Dial("localhost")
-	if err != nil {
-		panic(err)
-	}
-	session.SetMode(mgo.Monotonic, true)
-	return session
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbSession.Copy()
+	defer sessionCopy.Close()
+
+	// get a collection to execute the query against.
+	c := sessionCopy.DB(databases.Database.Databasename).C("gusers")
+
+	err = c.Find(bson.M{"email": Email}).One(&u)
+
+	return u, err
 }
