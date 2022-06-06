@@ -7,14 +7,18 @@ package main
 
 import (
 	"io"
+	"log"
 	"net/http"
 	"os"
 
 	"github.com/gin-gonic/contrib/jwt"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/controllers"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
+	"github.com/huavanthong/microservice-golang/user-api/securiy/google"
 )
 
 // Main manages main golang application
@@ -69,7 +73,31 @@ func main() {
 
 	// init a controllers
 	u := controllers.User{}
+	gu := controllers.GoogleUser{}
 	p := controllers.Profile{}
+
+	// generate google token
+	token, err := google.RandToken(64)
+	if err != nil {
+		log.Fatal("unable to generate random token: ", err)
+	}
+
+	store := sessions.NewCookieStore([]byte(token))
+	store.Options(sessions.Options{
+		Path:   "/",
+		MaxAge: 86400 * 7,
+	})
+
+	m.router.Use(gin.Logger())
+	m.router.Use(gin.Recovery())
+	m.router.Use(sessions.Sessions("goquestsession", store))
+	m.router.Static("/css", "./static/css")
+	m.router.Static("/img", "./static/img")
+	m.router.LoadHTMLGlob("templates/*")
+
+	m.router.GET("/", gu.IndexHandler)
+	m.router.GET("/login", gu.LoginHandler)
+	m.router.GET("/auth", gu.AuthHandler)
 
 	// simple group: v1
 	v1 := m.router.Group("/api/v1")
