@@ -7,6 +7,7 @@ package main
 
 import (
 	"io"
+	"log"
 	"net/http"
 	"os"
 
@@ -15,6 +16,7 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/controllers"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
+	"github.com/huavanthong/microservice-golang/user-api/securiy/google"
 )
 
 // Main manages main golang application
@@ -70,6 +72,11 @@ func main() {
 	// init a controllers
 	u := controllers.User{}
 	p := controllers.Profile{}
+
+	token, err := google.RandToken(64)
+	if err != nil {
+		log.Fatal("unable to generate random token: ", err)
+	}
 
 	// simple group: v1
 	v1 := m.router.Group("/api/v1")

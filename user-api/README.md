@@ -12,6 +12,7 @@ This user-api folder is a user microservice. It include some below feautures:
 * How do you enable logger for GIN Framework? or Server? What the difference of them?
 * In building-microservice-go book, Chapter 8: Security, it remind that we never storing passwords in plain text in a datastore. How do you implement this feature? Refer: [here](#hashing-password)
 * Implement **Unit Test** with Gin framework? Refer: [here](https://circleci.com/blog/gin-gonic-testing/)
+* Implement OAuth2 Google with GIN framework. Refer: [here]
 
 # Project Structure
 ```
@@ -96,3 +97,25 @@ func Santize(data string) string{
 More details:
 * About hacking with SQL injection. Refer: [here](https://www.meisternote.com/app/note/uMUTsPEJzQbx/sql-injection)
 * About implementing login with hash password. Refer: [here](https://www.meisternote.com/app/note/MKInhQGqLw4m/security-for-login)
+### Google OAuth2 
+More details documents: [here](https://skarlso.github.io/2016/06/12/google-signin-with-go/#setup---oauth-client)
+#### Step 1: Set up Credentials
+```go
+// Credentials which stores google ids.
+type Credentials struct {
+    Cid string `json:"cid"`
+    Csecret string `json:"csecret"`
+}
+
+func init() {
+    var c Credentials
+    file, err := ioutil.ReadFile("./creds.json")
+    if err != nil {
+        fmt.Printf("File error: %v\n", err)
+        os.Exit(1)
+    }
+    json.Unmarshal(file, &c)
+}
+```
+We will implement it at the common folder.
+
