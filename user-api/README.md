@@ -103,23 +103,7 @@ More details:
 ### Google OAuth2 
 * More details documents: [here](https://skarlso.github.io/2016/06/12/google-signin-with-go/#setup---oauth-client)
 * More details source code reference: [here](https://github.com/Skarlso/google-oauth-go-sample)
-#### Step 1: Set up Credentials
-```go
-// Credentials which stores google ids.
-type Credentials struct {
-    Cid string `json:"cid"`
-    Csecret string `json:"csecret"`
-}
+* Understand work-flow: [here](https://viblo.asia/p/tim-hieu-doi-chut-ve-oauth2-eW65GvMLlDO)
 
-func init() {
-    var c Credentials
-    file, err := ioutil.ReadFile("./creds.json")
-    if err != nil {
-        fmt.Printf("File error: %v\n", err)
-        os.Exit(1)
-    }
-    json.Unmarshal(file, &c)
-}
-```
-We will implement it at the common folder.
-
+### Work flow
+![OAuth2](./docs/images/oauth2/work-flow-oauth2.png)
