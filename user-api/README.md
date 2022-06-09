@@ -9,7 +9,7 @@ This user-api folder is a user microservice. It include some below feautures:
 ![Architecture User Microservice](./docs/images/architecture/go-architecture-layer.png)
 
 # Questions
-* How do you implement CRUB API with RESTful?
+* How do you implement CRUD API with RESTful API? The difference between CRUD and REST? Refer: [here](https://hevodata.com/learn/crud-vs-rest/)
 * How do you open MongoDB Driver on local machine?
 * When you need to generate JWT Token for a user?
 * How do you enable logger for GIN Framework? or Server? What the difference of them?
@@ -50,6 +50,11 @@ Those folders contain:
 
 
 
+## Swagger
+Test with swagger
+```
+http://localhost:9090/swagger/index.html
+```
 ## Test server
 To understand this service, please test server with APIs below
 ### Login With User
