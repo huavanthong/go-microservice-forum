@@ -26,6 +26,18 @@ type User struct {
 	userDAO daos.User
 }
 
+// Authenticate godoc
+// @Summary Check user authentication
+// @Description Authenticate user
+// @Tags admin
+// @Security ApiKeyAuth
+// @Accept  multipart/form-data
+// @Param user formData string true "Username"
+// @Param password formData string true "Password"
+// @Failure 401 {object} payload.Error
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} security.Token
+// @Router /admin/auth/signin [post]
 func (u *User) Authenticate(ctx *gin.Context) {
 
 	// get parameter value from request through PostForm
@@ -54,6 +66,18 @@ func (u *User) Authenticate(ctx *gin.Context) {
 	}
 }
 
+// AddUser godoc
+// @Summary Add a new user
+// @Description Add a new user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param user body models.AddUser true "Add user"
+// @Failure 500 {object} payload.Error
+// @Failure 400 {object} payload.Error
+// @Success 200 {object} payload.Message
+// @Router /users [post]
 func (u *User) AddUser(ctx *gin.Context) {
 	// bind user info to json getting context
 	var addUser models.AddUser
@@ -84,6 +108,16 @@ func (u *User) AddUser(ctx *gin.Context) {
 	}
 }
 
+// ListUsers godoc
+// @Summary List all existing users
+// @Description List all existing users
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Failure 500 {object} payload.Error
+// @Success 200 {array} models.User
+// @Router /users/list [get]
 // ListUsers get all users exist in DB
 func (u *User) ListUsers(ctx *gin.Context) {
 
@@ -103,6 +137,17 @@ func (u *User) ListUsers(ctx *gin.Context) {
 
 }
 
+// GetUserByID godoc
+// @Summary Get a user by ID
+// @Description Get a user by ID
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param id path string true "User ID"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} models.User
+// @Router /users/detail/{id} [get]
 // GetUserByID get a user by id in DB
 func (u *User) GetUserByID(ctx *gin.Context) {
 
@@ -121,6 +166,17 @@ func (u *User) GetUserByID(ctx *gin.Context) {
 	}
 }
 
+// GetUserByParams godoc
+// @Summary Get a user by ID parameter
+// @Description Get a user by ID parameter
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param id query string true "User ID"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} models.User
+// @Router /users [get]
 // GetUserByID get a user by id in DB
 func (u *User) GetUserByParams(ctx *gin.Context) {
 
@@ -139,6 +195,17 @@ func (u *User) GetUserByParams(ctx *gin.Context) {
 	}
 }
 
+// DeleteUserByID godoc
+// @Summary Delete a user by ID
+// @Description Delete a user by ID
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param id path string true "User ID"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} payload.Message
+// @Router /users/{id} [delete]
 func (u *User) DeleteUserByID(ctx *gin.Context) {
 	// filter parameter id context
 	id := ctx.Params.ByName("id")
@@ -155,6 +222,17 @@ func (u *User) DeleteUserByID(ctx *gin.Context) {
 	}
 }
 
+// UpdateUser godoc
+// @Summary Update an existing user
+// @Description Update an existing user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param user body models.User true "User ID"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} payload.Message
+// @Router /users [patch]
 func (u *User) UpdateUser(ctx *gin.Context) {
 
 	// bind user data to json

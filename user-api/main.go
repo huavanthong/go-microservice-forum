@@ -18,6 +18,11 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/controllers"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
+
+	_ "github.com/huavanthong/microservice-golang/user-api/docs"
+
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"github.com/huavanthong/microservice-golang/user-api/security/google"
 )
 
@@ -56,9 +61,22 @@ func (m *Main) initServer() error {
 
 	m.router = gin.Default()
 
+	// Design 1: cors with default
+	// m.router.Use(cors.Default())
+
+	// Design 2: customer cors
+	m.router.Use(CORSMiddleware())
+
 	return nil
 }
 
+// @title UserManagement Service API Document
+// @version 1.0
+// @description List APIs of UserManagement Service
+// @termsOfService http://swagger.io/terms/
+
+// @host 127.0.0.1:8808
+// @BasePath /api/v1
 func main() {
 
 	// init application
@@ -139,6 +157,24 @@ func main() {
 		c.String(http.StatusOK, "pong")
 	})
 
+	m.router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	m.router.Run(common.Config.Port)
 
+}
+
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
