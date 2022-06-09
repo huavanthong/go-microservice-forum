@@ -25,9 +25,15 @@ type GoogleUser struct {
 	guserDAO daos.GoogleUser
 }
 
+/**************************************************************************************
+ * global configuration for google security.
+/*************************************************************************************/
 var cred googleCred.Credentials
 var conf *oauth2.Config
 
+/**************************************************************************************
+ * Internal function
+/*************************************************************************************/
 func getLoginURL(state string) string {
 	return conf.AuthCodeURL(state)
 }
@@ -54,6 +60,9 @@ func init() {
 	}
 }
 
+/**************************************************************************************
+ * RESTful API
+/*************************************************************************************/
 // IndexHandler handles the location /.
 func (gu *GoogleUser) IndexHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
