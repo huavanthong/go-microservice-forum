@@ -21,9 +21,9 @@ import (
 
 	_ "github.com/huavanthong/microservice-golang/user-api/docs"
 
+	"github.com/huavanthong/microservice-golang/user-api/security/google"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"github.com/huavanthong/microservice-golang/user-api/security/google"
 )
 
 // Main manages main golang application

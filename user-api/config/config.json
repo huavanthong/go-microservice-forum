@@ -1,5 +1,5 @@
 {
-    "port": ":9090",
+    "port": ":8808",
     "enableGinConsoleLog": true,
     "enableGinFileLog": true,
 

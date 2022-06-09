@@ -53,7 +53,7 @@ Those folders contain:
 ## Swagger
 Test with swagger
 ```
-http://localhost:9090/swagger/index.html
+http://localhost:8808/swagger/index.html
 ```
 ## Test server
 To understand this service, please test server with APIs below
