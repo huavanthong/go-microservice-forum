@@ -71,7 +71,7 @@ func main() {
 	// init server failed, Close connection to DB
 	defer databases.Database.Close()
 
-	// init a controllers
+	// init controllers
 	u := controllers.User{}
 	gu := controllers.GoogleUser{}
 	p := controllers.Profile{}

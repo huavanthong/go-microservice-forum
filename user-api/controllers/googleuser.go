@@ -9,16 +9,31 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/huavanthong/microservice-golang/user-api/daos"
 	"github.com/huavanthong/microservice-golang/user-api/models"
+
 	googleCred "github.com/huavanthong/microservice-golang/user-api/security/google"
+	"github.com/huavanthong/microservice-golang/user-api/utils"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )
 
+// Define user manages
+type GoogleUser struct {
+	utils    utils.Utils
+	guserDAO daos.GoogleUser
+}
+
+/**************************************************************************************
+ * global configuration for google security.
+/*************************************************************************************/
 var cred googleCred.Credentials
 var conf *oauth2.Config
 
+/**************************************************************************************
+ * Internal function
+/*************************************************************************************/
 func getLoginURL(state string) string {
 	return conf.AuthCodeURL(state)
 }
@@ -45,27 +60,33 @@ func init() {
 	}
 }
 
+/**************************************************************************************
+ * RESTful API
+/*************************************************************************************/
 // IndexHandler handles the location /.
-func IndexHandler(c *gin.Context) {
+func (gu *GoogleUser) IndexHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 
 // AuthHandler handles authentication of a user and initiates a session.
-func AuthHandler(c *gin.Context) {
+func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 	// Handle the exchange code to initiate a transport.
-	session := sessions.Default(c)
+	// get session where stored info users
+	session := sessions.Default(ctx)
+
 	retrievedState := session.Get("state")
-	queryState := c.Request.URL.Query().Get("state")
+	queryState := ctx.Request.URL.Query().Get("state")
+
 	if retrievedState != queryState {
 		log.Printf("Invalid session state: retrieved: %s; Param: %s", retrievedState, queryState)
-		c.HTML(http.StatusUnauthorized, "error.tmpl", gin.H{"message": "Invalid session state."})
+		ctx.HTML(http.StatusUnauthorized, "error.tmpl", gin.H{"message": "Invalid session state."})
 		return
 	}
-	code := c.Request.URL.Query().Get("code")
+	code := ctx.Request.URL.Query().Get("code")
 	tok, err := conf.Exchange(oauth2.NoContext, code)
 	if err != nil {
 		log.Println(err)
-		c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Login failed. Please try again."})
+		ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Login failed. Please try again."})
 		return
 	}
 
@@ -73,7 +94,7 @@ func AuthHandler(c *gin.Context) {
 	userinfo, err := client.Get("https://www.googleapis.com/oauth2/v3/userinfo")
 	if err != nil {
 		log.Println(err)
-		c.AbortWithStatus(http.StatusBadRequest)
+		ctx.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 	defer userinfo.Body.Close()
@@ -81,52 +102,53 @@ func AuthHandler(c *gin.Context) {
 	u := models.GoogleUser{}
 	if err = json.Unmarshal(data, &u); err != nil {
 		log.Println(err)
-		c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error marshalling response. Please try agian."})
+		ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error marshalling response. Please try agian."})
 		return
 	}
 	session.Set("user-id", u.Email)
 	err = session.Save()
 	if err != nil {
 		log.Println(err)
-		c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving session. Please try again."})
+		ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving session. Please try again."})
 		return
 	}
 	seen := false
-	db := database.MongoDBConnection{}
-	if _, mongoErr := db.LoadUser(u.Email); mongoErr == nil {
+	if _, mongoErr := gu.guserDAO.LoadUser(u.Email); mongoErr == nil {
 		seen = true
 	} else {
-		err = db.SaveUser(&u)
+		err = gu.guserDAO.SaveUser(&u)
 		if err != nil {
 			log.Println(err)
-			c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving user. Please try again."})
+			ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving user. Please try again."})
 			return
 		}
 	}
-	c.HTML(http.StatusOK, "battle.tmpl", gin.H{"email": u.Email, "seen": seen})
+
+	ctx.HTML(http.StatusOK, "battle.tmpl", gin.H{"email": u.Email, "seen": seen})
 }
 
 // LoginHandler handles the login procedure.
-func LoginHandler(c *gin.Context) {
+func (gu *GoogleUser) LoginHandler(ctx *gin.Context) {
 	state, err := googleCred.RandToken(32)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{"message": "Error while generating random data."})
+		ctx.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{"message": "Error while generating random data."})
 		return
 	}
-	session := sessions.Default(c)
+	session := sessions.Default(ctx)
 	session.Set("state", state)
+
 	err = session.Save()
 	if err != nil {
-		c.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{"message": "Error while saving session."})
+		ctx.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{"message": "Error while saving session."})
 		return
 	}
 	link := getLoginURL(state)
-	c.HTML(http.StatusOK, "auth.tmpl", gin.H{"link": link})
+	ctx.HTML(http.StatusOK, "auth.tmpl", gin.H{"link": link})
 }
 
 // FieldHandler is a rudementary handler for logged in users.
-func FieldHandler(c *gin.Context) {
-	session := sessions.Default(c)
+func (gu *GoogleUser) FieldHandler(ctx *gin.Context) {
+	session := sessions.Default(ctx)
 	userID := session.Get("user-id")
-	c.HTML(http.StatusOK, "field.tmpl", gin.H{"user": userID})
+	ctx.HTML(http.StatusOK, "field.tmpl", gin.H{"user": userID})
 }
