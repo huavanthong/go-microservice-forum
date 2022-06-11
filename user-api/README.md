@@ -44,8 +44,9 @@ Those folders contain:
 
 # Design Database for User microservice
 * This db is designed for improve user service in the future.
-![ảnh](https://user-images.githubusercontent.com/50081052/170174069-745c221e-134e-43e2-9c68-111684c91935.png)
+![ảnh](./docs/images/db/user-microservice-db-v2.png)
 
+More details: [here](https://dbdiagram.io/d/62a44fa39921fe2a96e2f031)
 ## Getting Started
 
 
