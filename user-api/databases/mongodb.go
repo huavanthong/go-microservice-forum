@@ -62,8 +62,14 @@ func (db *MongoDB) initData() error {
 
 	if count < 1 {
 		// Create admin/admin account
-		var user models.User
-		user = models.User{bson.NewObjectId(), "admin", "admin"}
+		user := models.User{
+			ID:            bson.NewObjectId(),
+			Name:          "admin",
+			Email:         "admin@gmail.com",
+			Password:      "admin",
+			LoginAttempts: []models.LoginAttempt{}, // avoid struct composite literals. More details:https://stackoverflow.com/questions/51742263/go-build-with-protocol-buffer-error-too-few-values-in-struct-initializer
+
+		}
 		err = collection.Insert(&user)
 	}
 

@@ -93,7 +93,13 @@ func (u *User) AddUser(ctx *gin.Context) {
 	}
 
 	// create user from models
-	user := models.User{bson.NewObjectId(), addUser.Name, addUser.Password}
+	user := models.User{
+		ID:            bson.NewObjectId(),
+		Name:          addUser.Name,
+		Email:         addUser.Email,
+		Password:      addUser.Password,
+		LoginAttempts: []models.LoginAttempt{},
+	}
 
 	// insert user to DB
 	err := u.userDAO.Insert(user)
@@ -101,7 +107,7 @@ func (u *User) AddUser(ctx *gin.Context) {
 	// write response
 	if err == nil {
 		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
-		log.Debug("Registered a new user = " + user.Name + ", password = " + user.Password)
+		log.Debug("Registered a new user = " + user.Name + ", email: " + user.Email + ", password = " + user.Password)
 	} else {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		log.Debug("[ERROR]: ", err)
@@ -248,7 +254,7 @@ func (u *User) UpdateUser(ctx *gin.Context) {
 	// write response
 	if err == nil {
 		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
-		fmt.Errorf("Update a new user = " + user.Name + ", password = " + user.Password)
+		fmt.Errorf("Update a new user = " + user.Name + ", email: " + user.Email + ", password = " + user.Password)
 	} else {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		fmt.Errorf("[ERROR]: ", err)

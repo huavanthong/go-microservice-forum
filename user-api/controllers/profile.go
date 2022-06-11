@@ -72,17 +72,13 @@ func (p *Profile) AddProfile(ctx *gin.Context) {
 
 	// create profile from models
 	profile := models.Profile{
-		bson.NewObjectId(),
-		mp.ProfileName,
-		mp.FirstName,
-		mp.LastName,
-		mp.Email,
-		mp.AccountID,
-		mp.Age,
-		mp.PhoneNumber,
-		mp.DefaultProfile,
-		mp.FavouriteColor,
-		[]*models.Address{address}}
+		ProfileID:   bson.NewObjectId(),
+		FirstName:   mp.FirstName,
+		LastName:    mp.LastName,
+		UserID:      bson.NewObjectId(), // define a new object bson
+		PhoneNumber: mp.PhoneNumber,
+		Addresses:   []*models.Address{address},
+	}
 
 	// insert user to DB
 	err := p.profileDAO.Insert(profile)

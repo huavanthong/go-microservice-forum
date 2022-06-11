@@ -16,44 +16,44 @@ import (
 
 // User information
 type User struct {
-	UserID        bson.ObjectId  `bson:"_id" json:"userid" example:"5bbdadf782ebac06a695a8e7" `
-	UserName      string         `bson:"name" json:"username" example:"hvthong" `
+	ID            bson.ObjectId  `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7" `
+	Name          string         `bson:"name" json:"username" example:"hvthong" `
 	Email         string         `bson:"email" json:"email" validate:"required,email"`
 	Password      string         `bson:"password" json:"password" example:"raycad"`
 	CreatedAt     string         `bson:"-" json:"-"`
 	UpdateAt      string         `bson:"-" json:"-"`
 	LastLoginAt   string         `bson:"-" json:"-"`
-	LoginAttempts []LoginAttempt `bson:"-" json:"-"`
-	Role          Role           `bson:"-" json:"-"`
-	Activated     bool           `bson:"-" json:"-"`
+	LoginAttempts []LoginAttempt `bson:"loginattempts" json:"loginattempts"`
+	Role          Role           `bson:"role" json:"role"`
+	Activated     bool           `bson:"activated" json:"activated"`
 }
 
 // Login is a retrieved and authentiacted user.
 type LoginAttempt struct {
-	AccountName string `json:"accountname"`
-	Password    string `json:"password"`
-	IPNumber    string `json:"ipnumber"`
-	BrowerType  string `json:"browertype"`
-	Success     string `json:"success"`
-	CreateDate  string `json:"createdate"`
+	AccountName string `bson:"accountname" json:"accountname"` // define account name is not correct with user id
+	Password    string `bson:"password" json:"password"`
+	IPNumber    string `bson:"ipnumber" json:"ipnumber"`
+	BrowerType  string `bson:"browertype" json:"browertype"`
+	Success     string `bson:"success" json:"success"`
+	CreateDate  string `bson:"createdate" json:"createdate"`
 }
 
 // User Role
 type Role struct {
-	RoleName string
-	RoleNote string
-	Actions  []Action
+	RoleName string   `bson:"rolename" json:"rolename"`
+	RoleNote string   `bson:"rolenote" json:"rolenote"`
+	Actions  []Action `bson:"actions" json:"actions"`
 }
 
 // Action for role
 type Action struct {
-	ActionName string
-	ActionURL  string
+	ActionName string `bson:"actionname" json:"actionname"`
+	ActionURL  string `bson:"actionname" json:"actionname"`
 }
 
 // AddUser information
 type AddUser struct {
-	Name     string `json:"name" example:"User Name"`
+	Name     string `json:"name" validate:"required" example:"vanthong"`
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" example:"User Password"`
 }
