@@ -26,6 +26,17 @@ type Profile struct {
 	profileDAO daos.Profile
 }
 
+// GetProfileByUserId godoc
+// @Summary Get a profile user by userid
+// @Description Profile user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param id path string true "User ID"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} models.Profile
+// @Router /users/profile [get]
 // GetProfileByUserId get a profile by user id in DB
 func (u *Profile) GetProfileByUserId(ctx *gin.Context) {
 
@@ -44,6 +55,18 @@ func (u *Profile) GetProfileByUserId(ctx *gin.Context) {
 	}
 }
 
+// AddProfile godoc
+// @Summary Add a profile for user
+// @Description Update profile user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param user body models.Profile true "Add profile user"
+// @Failure 500 {object} payload.Error
+// @Failure 400 {object} payload.Error
+// @Success 200 {object} payload.Message
+// @Router /profile [post]
 func (p *Profile) AddProfile(ctx *gin.Context) {
 	// bind profile info to json getting context
 	var mp models.Profile
@@ -94,6 +117,17 @@ func (p *Profile) AddProfile(ctx *gin.Context) {
 	}
 }
 
+// DeteleProfileByUserId godoc
+// @Summary Delete a user profile by UserID
+// @Description Delete a user profile by UserID
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param userid path string true "User ID"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} payload.Message
+// @Router /profile/{userid} [delete]
 func (p *Profile) DeteleProfileByUserId(ctx *gin.Context) {
 	// filter parameter id context
 	id := ctx.Params.ByName("userid")
@@ -110,6 +144,17 @@ func (p *Profile) DeteleProfileByUserId(ctx *gin.Context) {
 	}
 }
 
+// UpdateProfileByUserId godoc
+// @Summary Update an existing profile user
+// @Description Update an existing profile user
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param user body models.Profile true "User ID"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} payload.Message
+// @Router /profile/ [patch]
 func (p *Profile) UpdateProfileByUserId(ctx *gin.Context) {
 
 	// bind user data to json

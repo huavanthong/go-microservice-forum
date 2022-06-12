@@ -146,7 +146,7 @@ func main() {
 		{
 			profile.POST(":userid", p.AddProfile)
 			profile.GET(":userid", p.GetProfileByUserId)
-			profile.PUT(":userid", p.UpdateProfileByUserId)
+			profile.PATCH("", p.UpdateProfileByUserId)
 			profile.DELETE(":userid", p.DeteleProfileByUserId)
 
 		}

@@ -77,6 +77,151 @@ const docTemplate = `{
                 }
             }
         },
+        "/profile": {
+            "post": {
+                "description": "Update profile user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Add a profile for user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Add profile user",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Profile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Message"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile/": {
+            "patch": {
+                "description": "Update an existing profile user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Update an existing profile user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "User ID",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Profile"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile/{userid}": {
+            "delete": {
+                "description": "Delete a user profile by UserID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Delete a user profile by UserID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userid",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "description": "Get a user by ID parameter",
@@ -304,6 +449,51 @@ const docTemplate = `{
                 }
             }
         },
+        "/users/profile": {
+            "get": {
+                "description": "Profile user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get a profile user by userid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Profile"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/users/{id}": {
             "delete": {
                 "description": "Delete a user by ID",
@@ -381,6 +571,37 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Address": {
+            "type": "object",
+            "required": [
+                "city",
+                "country",
+                "district",
+                "street",
+                "ward",
+                "zip"
+            ],
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "district": {
+                    "type": "string"
+                },
+                "street": {
+                    "type": "string"
+                },
+                "ward": {
+                    "type": "string"
+                },
+                "zip": {
+                    "type": "string"
+                }
+            }
+        },
         "models.LoginAttempt": {
             "type": "object",
             "properties": {
@@ -401,6 +622,54 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "success": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Profile": {
+            "type": "object",
+            "required": [
+                "firstname",
+                "lastname",
+                "phonenumber",
+                "profileid",
+                "profileid"
+            ],
+            "properties": {
+                "addresses": {
+                    "description": "a person can have a home and cottage...",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Address"
+                    }
+                },
+                "age": {
+                    "type": "integer",
+                    "maximum": 130,
+                    "minimum": 0
+                },
+                "defaultprofile": {
+                    "type": "string"
+                },
+                "favouritecolor": {
+                    "description": "alias for 'hexcolor|rgb|rgba|hsl|hsla'",
+                    "type": "string",
+                    "example": "#000-"
+                },
+                "firstname": {
+                    "type": "string"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "phonenumber": {
+                    "type": "string"
+                },
+                "profileid": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "profilename": {
                     "type": "string"
                 }
             }
