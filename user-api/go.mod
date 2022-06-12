@@ -11,6 +11,7 @@ require (
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/huavanthong/microservice-golang v0.0.0-20220609031934-734ae2984479 // indirect
+	github.com/huavanthong/microservice-golang/product-api v0.0.0-20220611125308-97d788b312fa
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0

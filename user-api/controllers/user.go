@@ -33,6 +33,7 @@ type User struct {
 // @Security ApiKeyAuth
 // @Accept  multipart/form-data
 // @Param user formData string true "Username"
+// @Param email formData string true "Email"
 // @Param password formData string true "Password"
 // @Failure 401 {object} payload.Error
 // @Failure 500 {object} payload.Error
@@ -41,17 +42,18 @@ type User struct {
 func (u *User) Authenticate(ctx *gin.Context) {
 
 	// get parameter value from request through PostForm
-	username := ctx.PostForm("user")
+	name := ctx.PostForm("user")
+	email := ctx.PostForm("email")
 	password := ctx.PostForm("password")
 
 	// var user models.User
 	var err error
-	_, err = u.userDAO.Login(username, password)
+	_, err = u.userDAO.Login(name, email, password)
 
 	if err == nil {
 		var tokenString string
 		// Generate token string
-		tokenString, err = u.utils.GenerateJWT(username, "")
+		tokenString, err = u.utils.GenerateJWT(name, "")
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 			log.Debug("[ERROR]: ", err)
@@ -87,11 +89,13 @@ func (u *User) AddUser(ctx *gin.Context) {
 	}
 
 	// validate data on user
+	fmt.Println("Check 1")
 	if err := addUser.Validate(); err != nil {
 		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
 	}
 
+	fmt.Println("Check 2")
 	// create user from models
 	user := models.User{
 		ID:            bson.NewObjectId(),
