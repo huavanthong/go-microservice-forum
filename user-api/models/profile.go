@@ -10,16 +10,17 @@ import "gopkg.in/mgo.v2/bson"
 
 // User contains user information
 type Profile struct {
-	ProfileID      bson.ObjectId `bson:"_profileid" json:"profileid" validate:"required,gt=0" example:"1"`
+	ID             bson.ObjectId `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7"`
 	ProfileName    string        `bson:"profilename" json:"profilename"`
-	FirstName      string        `bson:"firstname" json:"firstname" validate:"required"`
-	LastName       string        `bson:"lastname" json:"lastname" validate:"required"`
-	UserID         bson.ObjectId `bson:"_profileid" json:"profileid" validate:"required,gt=0" example:"1"`
-	Age            uint8         `bson:"age" json:"age" validate:"gte=0,lte=130"`
-	PhoneNumber    string        `bson:"phonenumber" json:"phonenumber" validate:"required"`
+	FirstName      string        `bson:"firstname" json:"firstname" binding:"required"`
+	LastName       string        `bson:"lastname" json:"lastname"`
+	Email          string        `bson:"email" json:"email" binding:"required,email"`
+	UserID         bson.ObjectId `bson:"_userid" json:"userid" binding:"required" example:"5bbdadf782ebac06a695a8e7"`
+	Age            uint8         `bson:"age" json:"age" binding:"omitempty,gte=0,lte=130"`
+	PhoneNumber    string        `bson:"phonenumber" json:"phonenumber"`
 	DefaultProfile string        `bson:"defaultprofile" json:"defaultprofile"`
-	FavouriteColor string        `bson:"favouritecolor" json:"favouritecolor" validate:"iscolor" example:"#000-"` // alias for 'hexcolor|rgb|rgba|hsl|hsla'
-	Addresses      []*Address    `bson:"addresses" json"addresses" validate:"required,dive,required"`             // a person can have a home and cottage...
+	FavouriteColor string        `bson:"favouritecolor" json:"favouritecolor" binding:"iscolor" example:"#000-"` // alias for 'hexcolor|rgb|rgba|hsl|hsla'
+	Addresses      []*Address    `bson:"addresses" json"addresses"`                                              // a person can have a home and cottage...
 }
 
 type Contact struct {
@@ -29,10 +30,10 @@ type Contact struct {
 
 // Address houses a users address information
 type Address struct {
-	Street   string `validate:"required"`
-	Ward     string `validate:"required"`
-	District string `validate:"required"`
-	City     string `validate:"required"`
-	Country  string `validate:"required"`
-	Zip      string `validate:"required"`
+	Street   string `bson:"street" json:"street"`
+	Ward     string `bson:"ward" json:"ward"`
+	District string `bson:"district" json:"district"`
+	City     string `bson:"city" json:"city"`
+	Country  string `bson:"country" json:"country"`
+	Zip      string `bson:"zip" json:"zip"`
 }
