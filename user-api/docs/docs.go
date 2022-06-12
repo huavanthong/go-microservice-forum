@@ -201,7 +201,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "User ID",
-                        "name": "id",
+                        "name": "userid",
                         "in": "path",
                         "required": true
                     }

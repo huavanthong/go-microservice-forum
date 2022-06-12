@@ -301,7 +301,7 @@ paths:
         type: string
       - description: User ID
         in: path
-        name: id
+        name: userid
         required: true
         type: string
       produces:

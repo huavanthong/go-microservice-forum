@@ -33,7 +33,7 @@ type Profile struct {
 // @Accept  json
 // @Produce  json
 // @Param Authorization header string true "Token"
-// @Param id path string true "User ID"
+// @Param userid path string true "User ID"
 // @Failure 500 {object} payload.Error
 // @Success 200 {object} models.Profile
 // @Router /profile/{userid} [get]
