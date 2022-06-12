@@ -130,6 +130,9 @@ func (u *User) Login(name string, email string, password string) (models.User, e
 // Insert adds a new User into database'
 func (u *User) Insert(user models.User) error {
 
+	// define error code
+	var err error = nil
+
 	// hash password using bcrypt
 	password, serr := security.Hash(user.Password)
 	if serr != nil {
@@ -140,15 +143,30 @@ func (u *User) Insert(user models.User) error {
 	// to access to MongoDB.
 	sessionCopy := databases.Database.MgDbSession.Copy()
 
-	// get a collection to execute the query against.
-	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
+	// get the User collection to execute the query against.
+	collectionUser := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
 	// update data for new user
 	var newUser models.User = user
 	newUser.Password = password
 
 	// insert a new user from argument
-	err := collection.Insert(&newUser)
+	err = collectionUser.Insert(&newUser)
+
+	// get a Profile collection to execute the query against.
+	collectionProfile := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
+
+	// create a new profile from basic info user
+	profile := models.Profile{
+		ID:        bson.NewObjectId(),
+		FirstName: newUser.Name,
+		Email:     newUser.Email,
+		UserID:    newUser.ID,
+	}
+
+	// insert a profile from user info
+	err = collectionProfile.Insert(&profile)
+
 	return err
 
 }

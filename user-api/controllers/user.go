@@ -89,13 +89,11 @@ func (u *User) AddUser(ctx *gin.Context) {
 	}
 
 	// validate data on user
-	fmt.Println("Check 1")
 	if err := addUser.Validate(); err != nil {
 		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
 	}
 
-	fmt.Println("Check 2")
 	// create user from models
 	user := models.User{
 		ID:            bson.NewObjectId(),

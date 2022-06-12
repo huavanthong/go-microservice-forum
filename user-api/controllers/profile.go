@@ -95,7 +95,7 @@ func (p *Profile) AddProfile(ctx *gin.Context) {
 
 	// create profile from models
 	profile := models.Profile{
-		ProfileID:   bson.NewObjectId(),
+		ID:          bson.NewObjectId(),
 		FirstName:   mp.FirstName,
 		LastName:    mp.LastName,
 		UserID:      bson.NewObjectId(), // define a new object bson

@@ -92,6 +92,6 @@ func (p *Profile) Update(profile models.Profile) error {
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
 
 	// update user by id
-	err := collection.UpdateId(profile.ProfileID, &profile)
+	err := collection.UpdateId(profile.ID, &profile)
 	return err
 }
