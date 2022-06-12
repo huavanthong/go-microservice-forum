@@ -6,6 +6,8 @@
 package daos
 
 import (
+	"fmt"
+
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
 	"github.com/huavanthong/microservice-golang/user-api/models"
@@ -54,8 +56,12 @@ func (p *Profile) Update(profile models.Profile) error {
 	// get a collection to execute the query against.
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
 
+	fmt.Println("Check 1: ", profile)
+
 	// update profile user by userid
-	err := collection.UpdateId(profile.ID, &profile)
+	err := collection.UpdateId(bson.M{"_userid": profile.UserID}, &profile)
+	fmt.Println("Check 2: ", err)
+
 	return err
 }
 

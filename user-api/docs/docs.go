@@ -128,9 +128,7 @@ const docTemplate = `{
                         }
                     }
                 }
-            }
-        },
-        "/profile/": {
+            },
             "patch": {
                 "description": "Update an existing profile user",
                 "consumes": [
@@ -153,7 +151,7 @@ const docTemplate = `{
                     },
                     {
                         "description": "User ID",
-                        "name": "user",
+                        "name": "profile",
                         "in": "body",
                         "required": true,
                         "schema": {

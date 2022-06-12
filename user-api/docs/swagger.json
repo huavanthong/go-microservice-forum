@@ -121,9 +121,7 @@
                         }
                     }
                 }
-            }
-        },
-        "/profile/": {
+            },
             "patch": {
                 "description": "Update an existing profile user",
                 "consumes": [
@@ -146,7 +144,7 @@
                     },
                     {
                         "description": "User ID",
-                        "name": "user",
+                        "name": "profile",
                         "in": "body",
                         "required": true,
                         "schema": {

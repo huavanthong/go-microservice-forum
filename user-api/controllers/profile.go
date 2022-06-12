@@ -55,6 +55,39 @@ func (u *Profile) GetProfileByUserId(ctx *gin.Context) {
 	}
 }
 
+// UpdateProfileByUserId godoc
+// @Summary Update an existing profile user
+// @Description Update an existing profile user
+// @Tags profile
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param profile body models.Profile true "User ID"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} payload.Message
+// @Router /profile [patch]
+func (p *Profile) UpdateProfileByUserId(ctx *gin.Context) {
+
+	// bind user data to json
+	var profile models.Profile
+	if err := ctx.ShouldBindJSON(&profile); err != nil {
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
+		return
+	}
+
+	// update user by user
+	err := p.profileDAO.Update(profile)
+
+	// write response
+	if err == nil {
+		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
+		fmt.Errorf("Update profile name = " + profile.ProfileName + ", firtname = " + profile.FirstName)
+	} else {
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
+		fmt.Errorf("[ERROR]: ", err)
+	}
+}
+
 // AddProfile godoc
 // @Summary Add a profile for user
 // @Description Update profile user
@@ -138,39 +171,6 @@ func (p *Profile) DeteleProfileByUserId(ctx *gin.Context) {
 	// write response
 	if err == nil {
 		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
-	} else {
-		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
-		fmt.Errorf("[ERROR]: ", err)
-	}
-}
-
-// UpdateProfileByUserId godoc
-// @Summary Update an existing profile user
-// @Description Update an existing profile user
-// @Tags profile
-// @Accept  json
-// @Produce  json
-// @Param Authorization header string true "Token"
-// @Param user body models.Profile true "User ID"
-// @Failure 500 {object} payload.Error
-// @Success 200 {object} payload.Message
-// @Router /profile/ [patch]
-func (p *Profile) UpdateProfileByUserId(ctx *gin.Context) {
-
-	// bind user data to json
-	var profile models.Profile
-	if err := ctx.ShouldBindJSON(&profile); err != nil {
-		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
-		return
-	}
-
-	// update user by user
-	err := p.profileDAO.Update(profile)
-
-	// write response
-	if err == nil {
-		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
-		fmt.Errorf("Update profile name = " + profile.ProfileName + ", firtname = " + profile.FirstName)
 	} else {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		fmt.Errorf("[ERROR]: ", err)

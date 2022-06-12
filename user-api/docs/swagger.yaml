@@ -194,6 +194,36 @@ paths:
       tags:
       - admin
   /profile:
+    patch:
+      consumes:
+      - application/json
+      description: Update an existing profile user
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: User ID
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/models.Profile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Error'
+      summary: Update an existing profile user
+      tags:
+      - profile
     post:
       consumes:
       - application/json
@@ -226,37 +256,6 @@ paths:
           schema:
             $ref: '#/definitions/payload.Error'
       summary: Add a profile for user
-      tags:
-      - profile
-  /profile/:
-    patch:
-      consumes:
-      - application/json
-      description: Update an existing profile user
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: User ID
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/models.Profile'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/payload.Message'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/payload.Error'
-      summary: Update an existing profile user
       tags:
       - profile
   /profile/{userid}:
