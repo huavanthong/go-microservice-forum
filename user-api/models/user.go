@@ -53,9 +53,9 @@ type Action struct {
 
 // AddUser information
 type AddUser struct {
-	Name     string `json:"name" validate:"required" example:"vanthong"`
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" example:"User Password"`
+	Name     string `json:"name" binding:"required" example:"vanthong"`
+	Email    string `json:"email" binding:"required,email" example:"hvthong@gmail.com"`
+	Password string `json:"password" binding:"required" example:"User Password"`
 }
 
 // Validate user
