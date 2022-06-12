@@ -29,7 +29,7 @@ type Profile struct {
 // GetProfileByUserId godoc
 // @Summary Get a profile user by userid
 // @Description Profile user
-// @Tags user
+// @Tags profile
 // @Accept  json
 // @Produce  json
 // @Param Authorization header string true "Token"
@@ -58,7 +58,7 @@ func (u *Profile) GetProfileByUserId(ctx *gin.Context) {
 // AddProfile godoc
 // @Summary Add a profile for user
 // @Description Update profile user
-// @Tags user
+// @Tags profile
 // @Accept  json
 // @Produce  json
 // @Param Authorization header string true "Token"
@@ -120,7 +120,7 @@ func (p *Profile) AddProfile(ctx *gin.Context) {
 // DeteleProfileByUserId godoc
 // @Summary Delete a user profile by UserID
 // @Description Delete a user profile by UserID
-// @Tags user
+// @Tags profile
 // @Accept  json
 // @Produce  json
 // @Param Authorization header string true "Token"
@@ -147,7 +147,7 @@ func (p *Profile) DeteleProfileByUserId(ctx *gin.Context) {
 // UpdateProfileByUserId godoc
 // @Summary Update an existing profile user
 // @Description Update an existing profile user
-// @Tags user
+// @Tags profile
 // @Accept  json
 // @Produce  json
 // @Param Authorization header string true "Token"

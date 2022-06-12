@@ -87,7 +87,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "profile"
                 ],
                 "summary": "Add a profile for user",
                 "parameters": [
@@ -140,7 +140,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "profile"
                 ],
                 "summary": "Update an existing profile user",
                 "parameters": [
@@ -187,7 +187,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "profile"
                 ],
                 "summary": "Delete a user profile by UserID",
                 "parameters": [
@@ -459,7 +459,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "profile"
                 ],
                 "summary": "Get a profile user by userid",
                 "parameters": [

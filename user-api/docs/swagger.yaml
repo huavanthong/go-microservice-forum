@@ -231,7 +231,7 @@ paths:
             $ref: '#/definitions/payload.Error'
       summary: Add a profile for user
       tags:
-      - user
+      - profile
   /profile/:
     patch:
       consumes:
@@ -262,7 +262,7 @@ paths:
             $ref: '#/definitions/payload.Error'
       summary: Update an existing profile user
       tags:
-      - user
+      - profile
   /profile/{userid}:
     delete:
       consumes:
@@ -292,7 +292,7 @@ paths:
             $ref: '#/definitions/payload.Error'
       summary: Delete a user profile by UserID
       tags:
-      - user
+      - profile
   /users:
     get:
       consumes:
@@ -503,5 +503,5 @@ paths:
             $ref: '#/definitions/payload.Error'
       summary: Get a profile user by userid
       tags:
-      - user
+      - profile
 swagger: "2.0"
