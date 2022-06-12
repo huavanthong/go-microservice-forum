@@ -6,6 +6,8 @@
 package daos
 
 import (
+	"fmt"
+
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
 	"github.com/huavanthong/microservice-golang/user-api/models"
@@ -21,6 +23,7 @@ type Profile struct {
 // GetProfileByUserId gets the profile by specific user id
 func (p *Profile) GetProfileByUserId(userid string) (models.Profile, error) {
 
+	fmt.Println("Check 1: ", userid)
 	// validate user id
 	err := p.utils.ValidateObjectID(userid)
 	if err != nil {
@@ -32,14 +35,29 @@ func (p *Profile) GetProfileByUserId(userid string) (models.Profile, error) {
 	sessionCopy := databases.Database.MgDbSession.Copy()
 	defer sessionCopy.Close()
 
-	// get a collection to execute the query against
-	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
+	// get the Profile collection to execute the query against
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
 
 	// find a user by id
 	var profile models.Profile
 	err = collection.FindId(bson.ObjectIdHex(userid)).One(&profile)
 
 	return profile, err
+}
+
+// Update modifies an existing User
+func (p *Profile) Update(profile models.Profile) error {
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbSession.Copy()
+	defer sessionCopy.Close()
+
+	// get a collection to execute the query against.
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
+
+	// update profile user by userid
+	err := collection.UpdateId(profile.ID, &profile)
+	return err
 }
 
 // Insert adds a new profile by specific user into database'
@@ -78,20 +96,5 @@ func (p *Profile) DeleteByUserID(id string) error {
 	// delete user by id
 	err = collection.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 
-	return err
-}
-
-// Update modifies an existing User
-func (p *Profile) Update(profile models.Profile) error {
-	// copy for a newsession with original authentication
-	// to access to MongoDB.
-	sessionCopy := databases.Database.MgDbSession.Copy()
-	defer sessionCopy.Close()
-
-	// get a collection to execute the query against.
-	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
-
-	// update user by id
-	err := collection.UpdateId(profile.ID, &profile)
 	return err
 }

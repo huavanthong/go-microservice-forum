@@ -178,6 +178,49 @@ const docTemplate = `{
             }
         },
         "/profile/{userid}": {
+            "get": {
+                "description": "Profile user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "profile"
+                ],
+                "summary": "Get a profile user by userid",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Profile"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "Delete a user profile by UserID",
                 "consumes": [
@@ -449,51 +492,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/profile": {
-            "get": {
-                "description": "Profile user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "profile"
-                ],
-                "summary": "Get a profile user by userid",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.Profile"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Error"
-                        }
-                    }
-                }
-            }
-        },
         "/users/{id}": {
             "delete": {
                 "description": "Delete a user by ID",
@@ -573,14 +571,6 @@ const docTemplate = `{
         },
         "models.Address": {
             "type": "object",
-            "required": [
-                "city",
-                "country",
-                "district",
-                "street",
-                "ward",
-                "zip"
-            ],
             "properties": {
                 "city": {
                     "type": "string"
@@ -629,11 +619,9 @@ const docTemplate = `{
         "models.Profile": {
             "type": "object",
             "required": [
+                "email",
                 "firstname",
-                "lastname",
-                "phonenumber",
-                "profileid",
-                "profileid"
+                "userid"
             ],
             "properties": {
                 "addresses": {
@@ -651,6 +639,9 @@ const docTemplate = `{
                 "defaultprofile": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "favouritecolor": {
                     "description": "alias for 'hexcolor|rgb|rgba|hsl|hsla'",
                     "type": "string",
@@ -659,18 +650,22 @@ const docTemplate = `{
                 "firstname": {
                     "type": "string"
                 },
+                "id": {
+                    "type": "string",
+                    "example": "5bbdadf782ebac06a695a8e7"
+                },
                 "lastname": {
                     "type": "string"
                 },
                 "phonenumber": {
                     "type": "string"
                 },
-                "profileid": {
-                    "type": "string",
-                    "example": "1"
-                },
                 "profilename": {
                     "type": "string"
+                },
+                "userid": {
+                    "type": "string",
+                    "example": "5bbdadf782ebac06a695a8e7"
                 }
             }
         },

@@ -35,13 +35,6 @@ definitions:
         type: string
       zip:
         type: string
-    required:
-    - city
-    - country
-    - district
-    - street
-    - ward
-    - zip
     type: object
   models.LoginAttempt:
     properties:
@@ -72,27 +65,30 @@ definitions:
         type: integer
       defaultprofile:
         type: string
+      email:
+        type: string
       favouritecolor:
         description: alias for 'hexcolor|rgb|rgba|hsl|hsla'
         example: '#000-'
         type: string
       firstname:
         type: string
+      id:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
       lastname:
         type: string
       phonenumber:
         type: string
-      profileid:
-        example: "1"
-        type: string
       profilename:
         type: string
+      userid:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
     required:
+    - email
     - firstname
-    - lastname
-    - phonenumber
-    - profileid
-    - profileid
+    - userid
     type: object
   models.Role:
     properties:
@@ -293,6 +289,35 @@ paths:
       summary: Delete a user profile by UserID
       tags:
       - profile
+    get:
+      consumes:
+      - application/json
+      description: Profile user
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Profile'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Error'
+      summary: Get a profile user by userid
+      tags:
+      - profile
   /users:
     get:
       consumes:
@@ -474,34 +499,4 @@ paths:
       summary: List all existing users
       tags:
       - user
-  /users/profile:
-    get:
-      consumes:
-      - application/json
-      description: Profile user
-      parameters:
-      - description: Token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Profile'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/payload.Error'
-      summary: Get a profile user by userid
-      tags:
-      - profile
 swagger: "2.0"

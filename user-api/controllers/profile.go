@@ -36,7 +36,7 @@ type Profile struct {
 // @Param id path string true "User ID"
 // @Failure 500 {object} payload.Error
 // @Success 200 {object} models.Profile
-// @Router /users/profile [get]
+// @Router /profile/{userid} [get]
 // GetProfileByUserId get a profile by user id in DB
 func (u *Profile) GetProfileByUserId(ctx *gin.Context) {
 
