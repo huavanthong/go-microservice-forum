@@ -6,8 +6,6 @@
 package daos
 
 import (
-	"fmt"
-
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
 	"github.com/huavanthong/microservice-golang/user-api/models"
@@ -23,7 +21,6 @@ type Profile struct {
 // GetProfileByUserId gets the profile by specific user id
 func (p *Profile) GetProfileByUserId(userid string) (models.Profile, error) {
 
-	fmt.Println("Check 1: ", userid)
 	// validate user id
 	err := p.utils.ValidateObjectID(userid)
 	if err != nil {
@@ -38,9 +35,11 @@ func (p *Profile) GetProfileByUserId(userid string) (models.Profile, error) {
 	// get the Profile collection to execute the query against
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
 
-	// find a user by id
+	// find the profile user by userid
 	var profile models.Profile
-	err = collection.FindId(bson.ObjectIdHex(userid)).One(&profile)
+	err = collection.Find(bson.M{"$and": []bson.M{
+		bson.M{"_userid": bson.ObjectIdHex(userid)}},
+	}).One(&profile)
 
 	return profile, err
 }
