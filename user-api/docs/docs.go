@@ -42,6 +42,13 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "Password",
                         "name": "password",
                         "in": "formData",
@@ -344,12 +351,29 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.AddUser": {
+        "models.Action": {
             "type": "object",
             "properties": {
+                "actionname": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.AddUser": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "hvthong@gmail.com"
+                },
                 "name": {
                     "type": "string",
-                    "example": "User Name"
+                    "example": "vanthong"
                 },
                 "password": {
                     "type": "string",
@@ -357,20 +381,79 @@ const docTemplate = `{
                 }
             }
         },
-        "models.User": {
+        "models.LoginAttempt": {
             "type": "object",
             "properties": {
+                "accountname": {
+                    "description": "define account name is not correct with user id",
+                    "type": "string"
+                },
+                "browertype": {
+                    "type": "string"
+                },
+                "createdate": {
+                    "type": "string"
+                },
+                "ipnumber": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Role": {
+            "type": "object",
+            "properties": {
+                "actions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Action"
+                    }
+                },
+                "rolename": {
+                    "type": "string"
+                },
+                "rolenote": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "activated": {
+                    "type": "boolean"
+                },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string",
                     "example": "5bbdadf782ebac06a695a8e7"
                 },
-                "name": {
-                    "type": "string",
-                    "example": "raycad"
+                "loginattempts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.LoginAttempt"
+                    }
                 },
                 "password": {
                     "type": "string",
                     "example": "raycad"
+                },
+                "role": {
+                    "$ref": "#/definitions/models.Role"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "hvthong"
                 }
             }
         },

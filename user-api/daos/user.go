@@ -87,7 +87,7 @@ func (u *User) DeleteByID(id string) error {
 }
 
 // Login User
-func (u *User) Login(name string, password string) (models.User, error) {
+func (u *User) Login(name string, email string, password string) (models.User, error) {
 
 	var err error
 	var user models.User
@@ -104,6 +104,7 @@ func (u *User) Login(name string, password string) (models.User, error) {
 	if name == "admin" {
 		err = collection.Find(bson.M{"$and": []bson.M{
 			bson.M{"name": name},
+			bson.M{"email": email},
 			bson.M{"password": password}},
 		}).One(&user)
 

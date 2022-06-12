@@ -16,6 +16,7 @@ This user-api folder is a user microservice. It include some below feautures:
 * In building-microservice-go book, Chapter 8: Security, it remind that we never storing passwords in plain text in a datastore. How do you implement this feature? Refer: [here](#hashing-password)
 * Implement **Unit Test** with Gin framework? Refer: [here](https://circleci.com/blog/gin-gonic-testing/)
 * Implement OAuth2 Google with GIN framework. Refer: [here]
+* Implement middleware for validating user info with GIN framework. Refer: [here](https://sosedoff.com/2014/12/21/gin-middleware.html)
 
 # Project Structure
 ```
@@ -55,6 +56,11 @@ More details: [here](https://dbdiagram.io/d/62a44fa39921fe2a96e2f031)
 Test with swagger
 ```
 http://localhost:8808/swagger/index.html
+```
+
+Generate swagger documents
+```
+swag init
 ```
 ## Test server
 To understand this service, please test server with APIs below

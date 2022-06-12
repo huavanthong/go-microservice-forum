@@ -1,25 +1,76 @@
 basePath: /api/v1
 definitions:
+  models.Action:
+    properties:
+      actionname:
+        type: string
+    type: object
   models.AddUser:
     properties:
+      email:
+        example: hvthong@gmail.com
+        type: string
       name:
-        example: User Name
+        example: vanthong
         type: string
       password:
         example: User Password
         type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  models.LoginAttempt:
+    properties:
+      accountname:
+        description: define account name is not correct with user id
+        type: string
+      browertype:
+        type: string
+      createdate:
+        type: string
+      ipnumber:
+        type: string
+      password:
+        type: string
+      success:
+        type: string
+    type: object
+  models.Role:
+    properties:
+      actions:
+        items:
+          $ref: '#/definitions/models.Action'
+        type: array
+      rolename:
+        type: string
+      rolenote:
+        type: string
     type: object
   models.User:
     properties:
+      activated:
+        type: boolean
+      email:
+        type: string
       id:
         example: 5bbdadf782ebac06a695a8e7
         type: string
-      name:
-        example: raycad
-        type: string
+      loginattempts:
+        items:
+          $ref: '#/definitions/models.LoginAttempt'
+        type: array
       password:
         example: raycad
         type: string
+      role:
+        $ref: '#/definitions/models.Role'
+      username:
+        example: hvthong
+        type: string
+    required:
+    - email
     type: object
   payload.Error:
     properties:
@@ -59,6 +110,11 @@ paths:
       - description: Username
         in: formData
         name: user
+        required: true
+        type: string
+      - description: Email
+        in: formData
+        name: email
         required: true
         type: string
       - description: Password
