@@ -12,14 +12,14 @@ import "gopkg.in/mgo.v2/bson"
 type Profile struct {
 	ID             bson.ObjectId `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7"`
 	ProfileName    string        `bson:"profilename" json:"profilename"`
-	FirstName      string        `bson:"firstname" json:"firstname" binding:"required"`
-	LastName       string        `bson:"lastname" json:"lastname"`
-	Email          string        `bson:"email" json:"email" binding:"required,email"`
+	FirstName      string        `bson:"firstname" json:"firstname" binding:"required" example:"John"`
+	LastName       string        `bson:"lastname" json:"lastname" example:"Switch"`
+	Email          string        `bson:"email" json:"email" binding:"required,email" example:"example@gmail.com"`
 	UserID         bson.ObjectId `bson:"_userid" json:"userid" binding:"required" example:"5bbdadf782ebac06a695a8e7"`
-	Age            uint8         `bson:"age" json:"age" binding:"omitempty,gte=0,lte=130"`
+	Age            uint8         `bson:"age" json:"age" binding:"omitempty,gte=0,lte=130" example:"30"`
 	PhoneNumber    string        `bson:"phonenumber" json:"phonenumber"`
 	DefaultProfile string        `bson:"defaultprofile" json:"defaultprofile"`
-	FavouriteColor string        `bson:"favouritecolor" json:"favouritecolor" binding:"iscolor" example:"#000-"` // alias for 'hexcolor|rgb|rgba|hsl|hsla'
+	FavouriteColor string        `bson:"favouritecolor" json:"favouritecolor" binding:"iscolor" example:"#0003"` // alias for 'hexcolor|rgb|rgba|hsl|hsla'
 	Addresses      []*Address    `bson:"addresses" json"addresses"`                                              // a person can have a home and cottage...
 }
 

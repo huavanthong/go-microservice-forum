@@ -632,28 +632,32 @@ const docTemplate = `{
                 "age": {
                     "type": "integer",
                     "maximum": 130,
-                    "minimum": 0
+                    "minimum": 0,
+                    "example": 30
                 },
                 "defaultprofile": {
                     "type": "string"
                 },
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "example@gmail.com"
                 },
                 "favouritecolor": {
                     "description": "alias for 'hexcolor|rgb|rgba|hsl|hsla'",
                     "type": "string",
-                    "example": "#000-"
+                    "example": "#0003"
                 },
                 "firstname": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "John"
                 },
                 "id": {
                     "type": "string",
                     "example": "5bbdadf782ebac06a695a8e7"
                 },
                 "lastname": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Switch"
                 },
                 "phonenumber": {
                     "type": "string"

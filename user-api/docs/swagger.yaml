@@ -60,23 +60,27 @@ definitions:
           $ref: '#/definitions/models.Address'
         type: array
       age:
+        example: 30
         maximum: 130
         minimum: 0
         type: integer
       defaultprofile:
         type: string
       email:
+        example: example@gmail.com
         type: string
       favouritecolor:
         description: alias for 'hexcolor|rgb|rgba|hsl|hsla'
-        example: '#000-'
+        example: '#0003'
         type: string
       firstname:
+        example: John
         type: string
       id:
         example: 5bbdadf782ebac06a695a8e7
         type: string
       lastname:
+        example: Switch
         type: string
       phonenumber:
         type: string
