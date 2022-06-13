@@ -42,6 +42,11 @@ const (
 
 // Status Text
 const (
+	invalidSession      = "Invalid session state"
+	loginFailed         = "Login failed. Please try again."
+	marshallingFailed   = "Error marshalling response. Please try agian."
+	savingSessionError  = "Error while saving session. Please try again."
+	savingUserError     = "Error while saving user. Please try again."
 	ErrNameEmpty        = "Name is empty"
 	ErrPasswordEmpty    = "Password is empty"
 	ErrHashPasswordFail = "Hash password failed"
