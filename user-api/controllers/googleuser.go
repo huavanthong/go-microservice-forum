@@ -96,6 +96,8 @@ func (gu *GoogleUser) AuthGoogleAccount(ctx *gin.Context) {
 		// ctx.HTML(http.StatusUnauthorized, "error.tmpl", gin.H{"message": "Invalid session state."})
 		return
 	}
+
+	// from code, getting access token
 	code := ctx.Request.URL.Query().Get("code")
 	tok, err := conf.Exchange(oauth2.NoContext, code)
 	if err != nil {
@@ -105,6 +107,7 @@ func (gu *GoogleUser) AuthGoogleAccount(ctx *gin.Context) {
 		return
 	}
 
+	// from token OAuth2, get user info from google service
 	client := conf.Client(oauth2.NoContext, tok)
 	userinfo, err := client.Get("https://www.googleapis.com/oauth2/v3/userinfo")
 	if err != nil {
@@ -113,6 +116,8 @@ func (gu *GoogleUser) AuthGoogleAccount(ctx *gin.Context) {
 		return
 	}
 	defer userinfo.Body.Close()
+
+	// decrypt user info from google
 	data, _ := ioutil.ReadAll(userinfo.Body)
 	u := models.GoogleUser{}
 	if err = json.Unmarshal(data, &u); err != nil {
@@ -121,6 +126,8 @@ func (gu *GoogleUser) AuthGoogleAccount(ctx *gin.Context) {
 		// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error marshalling response. Please try agian."})
 		return
 	}
+
+	// save user to session
 	session.Set("user-id", u.Email)
 	err = session.Save()
 	if err != nil {
@@ -129,6 +136,8 @@ func (gu *GoogleUser) AuthGoogleAccount(ctx *gin.Context) {
 		// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving session. Please try again."})
 		return
 	}
+
+	// Check user exists in mongodb or not
 	seen := false
 	if _, mongoErr := gu.guserDAO.LoadUser(u.Email); mongoErr == nil {
 		seen = true
