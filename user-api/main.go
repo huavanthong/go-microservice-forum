@@ -145,6 +145,7 @@ func main() {
 		profile.Use(jwt.Auth(common.Config.JwtSecretPassword))
 		{
 			profile.POST(":userid", p.AddProfile)
+			profile.GET("/list", p.ListProfiles)
 			profile.GET(":userid", p.GetProfileByUserId)
 			profile.PATCH("", p.UpdateProfileByUserId)
 			profile.DELETE(":userid", p.DeteleProfileByUserId)

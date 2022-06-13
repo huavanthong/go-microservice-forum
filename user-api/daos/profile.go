@@ -6,8 +6,6 @@
 package daos
 
 import (
-	"fmt"
-
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
 	"github.com/huavanthong/microservice-golang/user-api/models"
@@ -18,6 +16,23 @@ import (
 // Profile manages User CRUD
 type Profile struct {
 	utils *utils.Utils
+}
+
+// GetAll gets the list of Profiles
+func (u *Profile) GetAll() ([]models.Profile, error) {
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbSession.Copy()
+	defer sessionCopy.Close()
+
+	// get a collection to execute the query against.
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
+
+	// query all users in MongoDB and store it to array
+	var profiles []models.Profile
+	err := collection.Find(bson.M{}).All(&profiles)
+
+	return profiles, err
 }
 
 // GetProfileByUserId gets the profile by specific user id
@@ -56,11 +71,8 @@ func (p *Profile) Update(profile models.Profile) error {
 	// get a collection to execute the query against.
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColProfile)
 
-	fmt.Println("Check 1: ", profile)
-
 	// update profile user by userid
 	err := collection.UpdateId(bson.M{"_userid": profile.UserID}, &profile)
-	fmt.Println("Check 2: ", err)
 
 	return err
 }

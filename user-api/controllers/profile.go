@@ -26,6 +26,35 @@ type Profile struct {
 	profileDAO daos.Profile
 }
 
+// ListProfiles godoc
+// @Summary List all existing user profiles
+// @Description List all existing user profiles
+// @Tags profile
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Failure 500 {object} payload.Error
+// @Success 200 {array} models.Profile
+// @Router /profile/list [get]
+// ListUsers get all users exist in DB
+func (p *Profile) ListProfiles(ctx *gin.Context) {
+
+	// array of profiles
+	var profiles []models.Profile
+
+	// get all user profiles
+	profiles, err := p.profileDAO.GetAll()
+
+	// write response
+	if err == nil {
+		ctx.JSON(http.StatusOK, profiles)
+	} else {
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
+		log.Debug("[ERROR]: ", err)
+	}
+
+}
+
 // GetProfileByUserId godoc
 // @Summary Get a profile user by userid
 // @Description Profile user
