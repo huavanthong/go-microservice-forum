@@ -18,6 +18,7 @@ type Profile struct {
 	EmailVerified  bool          `bson:"emailverified" json:"emailverified" example:"true"`
 	UserID         bson.ObjectId `bson:"_userid" json:"userid" binding:"required" example:"5bbdadf782ebac06a695a8e7"`
 	Age            uint8         `bson:"age" json:"age" binding:"omitempty,gte=0,lte=130" example:"30"`
+	Gender         string        `bson:"gender" json:"gender" example:"male"`
 	PhoneNumber    string        `bson:"phonenumber" json:"phonenumber"`
 	Picture        string        `bson:"picture" json:"picture" example:"link to picture"`
 	DefaultProfile string        `bson:"defaultprofile" json:"defaultprofile"`
