@@ -114,8 +114,8 @@ func main() {
 	m.router.LoadHTMLGlob("templates/*")
 
 	m.router.GET("/", gu.IndexHandler)
-	m.router.GET("/login", gu.LoginHandler)
-	m.router.GET("/auth", gu.AuthHandler)
+	m.router.GET("/login", gu.LoginGoogle)
+	m.router.GET("/auth", gu.AuthGoogleAccount)
 
 	// simple group: v1
 	v1 := m.router.Group("/api/v1")
@@ -123,9 +123,9 @@ func main() {
 		admin := v1.Group("/admin")
 		{
 			admin.POST("/auth/signin", u.Authenticate)
-			// admin.POST("/auth/signin/social", c.AuthSocial)
-			// admin.POST("/auth/signin/webadmin", c.AuthWebAdmin)
-
+			// Login social
+			admin.GET("/auth/social", gu.LoginGoogle)
+			admin.GET("/auth", gu.AuthGoogleAccount)
 		}
 
 		user := v1.Group("/users")

@@ -70,8 +70,18 @@ func (gu *GoogleUser) IndexHandler(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 
-// AuthHandler handles authentication of a user and initiates a session.
-func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
+// AuthGoogleAccount godoc
+// @Summary Check user authentication
+// @Description Authenticate google user
+// @Tags admin
+// @Security ApiKeyAuth
+// @Accept  json
+// @Failure 401 {object} payload.Error
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} security.Token
+// @Router /admin/auth [get]
+// AuthGoogleAccount handles authentication of a user and initiates a session.
+func (gu *GoogleUser) AuthGoogleAccount(ctx *gin.Context) {
 	// Handle the exchange code to initiate a transport.
 	// get session where stored info users
 	session := sessions.Default(ctx)
@@ -136,8 +146,18 @@ func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 	// ctx.HTML(http.StatusOK, "battle.tmpl", gin.H{"email": u.Email, "seen": seen})
 }
 
-// LoginHandler handles the login procedure.
-func (gu *GoogleUser) LoginHandler(ctx *gin.Context) {
+// LoginGoogle godoc
+// @Summary Check token for accessing google account
+// @Description get token for redirect to sign in google service
+// @Tags admin
+// @Security ApiKeyAuth
+// @Accept  json
+// @Failure 401 {object} payload.Error
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} security.Token
+// @Router /admin/auth/social [get]
+// LoginGoogle handles the login procedure.
+func (gu *GoogleUser) LoginGoogle(ctx *gin.Context) {
 
 	// State is a token to protect the user from CSRF attachks
 	// Refer: https://pkg.go.dev/golang.org/x/oauth2#section-readme
