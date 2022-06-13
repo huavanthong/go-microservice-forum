@@ -17,6 +17,43 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/admin/auth": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Authenticate google user",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Check user authentication",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/security.Token"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/admin/auth/signin": {
             "post": {
                 "security": [
@@ -55,6 +92,43 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/security.Token"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/auth/social": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "get token for redirect to sign in google service",
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Check token for accessing google account",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -164,6 +238,47 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/payload.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/profile/list": {
+            "get": {
+                "description": "List all existing user profiles",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "profile"
+                ],
+                "summary": "List all existing user profiles",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Profile"
+                            }
                         }
                     },
                     "500": {
@@ -642,6 +757,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "example@gmail.com"
                 },
+                "emailverified": {
+                    "type": "boolean",
+                    "example": true
+                },
                 "favouritecolor": {
                     "description": "alias for 'hexcolor|rgb|rgba|hsl|hsla'",
                     "type": "string",
@@ -650,6 +769,10 @@ const docTemplate = `{
                 "firstname": {
                     "type": "string",
                     "example": "John"
+                },
+                "gender": {
+                    "type": "string",
+                    "example": "male"
                 },
                 "id": {
                     "type": "string",
@@ -661,6 +784,10 @@ const docTemplate = `{
                 },
                 "phonenumber": {
                     "type": "string"
+                },
+                "picture": {
+                    "type": "string",
+                    "example": "link to picture"
                 },
                 "profilename": {
                     "type": "string"

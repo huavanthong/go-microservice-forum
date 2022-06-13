@@ -69,12 +69,18 @@ definitions:
       email:
         example: example@gmail.com
         type: string
+      emailverified:
+        example: true
+        type: boolean
       favouritecolor:
         description: alias for 'hexcolor|rgb|rgba|hsl|hsla'
         example: '#0003'
         type: string
       firstname:
         example: John
+        type: string
+      gender:
+        example: male
         type: string
       id:
         example: 5bbdadf782ebac06a695a8e7
@@ -83,6 +89,9 @@ definitions:
         example: Switch
         type: string
       phonenumber:
+        type: string
+      picture:
+        example: link to picture
         type: string
       profilename:
         type: string
@@ -158,6 +167,29 @@ info:
   title: UserManagement Service API Document
   version: "1.0"
 paths:
+  /admin/auth:
+    get:
+      consumes:
+      - application/json
+      description: Authenticate google user
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/security.Token'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/payload.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Check user authentication
+      tags:
+      - admin
   /admin/auth/signin:
     post:
       consumes:
@@ -195,6 +227,29 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Check user authentication
+      tags:
+      - admin
+  /admin/auth/social:
+    get:
+      consumes:
+      - application/json
+      description: get token for redirect to sign in google service
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/security.Token'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/payload.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Check token for accessing google account
       tags:
       - admin
   /profile:
@@ -319,6 +374,33 @@ paths:
           schema:
             $ref: '#/definitions/payload.Error'
       summary: Get a profile user by userid
+      tags:
+      - profile
+  /profile/list:
+    get:
+      consumes:
+      - application/json
+      description: List all existing user profiles
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Profile'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Error'
+      summary: List all existing user profiles
       tags:
       - profile
   /users:
