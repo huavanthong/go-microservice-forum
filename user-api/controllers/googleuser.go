@@ -9,8 +9,10 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/daos"
 	"github.com/huavanthong/microservice-golang/user-api/models"
+	"github.com/huavanthong/microservice-golang/user-api/payload"
 
 	googleCred "github.com/huavanthong/microservice-golang/user-api/security/google"
 	"github.com/huavanthong/microservice-golang/user-api/utils"
@@ -74,19 +76,22 @@ func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 	// get session where stored info users
 	session := sessions.Default(ctx)
 
+	// retrieve token for accessing google service
 	retrievedState := session.Get("state")
 	queryState := ctx.Request.URL.Query().Get("state")
 
 	if retrievedState != queryState {
 		log.Printf("Invalid session state: retrieved: %s; Param: %s", retrievedState, queryState)
-		ctx.HTML(http.StatusUnauthorized, "error.tmpl", gin.H{"message": "Invalid session state."})
+		ctx.JSON(http.StatusUnauthorized, payload.Error{common.StatusCodeUnknown, common.invalidSession})
+		// ctx.HTML(http.StatusUnauthorized, "error.tmpl", gin.H{"message": "Invalid session state."})
 		return
 	}
 	code := ctx.Request.URL.Query().Get("code")
 	tok, err := conf.Exchange(oauth2.NoContext, code)
 	if err != nil {
 		log.Println(err)
-		ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Login failed. Please try again."})
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.loginFailed})
+		// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Login failed. Please try again."})
 		return
 	}
 
@@ -102,14 +107,16 @@ func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 	u := models.GoogleUser{}
 	if err = json.Unmarshal(data, &u); err != nil {
 		log.Println(err)
-		ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error marshalling response. Please try agian."})
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.marshallingFailed})
+		// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error marshalling response. Please try agian."})
 		return
 	}
 	session.Set("user-id", u.Email)
 	err = session.Save()
 	if err != nil {
 		log.Println(err)
-		ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving session. Please try again."})
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.savingSessionError})
+		// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving session. Please try again."})
 		return
 	}
 	seen := false
@@ -119,31 +126,45 @@ func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 		err = gu.guserDAO.SaveUser(&u)
 		if err != nil {
 			log.Println(err)
-			ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving user. Please try again."})
+			ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.savingUserError})
+			// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving user. Please try again."})
 			return
 		}
 	}
 
-	ctx.HTML(http.StatusOK, "battle.tmpl", gin.H{"email": u.Email, "seen": seen})
+	ctx.JSON(http.StatusBadRequest, gin.H{"email": u.Email, "seen": seen})
+	// ctx.HTML(http.StatusOK, "battle.tmpl", gin.H{"email": u.Email, "seen": seen})
 }
 
 // LoginHandler handles the login procedure.
 func (gu *GoogleUser) LoginHandler(ctx *gin.Context) {
+
+	// State is a token to protect the user from CSRF attachks
+	// Refer: https://pkg.go.dev/golang.org/x/oauth2#section-readme
 	state, err := googleCred.RandToken(32)
 	if err != nil {
-		ctx.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{"message": "Error while generating random data."})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Error while generating random data."})
+		// ctx.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{"message": "Error while generating random data."})
 		return
 	}
+
+	// Getting session default from main.go: NewCookieStore()
 	session := sessions.Default(ctx)
+
+	// Assign token to keyword: state
 	session.Set("state", state)
 
+	// Save session
 	err = session.Save()
 	if err != nil {
-		ctx.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{"message": "Error while saving session."})
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
 	}
+
+	// get URL to redirect sign up google
 	link := getLoginURL(state)
-	ctx.HTML(http.StatusOK, "auth.tmpl", gin.H{"link": link})
+	ctx.JSON(http.StatusOK, gin.H{"link": link})
+	// ctx.HTML(http.StatusOK, "auth.tmpl", gin.H{"link": link})
 }
 
 // FieldHandler is a rudementary handler for logged in users.
