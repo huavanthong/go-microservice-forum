@@ -82,7 +82,7 @@ func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 
 	if retrievedState != queryState {
 		log.Printf("Invalid session state: retrieved: %s; Param: %s", retrievedState, queryState)
-		ctx.JSON(http.StatusUnauthorized, payload.Error{common.StatusCodeUnknown, common.invalidSession})
+		ctx.JSON(http.StatusUnauthorized, payload.Error{common.StatusCodeUnknown, common.InvalidSession})
 		// ctx.HTML(http.StatusUnauthorized, "error.tmpl", gin.H{"message": "Invalid session state."})
 		return
 	}
@@ -90,7 +90,7 @@ func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 	tok, err := conf.Exchange(oauth2.NoContext, code)
 	if err != nil {
 		log.Println(err)
-		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.loginFailed})
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.LoginFailed})
 		// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Login failed. Please try again."})
 		return
 	}
@@ -107,7 +107,7 @@ func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 	u := models.GoogleUser{}
 	if err = json.Unmarshal(data, &u); err != nil {
 		log.Println(err)
-		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.marshallingFailed})
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.MarshallingFailed})
 		// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error marshalling response. Please try agian."})
 		return
 	}
@@ -115,7 +115,7 @@ func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 	err = session.Save()
 	if err != nil {
 		log.Println(err)
-		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.savingSessionError})
+		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.SavingSessionError})
 		// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving session. Please try again."})
 		return
 	}
@@ -126,7 +126,7 @@ func (gu *GoogleUser) AuthHandler(ctx *gin.Context) {
 		err = gu.guserDAO.SaveUser(&u)
 		if err != nil {
 			log.Println(err)
-			ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.savingUserError})
+			ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, common.SavingUserError})
 			// ctx.HTML(http.StatusBadRequest, "error.tmpl", gin.H{"message": "Error while saving user. Please try again."})
 			return
 		}
