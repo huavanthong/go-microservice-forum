@@ -5,6 +5,14 @@ This user-api folder is a user microservice. It include some below feautures:
 * Apply Singleton design pattern for DB.
 * Understand how to authenticate user with JWT
 
+### User microservice which includes;
+* [Done] User microservice application. 
+* [Done] REST API principles, CRUD operations.
+* [Done] MongoDB NoSQL database connection on docker containerization. 
+* [Done] N-Layer implementation with Repository Pattern. 
+* [Done] Swagger Open API implementation.
+* [NotD] Dockerfile and docker-compose implementation. 
+
 # Architecture
 ![Architecture User Microservice](./docs/images/architecture/go-architecture-layer.png)
 
@@ -50,9 +58,7 @@ Those folders contain:
 More details: [here](https://dbdiagram.io/d/62a44fa39921fe2a96e2f031)
 ## Getting Started
 
-
-
-## Swagger
+### Swagger
 Test with swagger
 ```
 http://localhost:8808/swagger/index.html
@@ -62,7 +68,7 @@ Generate swagger documents
 ```
 swag init
 ```
-## Test server
+### Test server
 To understand this service, please test server with APIs below
 ### Login With User
 Authenticate with your User.  

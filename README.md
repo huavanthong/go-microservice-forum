@@ -2,6 +2,11 @@
 
 
 # Reference
+## Architecture
+* Project
+    - Project ASP.NET example for demo microservice. Refer: [here](https://mehmetozkaya.medium.com/aspnetrun-microservices-renewed-d08901b5e06f), [doc](https://medium.com/aspnetrun/microservices-architecture-on-net-3b4865eea03f), [source](https://github.com/aspnetrun/run-aspnetcore-microservices)
+
+#
 ## Email microservice
 * Project
     - Example project email using **RabbitMQ**. Refer: [here](https://github.com/savsgio/microservice-email)
