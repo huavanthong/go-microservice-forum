@@ -7,6 +7,7 @@ This user-api folder is a user microservice. It include some below feautures:
 
 ### User microservice which includes;
 * [Done] User microservice application. 
+* [Done] Security for user service such as JWT, HashPassword, Avoid SQL injection. 
 * [Done] REST API principles, CRUD operations.
 * [Done] MongoDB NoSQL database connection on docker containerization. 
 * [Done] N-Layer implementation with Repository Pattern. 

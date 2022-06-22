@@ -20,9 +20,9 @@ type User struct {
 	Name          string         `bson:"name" json:"username" example:"hvthong" `
 	Email         string         `bson:"email" json:"email" validate:"required,email"`
 	Password      string         `bson:"password" json:"password" example:"raycad"`
-	CreatedAt     string         `bson:"-" json:"-"`
-	UpdateAt      string         `bson:"-" json:"-"`
-	LastLoginAt   string         `bson:"-" json:"-"`
+	CreatedAt     string         `bson:"createat" json:"-"`
+	UpdateAt      string         `bson:"updateat" json:"-"`
+	LastLoginAt   string         `bson:"lastloginat" json:"-"`
 	LoginAttempts []LoginAttempt `bson:"loginattempts" json:"loginattempts"`
 	Role          Role           `bson:"role" json:"role"`
 	Activated     bool           `bson:"activated" json:"activated"`
@@ -48,24 +48,24 @@ type Role struct {
 // Action for role
 type Action struct {
 	ActionName string `bson:"actionname" json:"actionname"`
-	ActionURL  string `bson:"actionname" json:"actionname"`
+	ActionURL  string `bson:"actionurl" json:"actionurl"`
 }
 
-// AddUser information
-type AddUser struct {
-	Name     string `json:"name" binding:"required" example:"vanthong"`
-	Email    string `json:"email" binding:"required,email" example:"hvthong@gmail.com"`
-	Password string `json:"password" binding:"required" example:"User Password"`
+// Account information
+type Account struct {
+	UserName string `form:"username" binding:"required,max=64" example:"vanthong"`
+	Email    string `form:"email" binding:"required,email,max=255" example:"hvthong@gmail.com"`
+	Password string `form:"password" binding:"required" example:"User Password"`
 }
 
 // Validate user
-func (a *AddUser) Validate() error {
+func (a *Account) Validate() error {
 
 	// check sql injection hacking
 	a.CheckSQLInjection(*a)
 
 	switch {
-	case len(a.Name) == 0:
+	case len(a.UserName) == 0:
 		return errors.New(common.ErrNameEmpty)
 	case len(a.Password) == 0:
 		return errors.New(common.ErrPasswordEmpty)
@@ -77,8 +77,8 @@ func (a *AddUser) Validate() error {
 }
 
 // Check SQL injection hacking
-func (a *AddUser) CheckSQLInjection(data AddUser) {
+func (a *Account) CheckSQLInjection(data Account) {
 
-	(*a).Name = security.Santize(data.Name)
+	(*a).UserName = security.Santize(data.UserName)
 	(*a).Password = security.Santize(data.Password)
 }

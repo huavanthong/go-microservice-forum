@@ -22,9 +22,11 @@
 * Authentication
     - Implement Google OAuth2 with GIN. Refer: [here](https://skarlso.github.io/2016/06/12/google-signin-with-go/)
     - Implement JWT for login account. Refer: [here](https://tienbm90.medium.com/authentication-and-authorization-in-gin-application-with-jwt-and-casbin-a56bbbdec90b)
+    - Implement a multi-level authentication system for goalng. [here](https://mattermost.com/blog/how-to-build-an-authentication-microservice-in-golang-from-scratch/)
 * Authorization
     - Implement authorize role. Refer: [here](https://www.zupzup.org/casbin-http-role-auth/)
     - Implement authorize role with GIN framework. Refer: [here](https://github.com/gin-contrib/authz)
+    - User Management Roles and Functions. Refer: [here](https://www.ibm.com/docs/en/strategicsm/10.1.1?topic=roles-user-management-functions)
 * Security
     - Convert user's password in plain text to bcrypt. [here](https://github.com/huavanthong/microservice-golang/blob/master/user-api/security/bcrypt.go)
     - Avoid SQL Injection. Refer: [here](https://github.com/huavanthong/microservice-golang/blob/master/user-api/security/bcrypt.go)

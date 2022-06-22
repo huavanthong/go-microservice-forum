@@ -41,19 +41,23 @@ type User struct {
 // @Router /admin/auth/signin [post]
 func (u *User) Authenticate(ctx *gin.Context) {
 
+	// init variable
+	var err error
+
 	// get parameter value from request through PostForm
-	name := ctx.PostForm("user")
-	email := ctx.PostForm("email")
-	password := ctx.PostForm("password")
+	var accountInfo models.Account
+	if err := ctx.ShouldBind(&accountInfo); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"binding account info error": err.Error()})
+		return
+	}
 
 	// var user models.User
-	var err error
-	_, err = u.userDAO.Login(name, email, password)
+	_, err = u.userDAO.Login(accountInfo)
 
 	if err == nil {
 		var tokenString string
 		// Generate token string
-		tokenString, err = u.utils.GenerateJWT(name, "")
+		tokenString, err = u.utils.GenerateJWT(accountInfo.UserName, "")
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 			log.Debug("[ERROR]: ", err)
@@ -82,24 +86,21 @@ func (u *User) Authenticate(ctx *gin.Context) {
 // @Router /users [post]
 func (u *User) AddUser(ctx *gin.Context) {
 	// bind user info to json getting context
-	var addUser models.AddUser
-	if err := ctx.ShouldBindJSON(&addUser); err != nil {
-		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
-		return
-	}
+	var addAccount models.Account
 
-	// validate data on user
-	if err := addUser.Validate(); err != nil {
-		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
+	// validate data on user data
+	// For binding data using go-playground in GIN through models.AddUser
+	if err := ctx.ShouldBindJSON(&addAccount); err != nil {
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
 	}
 
 	// create user from models
 	user := models.User{
 		ID:            bson.NewObjectId(),
-		Name:          addUser.Name,
-		Email:         addUser.Email,
-		Password:      addUser.Password,
+		Name:          addAccount.UserName,
+		Email:         addAccount.Email,
+		Password:      addAccount.Password,
 		LoginAttempts: []models.LoginAttempt{},
 	}
 

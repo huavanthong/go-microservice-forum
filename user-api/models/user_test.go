@@ -14,10 +14,10 @@ import (
 	"testing"
 )
 
-/*********************** AddUser ***********************/
+/*********************** Account ***********************/
 func TestNormalCaseAddUser(t *testing.T) {
 
-	a := AddUser{
+	a := Account{
 		Name:     "hvthong",
 		Password: "1234",
 	}
@@ -28,7 +28,7 @@ func TestNormalCaseAddUser(t *testing.T) {
 
 func TestInvalidUserNameReturnErr(t *testing.T) {
 
-	a := AddUser{
+	a := Account{
 		Name:     "",
 		Password: "1234",
 	}
@@ -40,7 +40,7 @@ func TestInvalidUserNameReturnErr(t *testing.T) {
 
 func TestInvalidPassWordReturnErr(t *testing.T) {
 
-	a := AddUser{
+	a := Account{
 		Name:     "hvthong",
 		Password: "",
 	}
@@ -52,7 +52,7 @@ func TestInvalidPassWordReturnErr(t *testing.T) {
 
 func TestSqlInjection(t *testing.T) {
 
-	a := AddUser{
+	a := Account{
 		Name:     "hvthong > ok",
 		Password: "1234$123>33",
 	}
