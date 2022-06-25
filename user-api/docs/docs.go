@@ -448,7 +448,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.AddUser"
+                            "$ref": "#/definitions/models.Account"
                         }
                     }
                 ],
@@ -501,6 +501,44 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.User"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Message"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/changepassword": {
+            "patch": {
+                "description": "Change password of user from the old password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Change password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -652,33 +690,38 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.Account": {
+            "type": "object",
+            "required": [
+                "email",
+                "password",
+                "userName"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "maxLength": 255,
+                    "example": "hvthong@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "User Password"
+                },
+                "userName": {
+                    "type": "string",
+                    "maxLength": 64,
+                    "example": "vanthong"
+                }
+            }
+        },
         "models.Action": {
             "type": "object",
             "properties": {
                 "actionname": {
                     "type": "string"
-                }
-            }
-        },
-        "models.AddUser": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "hvthong@gmail.com"
                 },
-                "name": {
-                    "type": "string",
-                    "example": "vanthong"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "User Password"
+                "actionurl": {
+                    "type": "string"
                 }
             }
         },

@@ -79,7 +79,7 @@ func (u *User) Authenticate(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param Authorization header string true "Token"
-// @Param user body models.AddUser true "Add user"
+// @Param user body models.Account true "Add user"
 // @Failure 500 {object} payload.Error
 // @Failure 400 {object} payload.Error
 // @Success 200 {object} payload.Message

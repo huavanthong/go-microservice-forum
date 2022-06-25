@@ -1,25 +1,29 @@
 basePath: /api/v1
 definitions:
-  models.Action:
-    properties:
-      actionname:
-        type: string
-    type: object
-  models.AddUser:
+  models.Account:
     properties:
       email:
         example: hvthong@gmail.com
-        type: string
-      name:
-        example: vanthong
+        maxLength: 255
         type: string
       password:
         example: User Password
         type: string
+      userName:
+        example: vanthong
+        maxLength: 64
+        type: string
     required:
     - email
-    - name
     - password
+    - userName
+    type: object
+  models.Action:
+    properties:
+      actionname:
+        type: string
+      actionurl:
+        type: string
     type: object
   models.Address:
     properties:
@@ -478,7 +482,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.AddUser'
+          $ref: '#/definitions/models.Account'
       produces:
       - application/json
       responses:
@@ -525,6 +529,31 @@ paths:
           schema:
             $ref: '#/definitions/payload.Error'
       summary: Delete a user by ID
+      tags:
+      - user
+  /users/changepassword:
+    patch:
+      consumes:
+      - application/json
+      description: Change password of user from the old password
+      parameters:
+      - description: Password
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Error'
+      summary: Change password
       tags:
       - user
   /users/detail/{id}:
