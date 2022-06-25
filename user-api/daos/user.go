@@ -229,3 +229,31 @@ func (u *User) Update(user models.User) error {
 	err := collection.UpdateId(user.ID, &user)
 	return err
 }
+
+// Change password an existing User
+func (u *User) ChangePassword(email string, password string) error {
+
+	var err error
+
+	// copy for a newsession with original authentication
+	// to access to MongoDB.
+	sessionCopy := databases.Database.MgDbSession.Copy()
+	defer sessionCopy.Close()
+
+	// get a collection to execute the query against.
+	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
+
+	/********* Design 2: Get user info only with username, then check password by bcrypt *********/
+	var result bson.M
+	err = collection.Find(bson.M{"email": email}).One(&result)
+
+	// convert interface to string
+	hashedPassword := fmt.Sprintf("%v", result["password"])
+
+	err = security.CheckPasswordHash(hashedPassword, password)
+	if err != nil {
+		return err
+	}
+
+	return err
+}

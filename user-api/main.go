@@ -139,6 +139,8 @@ func main() {
 			user.GET("/", u.GetUserByParams)
 			user.DELETE(":id", u.DeleteUserByID)
 			user.PATCH("", u.UpdateUser)
+			user.PATCH("/changepassword", u.ChangePassword)
+
 		}
 
 		profile := v1.Group("/profile")

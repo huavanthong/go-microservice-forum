@@ -263,3 +263,30 @@ func (u *User) UpdateUser(ctx *gin.Context) {
 		fmt.Errorf("[ERROR]: ", err)
 	}
 }
+
+// ChangePassword godoc
+// @Summary Change password
+// @Description Change password of user from the old password
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param password formData string true "Password"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} payload.Message
+// @Router /users/changepassword [patch]
+func (u *User) ChangePassword(ctx *gin.Context) {
+
+	// get parameter value from request through PostForm
+	email := ctx.PostForm("email")
+	password := ctx.PostForm("password")
+
+	// change password user
+	err := u.userDAO.ChangePassword(email, password)
+
+	// write response
+	if err == nil {
+		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
+	} else {
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
+	}
+}
