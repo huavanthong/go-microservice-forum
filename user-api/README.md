@@ -125,4 +125,11 @@ More details:
 * Understand work-flow: [here](https://viblo.asia/p/tim-hieu-doi-chut-ve-oauth2-eW65GvMLlDO)
 
 ### Work flow
+#### OAuth2
 ![OAuth2](./docs/images/oauth2/work-flow-oauth2.png)
+
+
+
+#### JWT
+![JWT](./docs/images/jwt/jwt-work-flow.png)
+More details: [here](https://auth0.com/learn/json-web-tokens/)
