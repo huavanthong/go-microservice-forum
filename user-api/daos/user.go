@@ -231,29 +231,44 @@ func (u *User) Update(user models.User) error {
 }
 
 // Change password an existing User
-func (u *User) ChangePassword(oldpassword string, newpassword string) error {
+func (u *User) ChangePassword(id string, oldpassword string, newpassword string) error {
 
 	var err error
+
+	// validate user id
+	err = u.utils.ValidateObjectID(id)
+	if err != nil {
+		return errors.New("User not found")
+	}
 
 	// copy for a newsession with original authentication
 	// to access to MongoDB.
 	sessionCopy := databases.Database.MgDbSession.Copy()
 	defer sessionCopy.Close()
 
-	// get a collection to execute the query against.
+	// get a collection to execute the query against
 	collection := sessionCopy.DB(databases.Database.Databasename).C(common.ColUsers)
 
-	/********* Design 2: Get user info only with username, then check password by bcrypt *********/
-	var result bson.M
-	err = collection.Find(bson.M{"email": email}).One(&result)
+	// find a user by id
+	var user models.User
+	err = collection.FindId(bson.ObjectIdHex(id)).One(&user)
 
-	// convert interface to string
-	hashedPassword := fmt.Sprintf("%v", result["password"])
-
-	err = security.CheckPasswordHash(hashedPassword, password)
+	err = security.CheckPasswordHash(user.Password, oldpassword)
 	if err != nil {
-		return err
+		return errors.New("Internal server error")
 	}
+
+	// hash password using bcrypt
+	password, serr := security.Hash(newpassword)
+	if serr != nil {
+		return errors.New(common.ErrHashPasswordFail)
+	}
+
+	// update new password
+	user.Password = password
+
+	// update to database
+	err = collection.UpdateId(user.ID, &user)
 
 	return err
 }

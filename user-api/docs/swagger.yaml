@@ -94,6 +94,8 @@ definitions:
         type: string
       phonenumber:
         type: string
+      phoneverified:
+        type: boolean
       picture:
         example: link to picture
         type: string
@@ -254,6 +256,27 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Check token for accessing google account
+      tags:
+      - admin
+  /admin/logout:
+    get:
+      description: Logout user
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/security.Token'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/payload.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Logout user
       tags:
       - admin
   /profile:
@@ -531,7 +554,7 @@ paths:
       summary: Delete a user by ID
       tags:
       - user
-  /users/changepassword:
+  /users/changepassword/{id}:
     post:
       consumes:
       - application/json
@@ -542,9 +565,19 @@ paths:
         name: Authorization
         required: true
         type: string
-      - description: Password
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Old Password
         in: formData
-        name: password
+        name: oldpassword
+        required: true
+        type: string
+      - description: New Password
+        in: formData
+        name: newpassword
         required: true
         type: string
       produces:
@@ -558,7 +591,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/payload.Error'
-      summary: Change password
+      summary: Change password by ID
       tags:
       - user
   /users/detail/{id}:

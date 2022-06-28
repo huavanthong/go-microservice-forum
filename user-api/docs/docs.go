@@ -151,6 +151,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/logout": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Logout user",
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Logout user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/security.Token"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/profile": {
             "post": {
                 "description": "Update profile user",
@@ -519,7 +553,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/changepassword": {
+        "/users/changepassword/{id}": {
             "post": {
                 "description": "Change password of user from the old password",
                 "consumes": [
@@ -531,7 +565,7 @@ const docTemplate = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "Change password",
+                "summary": "Change password by ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -542,8 +576,22 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Password",
-                        "name": "password",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Old Password",
+                        "name": "oldpassword",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "New Password",
+                        "name": "newpassword",
                         "in": "formData",
                         "required": true
                     }
@@ -834,6 +882,9 @@ const docTemplate = `{
                 },
                 "phonenumber": {
                     "type": "string"
+                },
+                "phoneverified": {
+                    "type": "boolean"
                 },
                 "picture": {
                     "type": "string",

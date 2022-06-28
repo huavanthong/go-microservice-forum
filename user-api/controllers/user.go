@@ -300,25 +300,30 @@ func (u *User) UpdateUser(ctx *gin.Context) {
 	}
 }
 
-// ChangePassword godoc
-// @Summary Change password
+// ChangePasswordByID godoc
+// @Summary Change password by ID
 // @Description Change password of user from the old password
 // @Tags user
 // @Accept  json
 // @Produce  json
 // @Param Authorization header string true "Token"
-// @Param password formData string true "Password"
+// @Param id path string true "User ID"
+// @Param oldpassword formData string true "Old Password"
+// @Param newpassword formData string true "New Password"
 // @Failure 500 {object} payload.Error
 // @Success 200 {object} payload.Message
-// @Router /users/changepassword [post]
-func (u *User) ChangePassword(ctx *gin.Context) {
+// @Router /users/changepassword/{id} [post]
+func (u *User) ChangePasswordByID(ctx *gin.Context) {
+
+	// filter parameter id context
+	id := ctx.Params.ByName("id")
 
 	// get parameter value from request through PostForm
 	oldpassword := ctx.PostForm("oldpassword")
 	newpassword := ctx.PostForm("newpassword")
 
 	// change password user
-	err := u.userDAO.ChangePassword(oldpassword, newpassword)
+	err := u.userDAO.ChangePassword(id, oldpassword, newpassword)
 
 	// write response
 	if err == nil {

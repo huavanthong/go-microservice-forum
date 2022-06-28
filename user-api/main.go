@@ -126,6 +126,7 @@ func main() {
 			// Login social
 			admin.GET("/auth/social", gu.LoginGoogle)
 			admin.GET("/auth", gu.AuthGoogleAccount)
+			admin.GET("/logout", u.Logout)
 		}
 
 		user := v1.Group("/users")
@@ -139,8 +140,7 @@ func main() {
 			user.GET("/", u.GetUserByParams)
 			user.DELETE(":id", u.DeleteUserByID)
 			user.PATCH("", u.UpdateUser)
-			user.PATCH("/changepassword", u.ChangePassword)
-			user.GET("/logout", u.Logout)
+			user.PATCH(":id/changepassword/", u.ChangePasswordByID)
 
 		}
 

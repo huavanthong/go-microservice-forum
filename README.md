@@ -16,6 +16,7 @@
 * Project
     - Example project user-microservice. Refer: [here](https://github.com/raycad/go-microservices)
     - Architecture for user-microserivce. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#architecture)
+    - Perfect design for user-microservice, Refer: [here](https://github.com/wpcodevo/golang-mongodb-api/tree/golang-mongodb-reset-password)
 * Validator
     - Implement validator using go-playground. Refer: [here](https://github.com/go-playground/validator)
     - Implement validator using go-playground through GIN framework. Refer: [here](https://blog.logrocket.com/gin-binding-in-go-a-tutorial-with-examples/)
