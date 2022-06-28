@@ -202,7 +202,7 @@ paths:
       parameters:
       - description: Username
         in: formData
-        name: user
+        name: username
         required: true
         type: string
       - description: Email
@@ -532,11 +532,16 @@ paths:
       tags:
       - user
   /users/changepassword:
-    patch:
+    post:
       consumes:
       - application/json
       description: Change password of user from the old password
       parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
       - description: Password
         in: formData
         name: password

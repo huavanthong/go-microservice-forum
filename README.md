@@ -24,6 +24,7 @@
     - Implement JWT for login account. Refer: [here](https://tienbm90.medium.com/authentication-and-authorization-in-gin-application-with-jwt-and-casbin-a56bbbdec90b)
     - Implement login/logout feature using session in gin. Refer: [here](https://github.com/Depado/gin-auth-example)
     - Implement a multi-level authentication system for goalng. [here](https://mattermost.com/blog/how-to-build-an-authentication-microservice-in-golang-from-scratch/)
+    - Implement feature to change password. [here](https://auth0.com/docs/authenticate/database-connections/password-change)
 * Authorization
     - Implement authorize role. Refer: [here](https://www.zupzup.org/casbin-http-role-auth/)
     - Implement authorize role with GIN framework. Refer: [here](https://github.com/gin-contrib/authz)

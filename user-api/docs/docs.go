@@ -73,7 +73,7 @@ const docTemplate = `{
                     {
                         "type": "string",
                         "description": "Username",
-                        "name": "user",
+                        "name": "username",
                         "in": "formData",
                         "required": true
                     },
@@ -520,7 +520,7 @@ const docTemplate = `{
             }
         },
         "/users/changepassword": {
-            "patch": {
+            "post": {
                 "description": "Change password of user from the old password",
                 "consumes": [
                     "application/json"
@@ -533,6 +533,13 @@ const docTemplate = `{
                 ],
                 "summary": "Change password",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "Password",

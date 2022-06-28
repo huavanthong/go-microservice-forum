@@ -231,7 +231,7 @@ func (u *User) Update(user models.User) error {
 }
 
 // Change password an existing User
-func (u *User) ChangePassword(email string, password string) error {
+func (u *User) ChangePassword(oldpassword string, newpassword string) error {
 
 	var err error
 

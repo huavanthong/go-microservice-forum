@@ -33,7 +33,7 @@ type User struct {
 // @Tags admin
 // @Security ApiKeyAuth
 // @Accept  multipart/form-data
-// @Param user formData string true "Username"
+// @Param username formData string true "Username"
 // @Param email formData string true "Email"
 // @Param password formData string true "Password"
 // @Failure 401 {object} payload.Error
@@ -306,18 +306,19 @@ func (u *User) UpdateUser(ctx *gin.Context) {
 // @Tags user
 // @Accept  json
 // @Produce  json
+// @Param Authorization header string true "Token"
 // @Param password formData string true "Password"
 // @Failure 500 {object} payload.Error
 // @Success 200 {object} payload.Message
-// @Router /users/changepassword [patch]
+// @Router /users/changepassword [post]
 func (u *User) ChangePassword(ctx *gin.Context) {
 
 	// get parameter value from request through PostForm
-	email := ctx.PostForm("email")
-	password := ctx.PostForm("password")
+	oldpassword := ctx.PostForm("oldpassword")
+	newpassword := ctx.PostForm("newpassword")
 
 	// change password user
-	err := u.userDAO.ChangePassword(email, password)
+	err := u.userDAO.ChangePassword(oldpassword, newpassword)
 
 	// write response
 	if err == nil {
