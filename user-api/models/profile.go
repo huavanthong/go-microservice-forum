@@ -20,6 +20,7 @@ type Profile struct {
 	Age            uint8         `bson:"age" json:"age" binding:"omitempty,gte=0,lte=130" example:"30"`
 	Gender         string        `bson:"gender" json:"gender" example:"male"`
 	PhoneNumber    string        `bson:"phonenumber" json:"phonenumber"`
+	PhoneVerified  bool          `bson:"phoneverified" json:"phoneverified"`
 	Picture        string        `bson:"picture" json:"picture" example:"link to picture"`
 	DefaultProfile string        `bson:"defaultprofile" json:"defaultprofile"`
 	FavouriteColor string        `bson:"favouritecolor" json:"favouritecolor" binding:"iscolor" example:"#0003"` // alias for 'hexcolor|rgb|rgba|hsl|hsla'
