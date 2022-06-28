@@ -22,6 +22,7 @@
 * Authentication
     - Implement Google OAuth2 with GIN. Refer: [here](https://skarlso.github.io/2016/06/12/google-signin-with-go/)
     - Implement JWT for login account. Refer: [here](https://tienbm90.medium.com/authentication-and-authorization-in-gin-application-with-jwt-and-casbin-a56bbbdec90b)
+    - Implement login/logout feature using session in gin. Refer: [here](https://github.com/Depado/gin-auth-example)
     - Implement a multi-level authentication system for goalng. [here](https://mattermost.com/blog/how-to-build-an-authentication-microservice-in-golang-from-scratch/)
 * Authorization
     - Implement authorize role. Refer: [here](https://www.zupzup.org/casbin-http-role-auth/)

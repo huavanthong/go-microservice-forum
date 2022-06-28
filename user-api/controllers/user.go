@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/daos"
@@ -43,6 +44,7 @@ func (u *User) Authenticate(ctx *gin.Context) {
 
 	// init variable
 	var err error
+	session := sessions.Default(ctx)
 
 	// get parameter value from request through PostForm
 	var accountInfo models.Account
@@ -67,9 +69,43 @@ func (u *User) Authenticate(ctx *gin.Context) {
 		token := security.Token{tokenString}
 		// Return token string to the client
 		ctx.JSON(http.StatusOK, token)
+
+		// Save the jwt token in the session
+		session.Set(common.Userkey, token) // In real world usage you'd set this to the users ID
+		if err := session.Save(); err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+			return
+		}
+
 	} else {
 		ctx.JSON(http.StatusUnauthorized, payload.Error{common.StatusCodeUnknown, err.Error()})
 	}
+}
+
+// Logout godoc
+// @Summary Logout user
+// @Description Logout user
+// @Tags admin
+// @Security ApiKeyAuth
+// @Failure 400 {object} payload.Error
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} security.Token
+// @Router /admin/logout [get]
+func (u *User) Logout(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+	user := session.Get(common.Userkey)
+	if user == nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
+		return
+	}
+
+	session.Delete(common.Userkey)
+	if err := session.Save(); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }
 
 // AddUser godoc

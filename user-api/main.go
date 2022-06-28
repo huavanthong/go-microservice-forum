@@ -140,6 +140,7 @@ func main() {
 			user.DELETE(":id", u.DeleteUserByID)
 			user.PATCH("", u.UpdateUser)
 			user.PATCH("/changepassword", u.ChangePassword)
+			user.GET("/logout", u.Logout)
 
 		}
 

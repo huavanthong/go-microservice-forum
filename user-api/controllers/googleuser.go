@@ -128,7 +128,7 @@ func (gu *GoogleUser) AuthGoogleAccount(ctx *gin.Context) {
 	}
 
 	// save user to session
-	session.Set("user-id", u.Email)
+	session.Set(common.Userkey, u.Email)
 	err = session.Save()
 	if err != nil {
 		log.Println(err)
@@ -199,6 +199,6 @@ func (gu *GoogleUser) LoginGoogle(ctx *gin.Context) {
 // FieldHandler is a rudementary handler for logged in users.
 func (gu *GoogleUser) FieldHandler(ctx *gin.Context) {
 	session := sessions.Default(ctx)
-	userID := session.Get("user-id")
+	userID := session.Get(common.Userkey)
 	ctx.HTML(http.StatusOK, "field.tmpl", gin.H{"user": userID})
 }

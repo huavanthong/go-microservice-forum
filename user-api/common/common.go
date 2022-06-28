@@ -40,6 +40,9 @@ const (
 	ColProfile = "profiles"
 )
 
+// User ID
+const Userkey = "user-id"
+
 // Status Text
 const (
 	InvalidSession      = "Invalid session state"
