@@ -19,7 +19,7 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api/controllers"
 	"github.com/huavanthong/microservice-golang/user-api/databases"
 
-	_ "github.com/huavanthong/microservice-golang/user-api-v2/docs"
+	_ "github.com/huavanthong/microservice-golang/user-api/docs"
 
 	"github.com/huavanthong/microservice-golang/user-api/security/google"
 	ginSwagger "github.com/swaggo/gin-swagger"
