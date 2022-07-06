@@ -6,9 +6,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wpcodevo/golang-mongodb/config"
-	"github.com/wpcodevo/golang-mongodb/services"
-	"github.com/wpcodevo/golang-mongodb/utils"
+	"github.com/huavanthong/microservice-golang/user-api-v3/config"
+	"github.com/huavanthong/microservice-golang/user-api-v3/services"
+	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
 )
 
 func DeserializeUser(userService services.UserService) gin.HandlerFunc {

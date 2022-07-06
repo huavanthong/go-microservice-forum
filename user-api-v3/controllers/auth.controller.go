@@ -6,10 +6,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wpcodevo/golang-mongodb/config"
-	"github.com/wpcodevo/golang-mongodb/models"
-	"github.com/wpcodevo/golang-mongodb/services"
-	"github.com/wpcodevo/golang-mongodb/utils"
+	"github.com/huavanthong/microservice-golang/user-api-v3/config"
+	"github.com/huavanthong/microservice-golang/user-api-v3/models"
+	"github.com/huavanthong/microservice-golang/user-api-v3/services"
+	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

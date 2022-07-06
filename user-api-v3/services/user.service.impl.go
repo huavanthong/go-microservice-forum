@@ -5,8 +5,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/wpcodevo/golang-mongodb/models"
-	"github.com/wpcodevo/golang-mongodb/utils"
+	"github.com/huavanthong/microservice-golang/user-api-v3/models"
+	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

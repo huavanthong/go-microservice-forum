@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/wpcodevo/golang-mongodb/controllers"
+	"github.com/huavanthong/microservice-golang/user-api-v3/controllers"
 )
 
 type SessionRouteController struct {

@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/wpcodevo/golang-mongodb/config"
+	"github.com/huavanthong/microservice-golang/user-api-v3/config"
 )
 
 type GoogleOauthToken struct {
