@@ -1,4 +1,4 @@
-module github.com/huavanthong/microservice-golang/user-api
+module github.com/huavanthong/microservice-golang/user-api-v2
 
 go 1.14
 

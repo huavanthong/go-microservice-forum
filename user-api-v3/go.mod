@@ -1,4 +1,4 @@
-module github.com/wpcodevo/golang-mongodb
+module github.com/huavanthong/microservice-golang/user-api-v3
 
 go 1.18
 
