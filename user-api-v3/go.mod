@@ -54,6 +54,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
+	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/urfave/cli/v2 v2.10.3 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect

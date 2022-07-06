@@ -17,8 +17,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
+	_ "github.com/huavanthong/microservice-golang/user-api-v3/docs"
+	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 var (
@@ -102,7 +103,7 @@ func init() {
 // @description List APIs of UserManagement Service
 // @termsOfService http://swagger.io/terms/
 
-// @host 127.0.0.1:8000
+// @host localhost:8000
 // @BasePath /api/v3
 func main() {
 
@@ -140,7 +141,8 @@ func main() {
 	UserRouteController.UserRoute(router, userService)
 	SessionRouteController.SessionRoute(router)
 
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	url := ginSwagger.URL("http://localhost:8000/api/v3/swagger/doc.json") // The url pointing to API definition
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, url))
 
 	log.Fatal(server.Run(":" + config.Port))
 }
