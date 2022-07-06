@@ -16,18 +16,24 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 var (
-	server      *gin.Engine
-	ctx         context.Context
-	mongoclient *mongo.Client
-	redisclient *redis.Client
+	// Server setting
+	server      *gin.Engine     // The framework's instance, it contains the muxer, middleware and configuration settings.
+	ctx         context.Context // Context running in background
+	mongoclient *mongo.Client   // MongoDB
+	redisclient *redis.Client   // For in-memory data store
 
+	// User Controller setting
 	userService         services.UserService
 	UserController      controllers.UserController
 	UserRouteController routes.UserRouteController
 
+	// Authenticate Controller setting
 	authCollection         *mongo.Collection
 	authService            services.AuthService
 	AuthController         controllers.AuthController
@@ -36,11 +42,14 @@ var (
 )
 
 func init() {
+
+	// Loading config from variable environment
 	config, err := config.LoadConfig(".")
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}
 
+	// Init an context running in background
 	ctx = context.TODO()
 
 	// Connect to MongoDB
@@ -84,10 +93,20 @@ func init() {
 	UserController = controllers.NewUserController(userService)
 	UserRouteController = routes.NewRouteUserController(UserController)
 
+	// Default returns an Engine instance with the Logger and Recovery middleware already attached.
 	server = gin.Default()
 }
 
+// @title UserManagement Service API Document
+// @version 1.0
+// @description List APIs of UserManagement Service
+// @termsOfService http://swagger.io/terms/
+
+// @host 127.0.0.1:8000
+// @BasePath /api/v3
 func main() {
+
+	/************************ Init MongoDB *************************/
 	config, err := config.LoadConfig(".")
 
 	if err != nil {
@@ -96,27 +115,32 @@ func main() {
 
 	defer mongoclient.Disconnect(ctx)
 
+	/************************ Connect Redis *************************/
 	value, err := redisclient.Get(ctx, "test").Result()
-
 	if err == redis.Nil {
 		fmt.Println("key: test does not exist")
 	} else if err != nil {
 		panic(err)
 	}
 
+	/************************ Allow Cross Orgin Resource Sharing  *************************/
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:8000", "http://localhost:3000"}
 	corsConfig.AllowCredentials = true
 
 	server.Use(cors.New(corsConfig))
 
-	router := server.Group("/api")
+	router := server.Group("/api/v3")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": value})
 	})
 
+	/************************ Controller  *************************/
 	AuthRouteController.AuthRoute(router)
 	UserRouteController.UserRoute(router, userService)
 	SessionRouteController.SessionRoute(router)
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	log.Fatal(server.Run(":" + config.Port))
 }

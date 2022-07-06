@@ -22,39 +22,65 @@ func NewAuthController(authService services.AuthService, userService services.Us
 	return AuthController{authService, userService}
 }
 
+// SignUpUser godoc
+// @Summary Register a new user
+// @Description Register a new user for service
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Failure 400 {string} http.StatusBadRequest
+// @Failure 502 {string} http.StatusBadGateway
+// @Success 201 {string} http.StatusCreated
+// @Router /auth/register [post]
 // SignUp User
 func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	var user *models.SignUpInput
 
+	// from context, bind user info to json
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
 		return
 	}
 
+	// confirm password
 	if user.Password != user.PasswordConfirm {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Passwords do not match"})
 		return
 	}
 
+	// transfer user info to service
 	newUser, err := ac.authService.SignUpUser(user)
-
 	if err != nil {
 		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": err.Error()})
 		return
 	}
 
+	// return user info after register a new user successfully
 	ctx.JSON(http.StatusCreated, gin.H{"status": "success", "data": gin.H{"user": models.FilteredResponse(newUser)}})
 }
 
+// SignInUser godoc
+// @Summary Sign In User
+// @Description User sign in to service
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Failure 400 {string} http.StatusBadRequest
+// @Success 200 {string} http.StatusOK
+// @Router /auth/login [post]
 // SignIn User
 func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	var credentials *models.SignInInput
 
+	// from context, bind user info to json
 	if err := ctx.ShouldBindJSON(&credentials); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
 		return
 	}
 
+	// Find user by email
 	user, err := ac.userService.FindUserByEmail(credentials.Email)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
@@ -65,11 +91,13 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 		return
 	}
 
+	// If user exists, verify password
 	if err := utils.VerifyPassword(user.Password, credentials.Password); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Invalid email or Password"})
 		return
 	}
 
+	// loading config, getting private key for generating token
 	config, _ := config.LoadConfig(".")
 
 	// Generate Tokens
@@ -85,6 +113,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 		return
 	}
 
+	// set to cookie
 	ctx.SetCookie("access_token", access_token, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
 	ctx.SetCookie("refresh_token", refresh_token, config.RefreshTokenMaxAge*60, "/", "localhost", false, true)
 	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
@@ -92,6 +121,16 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": access_token})
 }
 
+// RefreshAccessToken godoc
+// @Summary Refresh access token
+// @Description Refresh access token after the specific time
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Failure 403 {string} http.StatusForbidden
+// @Success 200 {string} http.StatusOK
+// @Router /auth/refresh [get]
 // Refresh Access Token
 func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
 	message := "could not refresh access token"
@@ -129,6 +168,20 @@ func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": access_token})
 }
 
+// GoogleOAuth godoc
+// @Summary Sign in a new user by Google OAuth2
+// @Description Sign in a new user by Google OAtuth2, then save a new user to DB
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Failure 307 {string} http.StatusTemporaryRedirect
+// @Failure 400 {string} http.StatusBadRequest
+// @Failure 401 {string} http.StatusUnauthorized
+// @Failure 502 {string} http.StatusBadGateway
+// @Success 201 {string} http.StatusCreated
+// @Router /sessions/oauth/google [get]
+// SignUp User
 func (ac *AuthController) GoogleOAuth(ctx *gin.Context) {
 	code := ctx.Query("code")
 	var pathUrl string = "/"

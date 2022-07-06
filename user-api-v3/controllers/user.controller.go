@@ -16,6 +16,16 @@ func NewUserController(userService services.UserService) UserController {
 	return UserController{userService}
 }
 
+// GetMe godoc
+// @Summary Get the current user info
+// @Description Get the current user info
+// @Tags users
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Success 200 {string} http.StatusOK
+// @Router /users/me [get]
+// SignUp User
 func (uc *UserController) GetMe(ctx *gin.Context) {
 	currentUser := ctx.MustGet("currentUser").(*models.DBResponse)
 
