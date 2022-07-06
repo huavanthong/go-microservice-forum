@@ -40,13 +40,16 @@ const (
 	ColProfile = "profiles"
 )
 
+// User ID
+const Userkey = "user-id"
+
 // Status Text
 const (
-	invalidSession      = "Invalid session state"
-	loginFailed         = "Login failed. Please try again."
-	marshallingFailed   = "Error marshalling response. Please try agian."
-	savingSessionError  = "Error while saving session. Please try again."
-	savingUserError     = "Error while saving user. Please try again."
+	InvalidSession      = "Invalid session state"
+	LoginFailed         = "Login failed. Please try again."
+	MarshallingFailed   = "Error marshalling response. Please try agian."
+	SavingSessionError  = "Error while saving session. Please try again."
+	SavingUserError     = "Error while saving user. Please try again."
 	ErrNameEmpty        = "Name is empty"
 	ErrPasswordEmpty    = "Password is empty"
 	ErrHashPasswordFail = "Hash password failed"

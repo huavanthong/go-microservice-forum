@@ -5,6 +5,15 @@ This user-api folder is a user microservice. It include some below feautures:
 * Apply Singleton design pattern for DB.
 * Understand how to authenticate user with JWT
 
+### User microservice which includes;
+* [Done] User microservice application. 
+* [Done] Security for user service such as JWT, HashPassword, Avoid SQL injection. 
+* [Done] REST API principles, CRUD operations.
+* [Done] MongoDB NoSQL database connection on docker containerization. 
+* [Done] N-Layer implementation with Repository Pattern. 
+* [Done] Swagger Open API implementation.
+* [NotD] Dockerfile and docker-compose implementation. 
+
 # Architecture
 ![Architecture User Microservice](./docs/images/architecture/go-architecture-layer.png)
 
@@ -16,6 +25,7 @@ This user-api folder is a user microservice. It include some below feautures:
 * In building-microservice-go book, Chapter 8: Security, it remind that we never storing passwords in plain text in a datastore. How do you implement this feature? Refer: [here](#hashing-password)
 * Implement **Unit Test** with Gin framework? Refer: [here](https://circleci.com/blog/gin-gonic-testing/)
 * Implement OAuth2 Google with GIN framework. Refer: [here]
+* Implement middleware for validating user info with GIN framework. Refer: [here](https://sosedoff.com/2014/12/21/gin-middleware.html)
 
 # Project Structure
 ```
@@ -44,19 +54,22 @@ Those folders contain:
 
 # Design Database for User microservice
 * This db is designed for improve user service in the future.
-![ảnh](./docs/images/db/user-microservice-db-v2.png)
+![ảnh](./docs/images/db/user-microservice-db-v3.png)
 
 More details: [here](https://dbdiagram.io/d/62a44fa39921fe2a96e2f031)
 ## Getting Started
 
-
-
-## Swagger
+### Swagger
 Test with swagger
 ```
 http://localhost:8808/swagger/index.html
 ```
-## Test server
+
+Generate swagger documents
+```
+swag init
+```
+### Test server
 To understand this service, please test server with APIs below
 ### Login With User
 Authenticate with your User.  
@@ -112,4 +125,11 @@ More details:
 * Understand work-flow: [here](https://viblo.asia/p/tim-hieu-doi-chut-ve-oauth2-eW65GvMLlDO)
 
 ### Work flow
+#### OAuth2
 ![OAuth2](./docs/images/oauth2/work-flow-oauth2.png)
+
+
+
+#### JWT
+![JWT](./docs/images/jwt/jwt-work-flow.png)
+More details: [here](https://auth0.com/learn/json-web-tokens/)

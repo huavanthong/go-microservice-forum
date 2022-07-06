@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/user-api/common"
 	"github.com/huavanthong/microservice-golang/user-api/daos"
@@ -32,7 +33,8 @@ type User struct {
 // @Tags admin
 // @Security ApiKeyAuth
 // @Accept  multipart/form-data
-// @Param user formData string true "Username"
+// @Param username formData string true "Username"
+// @Param email formData string true "Email"
 // @Param password formData string true "Password"
 // @Failure 401 {object} payload.Error
 // @Failure 500 {object} payload.Error
@@ -40,18 +42,24 @@ type User struct {
 // @Router /admin/auth/signin [post]
 func (u *User) Authenticate(ctx *gin.Context) {
 
+	// init variable
+	var err error
+	session := sessions.Default(ctx)
+
 	// get parameter value from request through PostForm
-	username := ctx.PostForm("user")
-	password := ctx.PostForm("password")
+	var accountInfo models.Account
+	if err := ctx.ShouldBind(&accountInfo); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"binding account info error": err.Error()})
+		return
+	}
 
 	// var user models.User
-	var err error
-	_, err = u.userDAO.Login(username, password)
+	_, err = u.userDAO.Login(accountInfo)
 
 	if err == nil {
 		var tokenString string
 		// Generate token string
-		tokenString, err = u.utils.GenerateJWT(username, "")
+		tokenString, err = u.utils.GenerateJWT(accountInfo.UserName, "")
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 			log.Debug("[ERROR]: ", err)
@@ -61,9 +69,43 @@ func (u *User) Authenticate(ctx *gin.Context) {
 		token := security.Token{tokenString}
 		// Return token string to the client
 		ctx.JSON(http.StatusOK, token)
+
+		// Save the jwt token in the session
+		session.Set(common.Userkey, token) // In real world usage you'd set this to the users ID
+		if err := session.Save(); err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+			return
+		}
+
 	} else {
 		ctx.JSON(http.StatusUnauthorized, payload.Error{common.StatusCodeUnknown, err.Error()})
 	}
+}
+
+// Logout godoc
+// @Summary Logout user
+// @Description Logout user
+// @Tags admin
+// @Security ApiKeyAuth
+// @Failure 400 {object} payload.Error
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} security.Token
+// @Router /admin/logout [get]
+func (u *User) Logout(ctx *gin.Context) {
+	session := sessions.Default(ctx)
+	user := session.Get(common.Userkey)
+	if user == nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid session token"})
+		return
+	}
+
+	session.Delete(common.Userkey)
+	if err := session.Save(); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Successfully logged out"})
 }
 
 // AddUser godoc
@@ -73,27 +115,30 @@ func (u *User) Authenticate(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param Authorization header string true "Token"
-// @Param user body models.AddUser true "Add user"
+// @Param user body models.Account true "Add user"
 // @Failure 500 {object} payload.Error
 // @Failure 400 {object} payload.Error
 // @Success 200 {object} payload.Message
 // @Router /users [post]
 func (u *User) AddUser(ctx *gin.Context) {
 	// bind user info to json getting context
-	var addUser models.AddUser
-	if err := ctx.ShouldBindJSON(&addUser); err != nil {
+	var addAccount models.Account
+
+	// validate data on user data
+	// For binding data using go-playground in GIN through models.AddUser
+	if err := ctx.ShouldBindJSON(&addAccount); err != nil {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		return
 	}
 
-	// validate data on user
-	if err := addUser.Validate(); err != nil {
-		ctx.JSON(http.StatusBadRequest, payload.Error{common.StatusCodeUnknown, err.Error()})
-		return
-	}
-
 	// create user from models
-	user := models.User{bson.NewObjectId(), addUser.Name, addUser.Password}
+	user := models.User{
+		ID:            bson.NewObjectId(),
+		Name:          addAccount.UserName,
+		Email:         addAccount.Email,
+		Password:      addAccount.Password,
+		LoginAttempts: []models.LoginAttempt{},
+	}
 
 	// insert user to DB
 	err := u.userDAO.Insert(user)
@@ -101,7 +146,7 @@ func (u *User) AddUser(ctx *gin.Context) {
 	// write response
 	if err == nil {
 		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
-		log.Debug("Registered a new user = " + user.Name + ", password = " + user.Password)
+		log.Debug("Registered a new user = " + user.Name + ", email: " + user.Email + ", password = " + user.Password)
 	} else {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		log.Debug("[ERROR]: ", err)
@@ -248,9 +293,42 @@ func (u *User) UpdateUser(ctx *gin.Context) {
 	// write response
 	if err == nil {
 		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
-		fmt.Errorf("Update a new user = " + user.Name + ", password = " + user.Password)
+		fmt.Errorf("Update a new user = " + user.Name + ", email: " + user.Email + ", password = " + user.Password)
 	} else {
 		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 		fmt.Errorf("[ERROR]: ", err)
+	}
+}
+
+// ChangePasswordByID godoc
+// @Summary Change password by ID
+// @Description Change password of user from the old password
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Token"
+// @Param id path string true "User ID"
+// @Param oldpassword formData string true "Old Password"
+// @Param newpassword formData string true "New Password"
+// @Failure 500 {object} payload.Error
+// @Success 200 {object} payload.Message
+// @Router /users/changepassword/{id} [post]
+func (u *User) ChangePasswordByID(ctx *gin.Context) {
+
+	// filter parameter id context
+	id := ctx.Params.ByName("id")
+
+	// get parameter value from request through PostForm
+	oldpassword := ctx.PostForm("oldpassword")
+	newpassword := ctx.PostForm("newpassword")
+
+	// change password user
+	err := u.userDAO.ChangePassword(id, oldpassword, newpassword)
+
+	// write response
+	if err == nil {
+		ctx.JSON(http.StatusOK, payload.Message{"Successfully"})
+	} else {
+		ctx.JSON(http.StatusInternalServerError, payload.Error{common.StatusCodeUnknown, err.Error()})
 	}
 }

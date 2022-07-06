@@ -114,8 +114,8 @@ func main() {
 	m.router.LoadHTMLGlob("templates/*")
 
 	m.router.GET("/", gu.IndexHandler)
-	m.router.GET("/login", gu.LoginHandler)
-	m.router.GET("/auth", gu.AuthHandler)
+	m.router.GET("/login", gu.LoginGoogle)
+	m.router.GET("/auth", gu.AuthGoogleAccount)
 
 	// simple group: v1
 	v1 := m.router.Group("/api/v1")
@@ -123,9 +123,10 @@ func main() {
 		admin := v1.Group("/admin")
 		{
 			admin.POST("/auth/signin", u.Authenticate)
-			// admin.POST("/auth/signin/social", c.AuthSocial)
-			// admin.POST("/auth/signin/webadmin", c.AuthWebAdmin)
-
+			// Login social
+			admin.GET("/auth/social", gu.LoginGoogle)
+			admin.GET("/auth", gu.AuthGoogleAccount)
+			admin.GET("/logout", u.Logout)
 		}
 
 		user := v1.Group("/users")
@@ -139,14 +140,17 @@ func main() {
 			user.GET("/", u.GetUserByParams)
 			user.DELETE(":id", u.DeleteUserByID)
 			user.PATCH("", u.UpdateUser)
+			user.PATCH(":id/changepassword/", u.ChangePasswordByID)
+
 		}
 
 		profile := v1.Group("/profile")
 		profile.Use(jwt.Auth(common.Config.JwtSecretPassword))
 		{
 			profile.POST(":userid", p.AddProfile)
+			profile.GET("/list", p.ListProfiles)
 			profile.GET(":userid", p.GetProfileByUserId)
-			profile.PUT(":userid", p.UpdateProfileByUserId)
+			profile.PATCH("", p.UpdateProfileByUserId)
 			profile.DELETE(":userid", p.DeteleProfileByUserId)
 
 		}
@@ -168,7 +172,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, PATCH")
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
