@@ -103,6 +103,17 @@ const docTemplate = `{
                     "auth"
                 ],
                 "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "New User",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SignUpInput"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Created",
@@ -202,6 +213,54 @@ const docTemplate = `{
                             "type": "string"
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.SignUpInput": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password",
+                "passwordConfirm"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@gmail.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "password123"
+                },
+                "passwordConfirm": {
+                    "type": "string",
+                    "example": "password123"
+                },
+                "photo": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "boolean"
                 }
             }
         }

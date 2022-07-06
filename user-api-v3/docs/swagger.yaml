@@ -1,4 +1,38 @@
 basePath: /api/v3
+definitions:
+  models.SignUpInput:
+    properties:
+      created_at:
+        type: string
+      email:
+        example: johndoe@gmail.com
+        type: string
+      name:
+        example: John Doe
+        type: string
+      password:
+        example: password123
+        minLength: 8
+        type: string
+      passwordConfirm:
+        example: password123
+        type: string
+      photo:
+        type: string
+      provider:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+      verified:
+        type: boolean
+    required:
+    - email
+    - name
+    - password
+    - passwordConfirm
+    type: object
 host: localhost:8000
 info:
   contact: {}
@@ -54,6 +88,13 @@ paths:
       consumes:
       - application/json
       description: Register a new user for service
+      parameters:
+      - description: New User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignUpInput'
       produces:
       - application/json
       responses:

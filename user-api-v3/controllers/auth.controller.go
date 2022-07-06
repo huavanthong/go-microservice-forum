@@ -29,9 +29,10 @@ func NewAuthController(authService services.AuthService, userService services.Us
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
+// @Param user body models.SignUpInput true "New User"
 // @Failure 400 {string} http.StatusBadRequest
 // @Failure 502 {string} http.StatusBadGateway
-// @Success 201 {string} http.StatusCreated
+// @Success 201 {object} {"data": models.SignUpInput , "status":"success"}
 // @Router /auth/register [post]
 // SignUp User
 func (ac *AuthController) SignUpUser(ctx *gin.Context) {

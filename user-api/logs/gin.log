@@ -9,14 +9,14 @@
 [GIN-debug] GET    /img/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (7 handlers)
 [GIN-debug] HEAD   /img/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (7 handlers)
 [GIN-debug] Loaded HTML Templates (8): 
+	- success.html
+	- 
 	- auth.tmpl
 	- battle.tmpl
 	- error.tmpl
 	- field.tmpl
 	- index.html
 	- index.tmpl
-	- success.html
-	- 
 
 [GIN-debug] GET    /                         --> github.com/huavanthong/microservice-golang/user-api/controllers.(*GoogleUser).IndexHandler-fm (7 handlers)
 [GIN-debug] GET    /login                    --> github.com/huavanthong/microservice-golang/user-api/controllers.(*GoogleUser).LoginGoogle-fm (7 handlers)
@@ -42,15 +42,13 @@
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8808
-[GIN] 2022/07/06 - 19:55:29 | 200 |       999.1µs |       127.0.0.1 | GET      "/swagger/index.html"
-[GIN] 2022/07/06 - 19:55:29 | 200 |       2.036ms |       127.0.0.1 | GET      "/swagger/index.html"
-[GIN] 2022/07/06 - 19:55:29 | 200 |            0s |       127.0.0.1 | GET      "/swagger/swagger-ui.css"
-[GIN] 2022/07/06 - 19:55:29 | 200 |      1.0018ms |       127.0.0.1 | GET      "/swagger/swagger-ui.css"
-[GIN] 2022/07/06 - 19:55:29 | 200 |      2.0036ms |       127.0.0.1 | GET      "/swagger/swagger-ui-bundle.js"
-[GIN] 2022/07/06 - 19:55:29 | 200 |      3.0007ms |       127.0.0.1 | GET      "/swagger/swagger-ui-bundle.js"
-[GIN] 2022/07/06 - 19:55:29 | 200 |       999.1µs |       127.0.0.1 | GET      "/swagger/swagger-ui-standalone-preset.js"
-[GIN] 2022/07/06 - 19:55:29 | 200 |       999.1µs |       127.0.0.1 | GET      "/swagger/swagger-ui-standalone-preset.js"
-[GIN] 2022/07/06 - 19:55:29 | 200 |            0s |       127.0.0.1 | GET      "/swagger/favicon-16x16.png"
-[GIN] 2022/07/06 - 19:55:29 | 200 |            0s |       127.0.0.1 | GET      "/swagger/favicon-16x16.png"
-[GIN] 2022/07/06 - 19:55:29 | 200 |            0s |       127.0.0.1 | GET      "/swagger/doc.json"
-[GIN] 2022/07/06 - 19:55:29 | 200 |            0s |       127.0.0.1 | GET      "/swagger/doc.json"
+[GIN] 2022/07/06 - 21:32:22 | 200 |            0s |       127.0.0.1 | GET      "/swagger/index.html"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      1.9674ms |       127.0.0.1 | GET      "/swagger/index.html"
+[GIN] 2022/07/06 - 21:32:22 | 200 |            0s |       127.0.0.1 | GET      "/swagger/swagger-ui.css"
+[GIN] 2022/07/06 - 21:32:22 | 200 |            0s |       127.0.0.1 | GET      "/swagger/swagger-ui.css"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      1.9922ms |       127.0.0.1 | GET      "/swagger/swagger-ui-bundle.js"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      1.9922ms |       127.0.0.1 | GET      "/swagger/swagger-ui-bundle.js"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      2.0001ms |       127.0.0.1 | GET      "/swagger/swagger-ui-standalone-preset.js"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      4.0016ms |       127.0.0.1 | GET      "/swagger/swagger-ui-standalone-preset.js"
+[GIN] 2022/07/06 - 21:32:23 | 200 |       995.7µs |       127.0.0.1 | GET      "/swagger/doc.json"
+[GIN] 2022/07/06 - 21:32:23 | 200 |       995.7µs |       127.0.0.1 | GET      "/swagger/doc.json"

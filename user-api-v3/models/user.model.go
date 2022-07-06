@@ -7,10 +7,10 @@ import (
 )
 
 type SignUpInput struct {
-	Name            string    `json:"name" bson:"name" binding:"required"`
-	Email           string    `json:"email" bson:"email" binding:"required"`
-	Password        string    `json:"password" bson:"password" binding:"required,min=8"`
-	PasswordConfirm string    `json:"passwordConfirm" bson:"passwordConfirm,omitempty" binding:"required"`
+	Name            string    `json:"name" bson:"name" binding:"required" example:"John Doe"`
+	Email           string    `json:"email" bson:"email" binding:"required" example:"johndoe@gmail.com"`
+	Password        string    `json:"password" bson:"password" binding:"required,min=8" example:"password123"`
+	PasswordConfirm string    `json:"passwordConfirm" bson:"passwordConfirm,omitempty" binding:"required" example:"password123"`
 	Role            string    `json:"role" bson:"role"`
 	Provider        string    `json:"provider,omitempty" bson:"provider,omitempty"`
 	Photo           string    `json:"photo,omitempty" bson:"photo,omitempty"`
@@ -20,8 +20,8 @@ type SignUpInput struct {
 }
 
 type SignInInput struct {
-	Email    string `json:"email" bson:"email" binding:"required"`
-	Password string `json:"password" bson:"password" binding:"required"`
+	Email    string `json:"email" bson:"email" binding:"required" example:"johndoe@gmail.com"`
+	Password string `json:"password" bson:"password" binding:"required" example:"password123"`
 }
 
 type DBResponse struct {
