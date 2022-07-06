@@ -23,6 +23,8 @@ func NewAuthService(collection *mongo.Collection, ctx context.Context) AuthServi
 }
 
 func (uc *AuthServiceImpl) SignUpUser(user *models.SignUpInput) (*models.DBResponse, error) {
+
+	/*** added the new user to the database with the InsertOne() function ***/
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = user.CreatedAt
 	user.Email = strings.ToLower(user.Email)
@@ -32,6 +34,7 @@ func (uc *AuthServiceImpl) SignUpUser(user *models.SignUpInput) (*models.DBRespo
 	user.Photo = "default.png"
 	user.Provider = "local"
 
+	// security: hash password using bcrypt
 	hashedPassword, _ := utils.HashPassword(user.Password)
 	user.Password = hashedPassword
 	res, err := uc.collection.InsertOne(uc.ctx, &user)
@@ -43,9 +46,13 @@ func (uc *AuthServiceImpl) SignUpUser(user *models.SignUpInput) (*models.DBRespo
 		return nil, err
 	}
 
-	// Create a unique index for the email field
+	/*** Create a unique index for the email field to ensure
+	that no two users can have the same email address. ***/
+
 	opt := options.Index()
 	opt.SetUnique(true)
+
+	// IndexModel represents a new index to be created.
 	index := mongo.IndexModel{Keys: bson.M{"email": 1}, Options: opt}
 
 	if _, err := uc.collection.Indexes().CreateOne(uc.ctx, index); err != nil {
@@ -55,6 +62,7 @@ func (uc *AuthServiceImpl) SignUpUser(user *models.SignUpInput) (*models.DBRespo
 	var newUser *models.DBResponse
 	query := bson.M{"_id": res.InsertedID}
 
+	/*** find and return the user that was added to the database. ***/
 	err = uc.collection.FindOne(uc.ctx, query).Decode(&newUser)
 	if err != nil {
 		return nil, err

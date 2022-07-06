@@ -1,0 +1,127 @@
+basePath: /api/v3
+host: 127.0.0.1:8000
+info:
+  contact: {}
+  description: List APIs of UserManagement Service
+  termsOfService: http://swagger.io/terms/
+  title: UserManagement Service API Document
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: User sign in to service
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Sign In User
+      tags:
+      - auth
+  /auth/refresh:
+    get:
+      consumes:
+      - application/json
+      description: Refresh access token after the specific time
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "403":
+          description: Forbidden
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Refresh access token
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user for service
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "502":
+          description: Bad Gateway
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Register a new user
+      tags:
+      - auth
+  /sessions/oauth/google:
+    get:
+      consumes:
+      - application/json
+      description: Sign in a new user by Google OAtuth2, then save a new user to DB
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "307":
+          description: Temporary Redirect
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "502":
+          description: Bad Gateway
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Sign in a new user by Google OAuth2
+      tags:
+      - auth
+  /users/me:
+    get:
+      consumes:
+      - application/json
+      description: Get the current user info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get the current user info
+      tags:
+      - users
+swagger: "2.0"
