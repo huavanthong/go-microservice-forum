@@ -17,7 +17,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
-	_ "github.com/huavanthong/microservice-golang/user-api-v3/docs"
+	docs "github.com/huavanthong/microservice-golang/user-api-v3/docs"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -131,6 +131,8 @@ func main() {
 
 	server.Use(cors.New(corsConfig))
 
+	docs.SwaggerInfo.BasePath = "/api/v3"
+
 	router := server.Group("/api/v3")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": value})
@@ -141,8 +143,7 @@ func main() {
 	UserRouteController.UserRoute(router, userService)
 	SessionRouteController.SessionRoute(router)
 
-	url := ginSwagger.URL("http://localhost:8000/api/v3/swagger/doc.json") // The url pointing to API definition
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler, url))
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	log.Fatal(server.Run(":" + config.Port))
 }
