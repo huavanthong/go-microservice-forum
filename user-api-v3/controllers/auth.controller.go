@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/user-api-v3/config"
 	"github.com/huavanthong/microservice-golang/user-api-v3/models"
+	"github.com/huavanthong/microservice-golang/user-api-v3/payload"
 	"github.com/huavanthong/microservice-golang/user-api-v3/services"
 	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -41,7 +42,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	// from context, bind user info to json
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.JSON(http.StatusBadRequest,
-			payload.response{
+			payload.Response{
 				Status:  "fail",
 				Code:    http.StatusBadRequest,
 				Message: err.Error(),
@@ -52,7 +53,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	// confirm password
 	if user.Password != user.PasswordConfirm {
 		ctx.JSON(http.StatusBadRequest,
-			payload.response{
+			payload.Response{
 				Status:  "fail",
 				Code:    http.StatusBadRequest,
 				Message: "Passwords do not match",
@@ -64,7 +65,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	newUser, err := ac.authService.SignUpUser(user)
 	if err != nil {
 		ctx.JSON(http.StatusBadGateway,
-			payload.response{
+			payload.Response{
 				Status:  "fail",
 				Code:    http.StatusBadGateway,
 				Message: err.Error(),

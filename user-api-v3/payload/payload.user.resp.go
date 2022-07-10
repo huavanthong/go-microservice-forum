@@ -15,6 +15,6 @@ import "github.com/huavanthong/microservice-golang/user-api-v3/models"
 
 // Error defines the response error
 type UserRegister struct {
-	ResponseMessage Response
 	Data            models.UserResponse
+	ResponseMessage Response
 }
