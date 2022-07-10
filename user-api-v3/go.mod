@@ -34,7 +34,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/huavanthong/microservice-golang v0.0.0-20220709103318-55954d0e1be6 // indirect
+	github.com/huavanthong/microservice-golang v0.0.0-20220709105142-088149fb0f88 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect

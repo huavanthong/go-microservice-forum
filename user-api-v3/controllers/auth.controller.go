@@ -30,9 +30,9 @@ func NewAuthController(authService services.AuthService, userService services.Us
 // @Accept  json
 // @Produce  json
 // @Param user body models.SignUpInput true "New User"
-// @Failure 400 {string} http.StatusBadRequest
-// @Failure 502 {string} http.StatusBadGateway
-// @Success 201 {object} {"data": models.SignUpInput , "status":"success"}
+// @Failure 400 {object} payload.response
+// @Failure 502 {object} payload.response
+// @Success 201 {string} string
 // @Router /auth/register [post]
 // SignUp User
 func (ac *AuthController) SignUpUser(ctx *gin.Context) {
@@ -40,20 +40,35 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 
 	// from context, bind user info to json
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": err.Error()})
+		ctx.JSON(http.StatusBadRequest,
+			payload.response{
+				Status:  "fail",
+				Code:    http.StatusBadRequest,
+				Message: err.Error(),
+			})
 		return
 	}
 
 	// confirm password
 	if user.Password != user.PasswordConfirm {
-		ctx.JSON(http.StatusBadRequest, gin.H{"status": "fail", "message": "Passwords do not match"})
+		ctx.JSON(http.StatusBadRequest,
+			payload.response{
+				Status:  "fail",
+				Code:    http.StatusBadRequest,
+				Message: "Passwords do not match",
+			})
 		return
 	}
 
 	// transfer user info to service
 	newUser, err := ac.authService.SignUpUser(user)
 	if err != nil {
-		ctx.JSON(http.StatusBadGateway, gin.H{"status": "error", "message": err.Error()})
+		ctx.JSON(http.StatusBadGateway,
+			payload.response{
+				Status:  "fail",
+				Code:    http.StatusBadGateway,
+				Message: err.Error(),
+			})
 		return
 	}
 
@@ -68,8 +83,9 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Failure 400 {string} http.StatusBadRequest
-// @Success 200 {string} http.StatusOK
+// @Param user body models.SignInInput true "Authenticate user"
+// @Failure 400 {string} string
+// @Success 200 {string} string
 // @Router /auth/login [post]
 // SignIn User
 func (ac *AuthController) SignInUser(ctx *gin.Context) {

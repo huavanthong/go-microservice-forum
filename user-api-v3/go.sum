@@ -300,6 +300,8 @@ github.com/huavanthong/microservice-golang v0.0.0-20220709100118-617315293327 h1
 github.com/huavanthong/microservice-golang v0.0.0-20220709100118-617315293327/go.mod h1:R+G1NQr1SbGM4jSjsba6KkVQGokd+PourtRTweoH/b4=
 github.com/huavanthong/microservice-golang v0.0.0-20220709103318-55954d0e1be6 h1:s1V3TjiHdX4pQuxrr64tZtqcbbr/O/gpJIgX9J3urIo=
 github.com/huavanthong/microservice-golang v0.0.0-20220709103318-55954d0e1be6/go.mod h1:R+G1NQr1SbGM4jSjsba6KkVQGokd+PourtRTweoH/b4=
+github.com/huavanthong/microservice-golang v0.0.0-20220709105142-088149fb0f88 h1:8mhNEwDT6osvl/SmubR9xWNAK4wDaSbJJ54LkOGqkeI=
+github.com/huavanthong/microservice-golang v0.0.0-20220709105142-088149fb0f88/go.mod h1:R+G1NQr1SbGM4jSjsba6KkVQGokd+PourtRTweoH/b4=
 github.com/huavanthong/microservice-golang/user-api-v3 v0.0.0-20220709103318-55954d0e1be6/go.mod h1:JHoG78SjQMuaX/yDyDukykXRrYOFeKqfaS5ig7boyc0=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=

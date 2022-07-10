@@ -35,6 +35,17 @@ const docTemplate = `{
                     "auth"
                 ],
                 "summary": "Sign In User",
+                "parameters": [
+                    {
+                        "description": "Authenticate user",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.SignInInput"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -218,6 +229,23 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.SignInInput": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "password123"
+                }
+            }
+        },
         "models.SignUpInput": {
             "type": "object",
             "required": [
@@ -227,9 +255,6 @@ const docTemplate = `{
                 "passwordConfirm"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "email": {
                     "type": "string",
                     "example": "johndoe@gmail.com"
@@ -246,21 +271,6 @@ const docTemplate = `{
                 "passwordConfirm": {
                     "type": "string",
                     "example": "password123"
-                },
-                "photo": {
-                    "type": "string"
-                },
-                "provider": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "verified": {
-                    "type": "boolean"
                 }
             }
         }

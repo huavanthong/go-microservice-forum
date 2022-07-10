@@ -1,9 +1,19 @@
 basePath: /api/v3
 definitions:
+  models.SignInInput:
+    properties:
+      email:
+        example: johndoe@gmail.com
+        type: string
+      password:
+        example: password123
+        type: string
+    required:
+    - email
+    - password
+    type: object
   models.SignUpInput:
     properties:
-      created_at:
-        type: string
       email:
         example: johndoe@gmail.com
         type: string
@@ -17,16 +27,6 @@ definitions:
       passwordConfirm:
         example: password123
         type: string
-      photo:
-        type: string
-      provider:
-        type: string
-      role:
-        type: string
-      updated_at:
-        type: string
-      verified:
-        type: boolean
     required:
     - email
     - name
@@ -46,6 +46,13 @@ paths:
       consumes:
       - application/json
       description: User sign in to service
+      parameters:
+      - description: Authenticate user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignInInput'
       produces:
       - application/json
       responses:

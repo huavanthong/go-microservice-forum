@@ -22,12 +22,13 @@ func NewAuthService(collection *mongo.Collection, ctx context.Context) AuthServi
 	return &AuthServiceImpl{collection, ctx}
 }
 
-func (uc *AuthServiceImpl) SignUpUser(user *models.SignUpInput) (*models.DBResponse, error) {
+func (uc *AuthServiceImpl) SignUpUser(userInfo *models.SignUpInput) (*models.DBResponse, error) {
 
 	/*** added the new user to the database with the InsertOne() function ***/
+	var user models.User
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = user.CreatedAt
-	user.Email = strings.ToLower(user.Email)
+	user.Email = strings.ToLower(userInfo.Email)
 	user.PasswordConfirm = ""
 	user.Verified = true
 	user.Role = "user"
@@ -35,7 +36,7 @@ func (uc *AuthServiceImpl) SignUpUser(user *models.SignUpInput) (*models.DBRespo
 	user.Provider = "local"
 
 	// security: hash password using bcrypt
-	hashedPassword, _ := utils.HashPassword(user.Password)
+	hashedPassword, _ := utils.HashPassword(userInfo.Password)
 	user.Password = hashedPassword
 	res, err := uc.collection.InsertOne(uc.ctx, &user)
 
