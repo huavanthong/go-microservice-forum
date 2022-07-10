@@ -43,13 +43,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.UserLoginSuccess"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.Response"
                         }
                     }
                 }
@@ -77,13 +77,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.UserRefreshTokenSuccess"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.Response"
                         }
                     }
                 }
@@ -122,19 +122,19 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.UserRegisterSuccess"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.Response"
                         }
                     }
                 }
@@ -168,25 +168,25 @@
                     "307": {
                         "description": "Temporary Redirect",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.Response"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.Response"
                         }
                     }
                 }
@@ -214,7 +214,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.UserRegisterSuccess"
                         }
                     }
                 }
@@ -264,6 +264,112 @@
                 "passwordConfirm": {
                     "type": "string",
                     "example": "password123"
+                }
+            }
+        },
+        "models.UserResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@gmail.com"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "5bbdadf782ebac06a695a8e7"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "photo": {
+                    "type": "string",
+                    "example": "http://www.golangprograms.com/skin/frontend/base/default/logo.png"
+                },
+                "provider": {
+                    "type": "string",
+                    "example": "google oauth2"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "user"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "payload.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Error message"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "failed"
+                }
+            }
+        },
+        "payload.UserLoginSuccess": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTc0NTg2NzcsImlhdCI6MTY1NzQ1Nzc3NywibmJmIjoxNjU3NDU3Nzc3LCJzdWIiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifQ.WbRHMAdggCfHR06XKpmbFCu3DNjPkjOPYs9b8TuvBZym1d_TD7JCMadmNCq_Sim9bOzhMi8muDZBb1wRBkli2A"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Generate token success"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "payload.UserRefreshTokenSuccess": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTc0NTg2NzcsImlhdCI6MTY1NzQ1Nzc3NywibmJmIjoxNjU3NDU3Nzc3LCJzdWIiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifQ.WbRHMAdggCfHR06XKpmbFCu3DNjPkjOPYs9b8TuvBZym1d_TD7JCMadmNCq_Sim9bOzhMi8muDZBb1wRBkli2A"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Refresh token success"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "payload.UserRegisterSuccess": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/models.UserResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Register a new user successfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
                 }
             }
         }

@@ -33,6 +33,81 @@ definitions:
     - password
     - passwordConfirm
     type: object
+  models.UserResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        example: johndoe@gmail.com
+        type: string
+      id:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
+      name:
+        example: John Doe
+        type: string
+      photo:
+        example: http://www.golangprograms.com/skin/frontend/base/default/logo.png
+        type: string
+      provider:
+        example: google oauth2
+        type: string
+      role:
+        example: user
+        type: string
+      updated_at:
+        type: string
+    type: object
+  payload.Response:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: Error message
+        type: string
+      status:
+        example: failed
+        type: string
+    type: object
+  payload.UserLoginSuccess:
+    properties:
+      access_token:
+        example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTc0NTg2NzcsImlhdCI6MTY1NzQ1Nzc3NywibmJmIjoxNjU3NDU3Nzc3LCJzdWIiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifQ.WbRHMAdggCfHR06XKpmbFCu3DNjPkjOPYs9b8TuvBZym1d_TD7JCMadmNCq_Sim9bOzhMi8muDZBb1wRBkli2A
+        type: string
+      message:
+        example: Generate token success
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  payload.UserRefreshTokenSuccess:
+    properties:
+      access_token:
+        example: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTc0NTg2NzcsImlhdCI6MTY1NzQ1Nzc3NywibmJmIjoxNjU3NDU3Nzc3LCJzdWIiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifQ.WbRHMAdggCfHR06XKpmbFCu3DNjPkjOPYs9b8TuvBZym1d_TD7JCMadmNCq_Sim9bOzhMi8muDZBb1wRBkli2A
+        type: string
+      message:
+        example: Refresh token success
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  payload.UserRegisterSuccess:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/models.UserResponse'
+      message:
+        example: Register a new user successfully
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
 host: localhost:8000
 info:
   contact: {}
@@ -59,11 +134,11 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/payload.UserLoginSuccess'
         "400":
           description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/payload.Response'
       security:
       - ApiKeyAuth: []
       summary: Sign In User
@@ -80,11 +155,11 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/payload.UserRefreshTokenSuccess'
         "403":
           description: Forbidden
           schema:
-            type: string
+            $ref: '#/definitions/payload.Response'
       security:
       - ApiKeyAuth: []
       summary: Refresh access token
@@ -108,15 +183,15 @@ paths:
         "201":
           description: Created
           schema:
-            type: string
+            $ref: '#/definitions/payload.UserRegisterSuccess'
         "400":
           description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/payload.Response'
         "502":
           description: Bad Gateway
           schema:
-            type: string
+            $ref: '#/definitions/payload.Response'
       security:
       - ApiKeyAuth: []
       summary: Register a new user
@@ -137,19 +212,19 @@ paths:
         "307":
           description: Temporary Redirect
           schema:
-            type: string
+            $ref: '#/definitions/payload.Response'
         "400":
           description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/payload.Response'
         "401":
           description: Unauthorized
           schema:
-            type: string
+            $ref: '#/definitions/payload.Response'
         "502":
           description: Bad Gateway
           schema:
-            type: string
+            $ref: '#/definitions/payload.Response'
       security:
       - ApiKeyAuth: []
       summary: Sign in a new user by Google OAuth2
@@ -166,7 +241,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: string
+            $ref: '#/definitions/payload.UserRegisterSuccess'
       security:
       - ApiKeyAuth: []
       summary: Get the current user info
