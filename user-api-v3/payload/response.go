@@ -1,5 +1,5 @@
 /*
- * @File: payload.responseMessage.go
+ * @File: payload.response.go
  * @Description: Defines Error information will be returned to the clients
  * @Author: Hua Van Thong (huavanthong14@gmail.com)
  */
@@ -12,7 +12,7 @@ Swagger message example: [here](https://docs.swagger.io/spec.html#511-object-exa
 ******************************************************************************/
 
 // Error defines the response error
-type ResponseMessage struct {
+type Response struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"27"`
 	Message string `json:"message" example:"Error message"`

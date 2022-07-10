@@ -6,72 +6,30 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type SignUpInput struct {
-	Name            string    `json:"name" bson:"name" binding:"required" example:"John Doe"`
-	Email           string    `json:"email" bson:"email" binding:"required" example:"johndoe@gmail.com"`
-	Password        string    `json:"password" bson:"password" binding:"required,min=8" example:"password123"`
-	PasswordConfirm string    `json:"passwordConfirm" bson:"passwordConfirm,omitempty" binding:"required" example:"password123"`
-	Role            string    `json:"role" bson:"role"`
-	Provider        string    `json:"provider,omitempty" bson:"provider,omitempty"`
-	Photo           string    `json:"photo,omitempty" bson:"photo,omitempty"`
-	Verified        bool      `json:"verified" bson:"verified"`
-	CreatedAt       time.Time `json:"created_at" bson:"created_at"`
-	UpdatedAt       time.Time `json:"updated_at" bson:"updated_at"`
-}
-
-type SignInInput struct {
-	Email    string `json:"email" bson:"email" binding:"required" example:"johndoe@gmail.com"`
-	Password string `json:"password" bson:"password" binding:"required" example:"password123"`
-}
-
-type DBResponse struct {
-	ID              primitive.ObjectID `json:"id" bson:"_id"`
-	Name            string             `json:"name" bson:"name"`
-	Email           string             `json:"email" bson:"email"`
-	Password        string             `json:"password" bson:"password"`
-	PasswordConfirm string             `json:"passwordConfirm,omitempty" bson:"passwordConfirm,omitempty"`
-	Provider        string             `json:"provider" bson:"provider"`
-	Photo           string             `json:"photo,omitempty" bson:"photo,omitempty"`
+// understanding json encoding, [here](https://pkg.go.dev/encoding/json#Marshal)
+type User struct {
+	ID              primitive.ObjectID `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7" `
+	Name            string             `json:"name" bson:"name" binding:"required" example:"John Doe"`
+	Email           string             `json:"email" bson:"email" binding:"required" example:"johndoe@gmail.com"`
+	Password        string             `json:"password" bson:"password" binding:"required,min=8" example:"password123"`
+	PasswordConfirm string             `json:"passwordConfirm" bson:"passwordConfirm,omitempty" binding:"required" example:"password123"`
 	Role            string             `json:"role" bson:"role"`
+	Provider        string             `json:"provider,omitempty" bson:"provider,omitempty"`
+	Photo           string             `json:"photo,omitempty" bson:"photo,omitempty"`
 	Verified        bool               `json:"verified" bson:"verified"`
+	LoginAttempts   []LoginAttempt     `bson:"loginattempts" json:"loginattempts"`
+	Activated       bool               `bson:"activated" json:"activated"`
 	CreatedAt       time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt       time.Time          `json:"updated_at" bson:"updated_at"`
+	LastLoginAt     string             `json:"lastloginat" bson:"lastloginat"`
 }
 
-type UserResponse struct {
-	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	Name      string             `json:"name,omitempty" bson:"name,omitempty"`
-	Email     string             `json:"email,omitempty" bson:"email,omitempty"`
-	Role      string             `json:"role,omitempty" bson:"role,omitempty"`
-	Photo     string             `json:"photo,omitempty" bson:"photo,omitempty"`
-	Provider  string             `json:"provider" bson:"provider"`
-	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
-	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at"`
-}
-
-type UpdateDBUser struct {
-	ID              primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	Name            string             `json:"name,omitempty" bson:"name,omitempty"`
-	Email           string             `json:"email,omitempty" bson:"email,omitempty"`
-	Password        string             `json:"password,omitempty" bson:"password,omitempty"`
-	PasswordConfirm string             `json:"passwordConfirm,omitempty" bson:"passwordConfirm,omitempty"`
-	Role            string             `json:"role,omitempty" bson:"role,omitempty"`
-	Provider        string             `json:"provider" bson:"provider"`
-	Photo           string             `json:"photo,omitempty" bson:"photo,omitempty"`
-	Verified        bool               `json:"verified,omitempty" bson:"verified,omitempty"`
-	CreatedAt       time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty"`
-	UpdatedAt       time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
-}
-
-func FilteredResponse(user *DBResponse) UserResponse {
-	return UserResponse{
-		ID:        user.ID,
-		Email:     user.Email,
-		Name:      user.Name,
-		Role:      user.Role,
-		Provider:  user.Provider,
-		Photo:     user.Photo,
-		CreatedAt: user.CreatedAt,
-		UpdatedAt: user.UpdatedAt,
-	}
+// Login is a retrieved and authentiacted user.
+type LoginAttempt struct {
+	AccountName string `bson:"accountname" json:"accountname"` // define account name is not correct with user id
+	Password    string `bson:"password" json:"password"`
+	IPNumber    string `bson:"ipnumber" json:"ipnumber"`
+	BrowerType  string `bson:"browertype" json:"browertype"`
+	Success     string `bson:"success" json:"success"`
+	CreateDate  string `bson:"createdate" json:"createdate"`
 }
