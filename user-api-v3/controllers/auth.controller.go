@@ -319,7 +319,7 @@ func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
 // @Failure 502 {object} payload.Response
 // @Success 201 {string} http.StatusCreated
 // @Router /sessions/oauth/google [get]
-// SignUp User
+// SignUp User by Google
 func (ac *AuthController) GoogleOAuth(ctx *gin.Context) {
 	code := ctx.Query("code")
 	var pathUrl string = "/"
@@ -415,6 +415,15 @@ func (ac *AuthController) GoogleOAuth(ctx *gin.Context) {
 	ctx.Redirect(http.StatusTemporaryRedirect, fmt.Sprint(config.ClientOrigin, pathUrl))
 }
 
+// LogoutUser godoc
+// @Summary Log out user
+// @Description Delete all cookie in session
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Success 201 {string} StatusOK
+// @Router /logout [get]
 func (ac *AuthController) LogoutUser(ctx *gin.Context) {
 	ctx.SetCookie("access_token", "", -1, "/", "localhost", false, true)
 	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
@@ -423,6 +432,17 @@ func (ac *AuthController) LogoutUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
+// VerifyEmail godoc
+// @Summary Verify email user
+// @Description Verify email user that sign up to service
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Param verificationCode path string true "Verification Code"
+// @Failure 403 {object} payload.Response
+// @Success 209 {object} payload.Response
+// @Router /verifyemail/{verificationCode} [get]
 func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 
 	code := ctx.Params.ByName("verificationCode")
@@ -432,17 +452,31 @@ func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 	update := bson.D{{Key: "$set", Value: bson.D{{Key: "verified", Value: true}}}, {Key: "$unset", Value: bson.D{{Key: "verificationCode", Value: ""}}}}
 	result, err := ac.collection.UpdateOne(ac.ctx, query, update)
 	if err != nil {
-		ctx.JSON(http.StatusForbidden, gin.H{"status": "success", "message": err.Error()})
+		ctx.JSON(http.StatusForbidden,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusForbidden,
+				Message: err.Error(),
+			})
 		return
 	}
 
 	if result.MatchedCount == 0 {
-		ctx.JSON(http.StatusForbidden, gin.H{"status": "success", "message": "Could not verify email address"})
+		ctx.JSON(http.StatusForbidden,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusForbidden,
+				Message: "Could not verify email address",
+			})
 		return
 	}
 
 	fmt.Println(result)
 
-	ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Email verified successfully"})
-
+	ctx.JSON(http.StatusOK,
+		payload.Response{
+			Status:  "fail",
+			Code:    http.StatusOK,
+			Message: "Email verified successfully",
+		})
 }
