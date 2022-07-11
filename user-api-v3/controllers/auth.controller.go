@@ -2,10 +2,14 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/thanhpk/randstr"
+
 	"github.com/huavanthong/microservice-golang/user-api-v3/config"
 	"github.com/huavanthong/microservice-golang/user-api-v3/models"
 	"github.com/huavanthong/microservice-golang/user-api-v3/payload"
@@ -64,6 +68,15 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	// transfer user info to service
 	newUser, err := ac.authService.SignUpUser(user)
 	if err != nil {
+		if strings.Contains(err.Error(), "email already exist") {
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusConflict,
+				Message: err.Error(),
+			}
+			return
+		}
+
 		ctx.JSON(http.StatusBadGateway,
 			payload.Response{
 				Status:  "fail",
@@ -72,13 +85,43 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 			})
 		return
 	}
+	/********************** Verify email *********************/
+	config, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatal("Could not load config", err)
+	}
+
+	// Generate Verification Code
+	code := randstr.String(20)
+
+	verificationCode := utils.Encode(code)
+
+	// Update User in Database
+	ac.userService.UpdateUserById(newUser.ID.Hex(), "verificationCode", verificationCode)
+
+	var firstName = newUser.Name
+
+	if strings.Contains(firstName, " ") {
+		firstName = strings.Split(firstName, " ")[1]
+	}
+
+	// 👇 Send Email
+	emailData := utils.EmailData{
+		URL:       config.Origin + "/verifyemail/" + code,
+		FirstName: firstName,
+		Subject:   "Your account verification code",
+	}
+
+	utils.SendEmail(newUser, &emailData)
+
+	message := "We sent an email with a verification code to " + user.Email
 
 	// return user info after register a new user successfully
 	ctx.JSON(http.StatusCreated,
 		payload.UserRegisterSuccess{
 			Status:  "success",
 			Code:    http.StatusCreated,
-			Message: "Register a new user successfully",
+			Message: message,
 			Data:    models.FilteredResponse(newUser),
 		})
 }
