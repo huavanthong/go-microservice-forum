@@ -36,6 +36,7 @@ func NewAuthController(authService services.AuthService, userService services.Us
 // @Produce  json
 // @Param user body models.SignUpInput true "New User"
 // @Failure 400 {object} payload.Response
+// @Failure 409 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 201 {object} payload.UserRegisterSuccess
 // @Router /auth/register [post]

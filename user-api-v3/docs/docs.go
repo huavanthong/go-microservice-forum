@@ -138,6 +138,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/payload.Response"
                         }
                     },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
