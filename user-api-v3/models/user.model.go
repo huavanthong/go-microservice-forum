@@ -21,7 +21,7 @@ type User struct {
 	Activated       bool               `bson:"activated" json:"activated"`
 	CreatedAt       time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt       time.Time          `json:"updated_at" bson:"updated_at"`
-	LastLoginAt     string             `json:"lastloginat" bson:"lastloginat"`
+	LastLoginAt     string             `json:"lastlogin_at" bson:"lastlogin_at"`
 }
 
 // Login is a retrieved and authentiacted user.
