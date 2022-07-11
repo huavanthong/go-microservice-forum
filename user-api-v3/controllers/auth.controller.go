@@ -69,11 +69,12 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	newUser, err := ac.authService.SignUpUser(user)
 	if err != nil {
 		if strings.Contains(err.Error(), "email already exist") {
-			payload.Response{
-				Status:  "fail",
-				Code:    http.StatusConflict,
-				Message: err.Error(),
-			}
+			ctx.JSON(http.StatusConflict,
+				payload.Response{
+					Status:  "fail",
+					Code:    http.StatusConflict,
+					Message: err.Error(),
+				})
 			return
 		}
 
