@@ -8,6 +8,6 @@ type AdminController struct {
 	adminService services.AdminService
 }
 
-func NewUserController(adminService services.AdminService) AdminController {
+func NewAdminController(adminService services.AdminService) AdminController {
 	return AdminController{adminService}
 }
