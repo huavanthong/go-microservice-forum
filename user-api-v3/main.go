@@ -87,7 +87,7 @@ func init() {
 	authCollection = mongoclient.Database("golang_mongodb").Collection("users")
 	userService = services.NewUserServiceImpl(authCollection, ctx)
 	authService = services.NewAuthService(authCollection, ctx)
-	AuthController = controllers.NewAuthController(authService, userService)
+	AuthController = controllers.NewAuthController(authService, userService, ctx, authCollection)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
 	SessionRouteController = routes.NewSessionRouteController(AuthController)
 
@@ -139,7 +139,7 @@ func main() {
 	})
 
 	/************************ Controller  *************************/
-	AuthRouteController.AuthRoute(router)
+	AuthRouteController.AuthRoute(router, userService)
 	UserRouteController.UserRoute(router, userService)
 	SessionRouteController.SessionRoute(router)
 

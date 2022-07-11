@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,16 +16,19 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api-v3/payload"
 	"github.com/huavanthong/microservice-golang/user-api-v3/services"
 	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type AuthController struct {
 	authService services.AuthService
 	userService services.UserService
+	ctx         context.Context
+	collection  *mongo.Collection
 }
 
-func NewAuthController(authService services.AuthService, userService services.UserService) AuthController {
-	return AuthController{authService, userService}
+func NewAuthController(authService services.AuthService, userService services.UserService, ctx context.Context, collection *mongo.Collection) AuthController {
+	return AuthController{authService, userService, ctx, collection}
 }
 
 // SignUpUser godoc
@@ -172,6 +176,11 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 				Code:    http.StatusBadRequest,
 				Message: err.Error(),
 			})
+		return
+	}
+	// User'email verify or not
+	if !user.Verified {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": "You are not verified, please verify your email to login"})
 		return
 	}
 
@@ -404,4 +413,36 @@ func (ac *AuthController) GoogleOAuth(ctx *gin.Context) {
 	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
 
 	ctx.Redirect(http.StatusTemporaryRedirect, fmt.Sprint(config.ClientOrigin, pathUrl))
+}
+
+func (ac *AuthController) LogoutUser(ctx *gin.Context) {
+	ctx.SetCookie("access_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("logged_in", "", -1, "/", "localhost", false, true)
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
+}
+
+func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
+
+	code := ctx.Params.ByName("verificationCode")
+	verificationCode := utils.Encode(code)
+
+	query := bson.D{{Key: "verificationCode", Value: verificationCode}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "verified", Value: true}}}, {Key: "$unset", Value: bson.D{{Key: "verificationCode", Value: ""}}}}
+	result, err := ac.collection.UpdateOne(ac.ctx, query, update)
+	if err != nil {
+		ctx.JSON(http.StatusForbidden, gin.H{"status": "success", "message": err.Error()})
+		return
+	}
+
+	if result.MatchedCount == 0 {
+		ctx.JSON(http.StatusForbidden, gin.H{"status": "success", "message": "Could not verify email address"})
+		return
+	}
+
+	fmt.Println(result)
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Email verified successfully"})
+
 }
