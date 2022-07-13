@@ -139,9 +139,30 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/payload.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/payload.Response'
       security:
       - ApiKeyAuth: []
       summary: Sign In User
+      tags:
+      - auth
+  /auth/logout:
+    get:
+      consumes:
+      - application/json
+      description: Delete all cookie in session
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Log out user
       tags:
       - auth
   /auth/refresh:
@@ -188,6 +209,10 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/payload.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/payload.Response'
         "502":
           description: Bad Gateway
           schema:
@@ -195,6 +220,33 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Register a new user
+      tags:
+      - auth
+  /auth/verifyemail/{verificationCode}:
+    get:
+      consumes:
+      - application/json
+      description: Verify email user that sign up to service
+      parameters:
+      - description: Verification Code
+        in: path
+        name: verificationCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "209":
+          description: ""
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Verify email user
       tags:
       - auth
   /sessions/oauth/google:

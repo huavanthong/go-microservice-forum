@@ -87,7 +87,7 @@ func init() {
 	authCollection = mongoclient.Database("golang_mongodb").Collection("users")
 	userService = services.NewUserServiceImpl(authCollection, ctx)
 	authService = services.NewAuthService(authCollection, ctx)
-	AuthController = controllers.NewAuthController(authService, userService)
+	AuthController = controllers.NewAuthController(authService, userService, ctx, authCollection)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
 	SessionRouteController = routes.NewSessionRouteController(AuthController)
 
@@ -133,13 +133,14 @@ func main() {
 
 	docs.SwaggerInfo.BasePath = "/api/v3"
 
+	/************************ Server routing  *************************/
 	router := server.Group("/api/v3")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": value})
 	})
 
 	/************************ Controller  *************************/
-	AuthRouteController.AuthRoute(router)
+	AuthRouteController.AuthRoute(router, userService)
 	UserRouteController.UserRoute(router, userService)
 	SessionRouteController.SessionRoute(router)
 

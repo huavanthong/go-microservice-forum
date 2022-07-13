@@ -9,6 +9,7 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api-v3/models"
 	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -30,16 +31,17 @@ func (uc *AuthServiceImpl) SignUpUser(userInfo *models.SignUpInput) (*models.DBR
 	user.UpdatedAt = user.CreatedAt
 	user.Email = strings.ToLower(userInfo.Email)
 	user.PasswordConfirm = ""
-	user.Verified = true
+	user.Verified = false // member is verified by email
 	user.Role = "user"
 	user.Photo = "default.png"
 	user.Provider = "local"
+	/*** Design ObjectID 1: Bson generate object id ***/
+	user.ID = primitive.NewObjectID()
 
 	// security: hash password using bcrypt
 	hashedPassword, _ := utils.HashPassword(userInfo.Password)
 	user.Password = hashedPassword
-	res, err := uc.collection.InsertOne(uc.ctx, &user)
-
+	_, err := uc.collection.InsertOne(uc.ctx, &user)
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
 			return nil, errors.New("user with that email already exist")
@@ -60,10 +62,13 @@ func (uc *AuthServiceImpl) SignUpUser(userInfo *models.SignUpInput) (*models.DBR
 		return nil, errors.New("could not create index for email")
 	}
 
-	var newUser *models.DBResponse
-	query := bson.M{"_id": res.InsertedID}
+	/*** Design ObjectID 2: -- final step --  insert id for user after finish the above steps ***/
+	// query := bson.M{"_id": res.InsertedID}
+
+	query := bson.M{"_id": user.ID}
 
 	/*** find and return the user that was added to the database. ***/
+	var newUser *models.DBResponse
 	err = uc.collection.FindOne(uc.ctx, query).Decode(&newUser)
 	if err != nil {
 		return nil, err

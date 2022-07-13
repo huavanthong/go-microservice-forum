@@ -1,26 +1,34 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/thanhpk/randstr"
+
 	"github.com/huavanthong/microservice-golang/user-api-v3/config"
 	"github.com/huavanthong/microservice-golang/user-api-v3/models"
 	"github.com/huavanthong/microservice-golang/user-api-v3/payload"
 	"github.com/huavanthong/microservice-golang/user-api-v3/services"
 	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type AuthController struct {
 	authService services.AuthService
 	userService services.UserService
+	ctx         context.Context
+	collection  *mongo.Collection
 }
 
-func NewAuthController(authService services.AuthService, userService services.UserService) AuthController {
-	return AuthController{authService, userService}
+func NewAuthController(authService services.AuthService, userService services.UserService, ctx context.Context, collection *mongo.Collection) AuthController {
+	return AuthController{authService, userService, ctx, collection}
 }
 
 // SignUpUser godoc
@@ -32,6 +40,7 @@ func NewAuthController(authService services.AuthService, userService services.Us
 // @Produce  json
 // @Param user body models.SignUpInput true "New User"
 // @Failure 400 {object} payload.Response
+// @Failure 409 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 201 {object} payload.UserRegisterSuccess
 // @Router /auth/register [post]
@@ -64,6 +73,16 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 	// transfer user info to service
 	newUser, err := ac.authService.SignUpUser(user)
 	if err != nil {
+		if strings.Contains(err.Error(), "email already exist") {
+			ctx.JSON(http.StatusConflict,
+				payload.Response{
+					Status:  "fail",
+					Code:    http.StatusConflict,
+					Message: err.Error(),
+				})
+			return
+		}
+
 		ctx.JSON(http.StatusBadGateway,
 			payload.Response{
 				Status:  "fail",
@@ -72,13 +91,43 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 			})
 		return
 	}
+	/********************** Verify email *********************/
+	config, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatal("Could not load config", err)
+	}
+
+	// Generate Verification Code
+	code := randstr.String(20)
+
+	verificationCode := utils.Encode(code)
+
+	// Update User in Database
+	ac.userService.UpdateUserById(newUser.ID.Hex(), "verificationCode", verificationCode)
+
+	var firstName = newUser.Name
+
+	if strings.Contains(firstName, " ") {
+		firstName = strings.Split(firstName, " ")[1]
+	}
+
+	// 👇 Send Email
+	emailData := utils.EmailData{
+		URL:       config.Origin + "/api/v3/auth/verifyemail/" + code,
+		FirstName: firstName,
+		Subject:   "Your account verification code",
+	}
+
+	utils.SendEmail(newUser, &emailData)
+
+	message := "We sent an email with a verification code to " + user.Email
 
 	// return user info after register a new user successfully
 	ctx.JSON(http.StatusCreated,
 		payload.UserRegisterSuccess{
 			Status:  "success",
 			Code:    http.StatusCreated,
-			Message: "Register a new user successfully",
+			Message: message,
 			Data:    models.FilteredResponse(newUser),
 		})
 }
@@ -92,6 +141,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 // @Produce  json
 // @Param user body models.SignInInput true "Authenticate user"
 // @Failure 400 {object} payload.Response
+// @Failure 401 {object} payload.Response
 // @Success 200 {object} payload.UserLoginSuccess
 // @Router /auth/login [post]
 // SignIn User
@@ -111,6 +161,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	// Find user by email
 	user, err := ac.userService.FindUserByEmail(credentials.Email)
+	fmt.Println(user)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			ctx.JSON(http.StatusBadRequest,
@@ -126,6 +177,18 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 				Status:  "fail",
 				Code:    http.StatusBadRequest,
 				Message: err.Error(),
+			})
+		return
+	}
+
+	// User'email verify or not
+	fmt.Println(user.Verified)
+	if !user.Verified {
+		ctx.JSON(http.StatusUnauthorized,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusUnauthorized,
+				Message: "You are not verified, please verify your email to login",
 			})
 		return
 	}
@@ -265,7 +328,7 @@ func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
 // @Failure 502 {object} payload.Response
 // @Success 201 {string} http.StatusCreated
 // @Router /sessions/oauth/google [get]
-// SignUp User
+// SignUp User by Google
 func (ac *AuthController) GoogleOAuth(ctx *gin.Context) {
 	code := ctx.Query("code")
 	var pathUrl string = "/"
@@ -359,4 +422,70 @@ func (ac *AuthController) GoogleOAuth(ctx *gin.Context) {
 	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
 
 	ctx.Redirect(http.StatusTemporaryRedirect, fmt.Sprint(config.ClientOrigin, pathUrl))
+}
+
+// LogoutUser godoc
+// @Summary Log out user
+// @Description Delete all cookie in session
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Success 201 {string} StatusOK
+// @Router /auth/logout [get]
+func (ac *AuthController) LogoutUser(ctx *gin.Context) {
+	ctx.SetCookie("access_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("logged_in", "", -1, "/", "localhost", false, true)
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "success"})
+}
+
+// VerifyEmail godoc
+// @Summary Verify email user
+// @Description Verify email user that sign up to service
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Param verificationCode path string true "Verification Code"
+// @Failure 403 {object} payload.Response
+// @Success 209 {object} payload.Response
+// @Router /auth/verifyemail/{verificationCode} [get]
+func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
+
+	code := ctx.Params.ByName("verificationCode")
+	verificationCode := utils.Encode(code)
+
+	query := bson.D{{Key: "verificationCode", Value: verificationCode}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "verified", Value: true}}}, {Key: "$unset", Value: bson.D{{Key: "verificationCode", Value: ""}}}}
+	result, err := ac.collection.UpdateOne(ac.ctx, query, update)
+	if err != nil {
+		ctx.JSON(http.StatusForbidden,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusForbidden,
+				Message: err.Error(),
+			})
+		return
+	}
+
+	if result.MatchedCount == 0 {
+		ctx.JSON(http.StatusForbidden,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusForbidden,
+				Message: "Could not verify email address",
+			})
+		return
+	}
+
+	fmt.Println(result)
+
+	ctx.JSON(http.StatusOK,
+		payload.Response{
+			Status:  "success",
+			Code:    http.StatusOK,
+			Message: "Email verified successfully",
+		})
 }
