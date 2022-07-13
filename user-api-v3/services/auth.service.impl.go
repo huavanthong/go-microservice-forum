@@ -32,6 +32,7 @@ func (uc *AuthServiceImpl) SignUpUser(userInfo *models.SignUpInput) (*models.DBR
 	user.Email = strings.ToLower(userInfo.Email)
 	user.PasswordConfirm = ""
 	user.Verified = false // member is verified by email
+	user.Activated = true
 	user.Role = "user"
 	user.Photo = "default.png"
 	user.Provider = "local"

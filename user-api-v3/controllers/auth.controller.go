@@ -236,6 +236,8 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
 
 	// update the last login time for user
+	lastLogin := time.Now()
+	ac.userService.UpdateUserById(user.ID.Hex(), "lastlogin_at", lastLogin.String())
 
 	// sign in success
 	ctx.JSON(http.StatusOK,
