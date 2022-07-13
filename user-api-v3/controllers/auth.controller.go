@@ -235,6 +235,9 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	ctx.SetCookie("refresh_token", refresh_token, config.RefreshTokenMaxAge*60, "/", "localhost", false, true)
 	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
 
+	// update the last login time for user
+
+	// sign in success
 	ctx.JSON(http.StatusOK,
 		payload.UserLoginSuccess{
 			Status:      "success",
@@ -454,7 +457,10 @@ func (ac *AuthController) LogoutUser(ctx *gin.Context) {
 // @Router /auth/verifyemail/{verificationCode} [get]
 func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 
+	// get verification code from request
 	code := ctx.Params.ByName("verificationCode")
+
+	// encode the code
 	verificationCode := utils.Encode(code)
 
 	query := bson.D{{Key: "verificationCode", Value: verificationCode}}

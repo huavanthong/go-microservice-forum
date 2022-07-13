@@ -88,6 +88,7 @@ func (uc *UserServiceImpl) UpdateUserById(id string, field string, value string)
 	result, err := uc.collection.UpdateOne(uc.ctx, query, update)
 
 	fmt.Print(result.ModifiedCount)
+
 	if err != nil {
 		fmt.Print(err)
 		return &models.DBResponse{}, err
@@ -96,16 +97,17 @@ func (uc *UserServiceImpl) UpdateUserById(id string, field string, value string)
 	return &models.DBResponse{}, nil
 }
 
-func (uc *UserServiceImpl) UpdateOne(field string, value interface{}) (*models.DBResponse, error) {
-	query := bson.D{{Key: field, Value: value}}
-	update := bson.D{{Key: "$set", Value: bson.D{{Key: field, Value: value}}}}
-	result, err := uc.collection.UpdateOne(uc.ctx, query, update)
+// func (uc *UserServiceImpl) UpdateOne(field string, value interface{}) (*models.DBResponse, error) {
+// 	query := bson.D{{Key: field, Value: value}}
+// 	update := bson.D{{Key: "$set", Value: bson.D{{Key: field, Value: value}}}}
+// 	result, err := uc.collection.UpdateOne(uc.ctx, query, update)
 
-	fmt.Print(result.ModifiedCount)
-	if err != nil {
-		fmt.Print(err)
-		return &models.DBResponse{}, err
-	}
+// 	fmt.Print(result.ModifiedCount)
 
-	return &models.DBResponse{}, nil
-}
+// 	if err != nil {
+// 		fmt.Print(err)
+// 		return &models.DBResponse{}, err
+// 	}
+
+// 	return &models.DBResponse{}, nil
+// }
