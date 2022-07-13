@@ -133,6 +133,7 @@ func main() {
 
 	docs.SwaggerInfo.BasePath = "/api/v3"
 
+	/************************ Server routing  *************************/
 	router := server.Group("/api/v3")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": value})

@@ -81,6 +81,7 @@ func (uc *UserServiceImpl) UpsertUser(email string, data *models.UpdateDBUser) (
 }
 
 func (uc *UserServiceImpl) UpdateUserById(id string, field string, value string) (*models.DBResponse, error) {
+
 	userId, _ := primitive.ObjectIDFromHex(id)
 	query := bson.D{{Key: "_id", Value: userId}}
 	update := bson.D{{Key: "$set", Value: bson.D{{Key: field, Value: value}}}}
