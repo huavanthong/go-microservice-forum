@@ -113,7 +113,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 
 	// 👇 Send Email
 	emailData := utils.EmailData{
-		URL:       config.Origin + "/verifyemail/" + code,
+		URL:       config.Origin + "/api/v3/auth/verifyemail/" + code,
 		FirstName: firstName,
 		Subject:   "Your account verification code",
 	}
@@ -141,6 +141,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 // @Produce  json
 // @Param user body models.SignInInput true "Authenticate user"
 // @Failure 400 {object} payload.Response
+// @Failure 401 {object} payload.Response
 // @Success 200 {object} payload.UserLoginSuccess
 // @Router /auth/login [post]
 // SignIn User
@@ -160,6 +161,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	// Find user by email
 	user, err := ac.userService.FindUserByEmail(credentials.Email)
+	fmt.Println(user)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			ctx.JSON(http.StatusBadRequest,
@@ -178,9 +180,16 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 			})
 		return
 	}
+
 	// User'email verify or not
+	fmt.Println(user.Verified)
 	if !user.Verified {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": "You are not verified, please verify your email to login"})
+		ctx.JSON(http.StatusUnauthorized,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusUnauthorized,
+				Message: "You are not verified, please verify your email to logi",
+			})
 		return
 	}
 
@@ -475,7 +484,7 @@ func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK,
 		payload.Response{
-			Status:  "fail",
+			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Email verified successfully",
 		})
