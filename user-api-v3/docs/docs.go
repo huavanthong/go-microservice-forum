@@ -58,6 +58,40 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/payload.Response"
                         }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Delete all cookie in session",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Log out user",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             }
@@ -153,14 +187,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/logout": {
+        "/auth/verifyemail/{verificationCode}": {
             "get": {
                 "security": [
                     {
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Delete all cookie in session",
+                "description": "Verify email user that sign up to service",
                 "consumes": [
                     "application/json"
                 ],
@@ -170,12 +204,27 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "Log out user",
+                "summary": "Verify email user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Verification Code",
+                        "name": "verificationCode",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "209": {
+                        "description": "",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
                         }
                     }
                 }
@@ -256,49 +305,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/payload.UserRegisterSuccess"
-                        }
-                    }
-                }
-            }
-        },
-        "/verifyemail/{verificationCode}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Verify email user that sign up to service",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Verify email user",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Verification Code",
-                        "name": "verificationCode",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "209": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
                         }
                     }
                 }

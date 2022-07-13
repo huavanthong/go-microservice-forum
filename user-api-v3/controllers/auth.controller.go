@@ -188,7 +188,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 			payload.Response{
 				Status:  "fail",
 				Code:    http.StatusUnauthorized,
-				Message: "You are not verified, please verify your email to logi",
+				Message: "You are not verified, please verify your email to login",
 			})
 		return
 	}
@@ -432,7 +432,7 @@ func (ac *AuthController) GoogleOAuth(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Success 201 {string} StatusOK
-// @Router /logout [get]
+// @Router /auth/logout [get]
 func (ac *AuthController) LogoutUser(ctx *gin.Context) {
 	ctx.SetCookie("access_token", "", -1, "/", "localhost", false, true)
 	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
@@ -451,7 +451,7 @@ func (ac *AuthController) LogoutUser(ctx *gin.Context) {
 // @Param verificationCode path string true "Verification Code"
 // @Failure 403 {object} payload.Response
 // @Success 209 {object} payload.Response
-// @Router /verifyemail/{verificationCode} [get]
+// @Router /auth/verifyemail/{verificationCode} [get]
 func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 
 	code := ctx.Params.ByName("verificationCode")
