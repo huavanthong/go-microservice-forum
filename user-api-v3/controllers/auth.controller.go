@@ -118,7 +118,16 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 		Subject:   "Your account verification code",
 	}
 
-	utils.SendEmail(newUser, &emailData)
+	err = utils.SendEmail(newUser, &emailData, "verificationCode.html")
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway,
+			payload.Response{
+				Status:  "success",
+				Code:    http.StatusBadGateway,
+				Message: "There was an error sending email",
+			})
+		return
+	}
 
 	message := "We sent an email with a verification code to " + user.Email
 
@@ -495,5 +504,208 @@ func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Email verified successfully",
+		})
+}
+
+// ForgotPassword godoc
+// @Summary Forgot password
+// @Description User forgot password
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Param email body models.ForgotPasswordInput true "Confirm forget password"
+// @Failure 400 {object} payload.Response
+// @Failure 401 {object} payload.Response
+// @Failure 403 {object} payload.Response
+// @Failure 502 {object} payload.Response
+// @Success 200 {object} payload.Response
+// @Router /auth/forgotpassword/ [post]
+func (ac *AuthController) ForgotPassword(ctx *gin.Context) {
+	var userCredential *models.ForgotPasswordInput
+
+	if err := ctx.ShouldBindJSON(&userCredential); err != nil {
+		ctx.JSON(http.StatusBadRequest,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusBadRequest,
+				Message: err.Error(),
+			})
+		return
+	}
+
+	message := "You will receive a reset email if user with that email exist"
+
+	user, err := ac.userService.FindUserByEmail(userCredential.Email)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			ctx.JSON(http.StatusOK,
+				payload.Response{
+					Status:  "fail",
+					Code:    http.StatusOK,
+					Message: message,
+				})
+			return
+		}
+		ctx.JSON(http.StatusBadGateway,
+			payload.Response{
+				Status:  "error",
+				Code:    http.StatusBadGateway,
+				Message: err.Error(),
+			})
+		return
+	}
+
+	if !user.Verified {
+		ctx.JSON(http.StatusUnauthorized,
+			payload.Response{
+				Status:  "error",
+				Code:    http.StatusUnauthorized,
+				Message: "Account not verified",
+			})
+		return
+	}
+
+	config, err := config.LoadConfig(".")
+	if err != nil {
+		log.Fatal("Could not load config", err)
+	}
+
+	// Generate Verification Code
+	resetToken := randstr.String(20)
+
+	passwordResetToken := utils.Encode(resetToken)
+
+	// Update User in Database
+	query := bson.D{{Key: "email", Value: strings.ToLower(userCredential.Email)}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "passwordResetToken", Value: passwordResetToken}, {Key: "passwordResetAt", Value: time.Now().Add(time.Minute * 15)}}}}
+	result, err := ac.collection.UpdateOne(ac.ctx, query, update)
+
+	if result.MatchedCount == 0 {
+		ctx.JSON(http.StatusBadGateway,
+			payload.Response{
+				Status:  "error",
+				Code:    http.StatusBadGateway,
+				Message: "There was an error sending email",
+			})
+		return
+	}
+
+	if err != nil {
+		ctx.JSON(http.StatusForbidden,
+			payload.Response{
+				Status:  "error",
+				Code:    http.StatusForbidden,
+				Message: err.Error(),
+			})
+		return
+	}
+	var firstName = user.Name
+
+	if strings.Contains(firstName, " ") {
+		firstName = strings.Split(firstName, " ")[1]
+	}
+
+	//  Send Email
+	emailData := utils.EmailData{
+		URL:       config.Origin + "/api/v3/auth/resetpassword/" + resetToken,
+		FirstName: firstName,
+		Subject:   "Your password reset token (valid for 10min)",
+	}
+
+	err = utils.SendEmail(user, &emailData, "resetPassword.html")
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway,
+			payload.Response{
+				Status:  "success",
+				Code:    http.StatusBadGateway,
+				Message: "There was an error sending email",
+			})
+		return
+	}
+
+	ctx.JSON(http.StatusOK,
+		payload.Response{
+			Status:  "success",
+			Code:    http.StatusOK,
+			Message: message,
+		})
+}
+
+// ResetPassword godoc
+// @Summary Reset password
+// @Description Validate the reset token and update the user’s password
+// @Tags auth
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Param password body models.ResetPasswordInput true "New password"
+// @Param resetToken path string true "reset password"
+// @Failure 400 {object} payload.Response
+// @Failure 403 {object} payload.Response
+// @Success 200 {object} payload.Response
+// @Router /auth/resetpassword/{resetToken} [patch]
+func (ac *AuthController) ResetPassword(ctx *gin.Context) {
+	resetToken := ctx.Params.ByName("resetToken")
+	var userCredential *models.ResetPasswordInput
+
+	if err := ctx.ShouldBindJSON(&userCredential); err != nil {
+		ctx.JSON(http.StatusBadRequest,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusBadRequest,
+				Message: err.Error(),
+			})
+		return
+	}
+
+	if userCredential.Password != userCredential.PasswordConfirm {
+		ctx.JSON(http.StatusBadRequest,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusBadRequest,
+				Message: "Passwords do not match",
+			})
+		return
+	}
+
+	hashedPassword, _ := utils.HashPassword(userCredential.Password)
+
+	passwordResetToken := utils.Encode(resetToken)
+
+	// Update User in Database
+	query := bson.D{{Key: "passwordResetToken", Value: passwordResetToken}}
+	update := bson.D{{Key: "$set", Value: bson.D{{Key: "password", Value: hashedPassword}}}, {Key: "$unset", Value: bson.D{{Key: "passwordResetToken", Value: ""}, {Key: "passwordResetAt", Value: ""}}}}
+	result, err := ac.collection.UpdateOne(ac.ctx, query, update)
+
+	if result.MatchedCount == 0 {
+		ctx.JSON(http.StatusBadRequest,
+			payload.Response{
+				Status:  "success",
+				Code:    http.StatusBadRequest,
+				Message: "Token is invalid or has expired",
+			})
+		return
+	}
+
+	if err != nil {
+		ctx.JSON(http.StatusForbidden,
+			payload.Response{
+				Status:  "success",
+				Code:    http.StatusForbidden,
+				Message: err.Error(),
+			})
+		return
+	}
+
+	ctx.SetCookie("access_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("logged_in", "", -1, "/", "localhost", false, true)
+
+	ctx.JSON(http.StatusOK,
+		payload.Response{
+			Status:  "success",
+			Code:    http.StatusOK,
+			Message: "Password data updated successfully",
 		})
 }

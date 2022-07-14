@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+// SignUpInput struct
 type SignUpInput struct {
 	Name            string `json:"name" bson:"name" binding:"required" example:"John Doe"`
 	Email           string `json:"email" bson:"email" binding:"required" example:"johndoe@gmail.com"`
@@ -18,6 +19,7 @@ type SignUpInput struct {
 	PasswordConfirm string `json:"passwordConfirm" bson:"passwordConfirm,omitempty" binding:"required" example:"password123"`
 }
 
+// SignInInput struct
 type SignInInput struct {
 	Email    string `json:"email" bson:"email" binding:"required" example:"johndoe@gmail.com"`
 	Password string `json:"password" bson:"password" binding:"required" example:"password123"`
@@ -35,4 +37,15 @@ type UpdateDBUser struct {
 	Verified        bool               `json:"verified,omitempty" bson:"verified,omitempty"`
 	CreatedAt       time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty"`
 	UpdatedAt       time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
+}
+
+//  ForgotPasswordInput struct
+type ForgotPasswordInput struct {
+	Email string `json:"email" binding:"required" example:"johndoe@gmail.com"`
+}
+
+//  ResetPasswordInput struct
+type ResetPasswordInput struct {
+	Password        string `json:"password" binding:"required" example:"password1234"`
+	PasswordConfirm string `json:"passwordConfirm" binding:"required" example:"password1234"`
 }

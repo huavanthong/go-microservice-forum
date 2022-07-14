@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"crypto/tls"
+	"fmt"
 	"html/template"
 	"log"
 	"os"
@@ -21,7 +22,6 @@ type EmailData struct {
 }
 
 // 👇 Email template parser
-
 func ParseTemplateDir(dir string) (*template.Template, error) {
 	var paths []string
 	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
@@ -34,6 +34,8 @@ func ParseTemplateDir(dir string) (*template.Template, error) {
 		return nil
 	})
 
+	fmt.Println("Am parsing templates...")
+
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +43,7 @@ func ParseTemplateDir(dir string) (*template.Template, error) {
 	return template.ParseFiles(paths...)
 }
 
-func SendEmail(user *models.DBResponse, data *EmailData) {
+func SendEmail(user *models.DBResponse, data *EmailData, templateName string) error {
 	config, err := config.LoadConfig(".")
 
 	if err != nil {
@@ -63,7 +65,8 @@ func SendEmail(user *models.DBResponse, data *EmailData) {
 		log.Fatal("Could not parse template", err)
 	}
 
-	template.ExecuteTemplate(&body, "verificationCode.html", &data)
+	template = template.Lookup(templateName)
+	template.Execute(&body, &data)
 
 	m := gomail.NewMessage()
 
@@ -78,7 +81,7 @@ func SendEmail(user *models.DBResponse, data *EmailData) {
 
 	// Send Email
 	if err := d.DialAndSend(m); err != nil {
-		log.Fatal("Could not send email: ", err)
+		return err
 	}
-
+	return nil
 }

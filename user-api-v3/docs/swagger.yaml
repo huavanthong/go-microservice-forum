@@ -1,5 +1,25 @@
 basePath: /api/v3
 definitions:
+  models.ForgotPasswordInput:
+    properties:
+      email:
+        example: johndoe@gmail.com
+        type: string
+    required:
+    - email
+    type: object
+  models.ResetPasswordInput:
+    properties:
+      password:
+        example: password1234
+        type: string
+      passwordConfirm:
+        example: password1234
+        type: string
+    required:
+    - password
+    - passwordConfirm
+    type: object
   models.SignInInput:
     properties:
       email:
@@ -116,6 +136,46 @@ info:
   title: UserManagement Service API Document
   version: "1.0"
 paths:
+  /auth/forgotpassword/:
+    post:
+      consumes:
+      - application/json
+      description: User forgot password
+      parameters:
+      - description: Confirm forget password
+        in: body
+        name: email
+        required: true
+        schema:
+          $ref: '#/definitions/models.ForgotPasswordInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Forgot password
+      tags:
+      - auth
   /auth/login:
     post:
       consumes:
@@ -220,6 +280,43 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Register a new user
+      tags:
+      - auth
+  /auth/resetpassword/{resetToken}:
+    patch:
+      consumes:
+      - application/json
+      description: Validate the reset token and update the user’s password
+      parameters:
+      - description: New password
+        in: body
+        name: password
+        required: true
+        schema:
+          $ref: '#/definitions/models.ResetPasswordInput'
+      - description: reset password
+        in: path
+        name: resetToken
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Reset password
       tags:
       - auth
   /auth/verifyemail/{verificationCode}:
