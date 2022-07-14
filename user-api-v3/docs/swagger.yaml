@@ -136,7 +136,7 @@ info:
   title: UserManagement Service API Document
   version: "1.0"
 paths:
-  /auth/forgotpassword:
+  /auth/forgotpassword/:
     post:
       consumes:
       - application/json
@@ -294,6 +294,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.ResetPasswordInput'
+      - description: reset password
+        in: path
+        name: resetToken
+        required: true
+        type: string
       produces:
       - application/json
       responses:

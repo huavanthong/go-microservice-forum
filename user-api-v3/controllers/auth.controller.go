@@ -520,7 +520,7 @@ func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 // @Failure 403 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.Response
-// @Router /auth/forgotpassword [post]
+// @Router /auth/forgotpassword/ [post]
 func (ac *AuthController) ForgotPassword(ctx *gin.Context) {
 	var userCredential *models.ForgotPasswordInput
 
@@ -608,7 +608,7 @@ func (ac *AuthController) ForgotPassword(ctx *gin.Context) {
 
 	//  Send Email
 	emailData := utils.EmailData{
-		URL:       config.Origin + "/api/v3/auth/forgotPassword/" + resetToken,
+		URL:       config.Origin + "/api/v3/auth/resetpassword/" + resetToken,
 		FirstName: firstName,
 		Subject:   "Your password reset token (valid for 10min)",
 	}
@@ -640,6 +640,7 @@ func (ac *AuthController) ForgotPassword(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param password body models.ResetPasswordInput true "New password"
+// @Param resetToken path string true "reset password"
 // @Failure 400 {object} payload.Response
 // @Failure 403 {object} payload.Response
 // @Success 200 {object} payload.Response

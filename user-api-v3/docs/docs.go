@@ -17,7 +17,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/auth/forgotpassword": {
+        "/auth/forgotpassword/": {
             "post": {
                 "security": [
                     {
@@ -277,6 +277,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.ResetPasswordInput"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "reset password",
+                        "name": "resetToken",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {

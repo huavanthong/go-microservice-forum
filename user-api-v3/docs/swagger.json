@@ -10,7 +10,7 @@
     "host": "localhost:8000",
     "basePath": "/api/v3",
     "paths": {
-        "/auth/forgotpassword": {
+        "/auth/forgotpassword/": {
             "post": {
                 "security": [
                     {
@@ -270,6 +270,13 @@
                         "schema": {
                             "$ref": "#/definitions/models.ResetPasswordInput"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "reset password",
+                        "name": "resetToken",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
