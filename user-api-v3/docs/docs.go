@@ -17,6 +17,49 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/forgotpassword": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "User forgot password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Forgot password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Verification Code",
+                        "name": "verificationCode",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "209": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/login": {
             "post": {
                 "security": [
@@ -180,6 +223,49 @@ const docTemplate = `{
                     },
                     "502": {
                         "description": "Bad Gateway",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/resetpassword/{resetToken}": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Validate the reset token and update the user’s password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Reset password",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Verification Code",
+                        "name": "verificationCode",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "209": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
                         "schema": {
                             "$ref": "#/definitions/payload.Response"
                         }

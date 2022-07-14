@@ -116,6 +116,33 @@ info:
   title: UserManagement Service API Document
   version: "1.0"
 paths:
+  /auth/forgotpassword:
+    post:
+      consumes:
+      - application/json
+      description: User forgot password
+      parameters:
+      - description: Verification Code
+        in: path
+        name: verificationCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "209":
+          description: ""
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Forgot password
+      tags:
+      - auth
   /auth/login:
     post:
       consumes:
@@ -220,6 +247,33 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Register a new user
+      tags:
+      - auth
+  /auth/resetpassword/{resetToken}:
+    patch:
+      consumes:
+      - application/json
+      description: Validate the reset token and update the user’s password
+      parameters:
+      - description: Verification Code
+        in: path
+        name: verificationCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "209":
+          description: ""
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Reset password
       tags:
       - auth
   /auth/verifyemail/{verificationCode}:
