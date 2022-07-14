@@ -1,5 +1,22 @@
 basePath: /api/v3
 definitions:
+  models.ForgotPasswordInput:
+    properties:
+      email:
+        type: string
+    required:
+    - email
+    type: object
+  models.ResetPasswordInput:
+    properties:
+      password:
+        type: string
+      passwordConfirm:
+        type: string
+    required:
+    - password
+    - passwordConfirm
+    type: object
   models.SignInInput:
     properties:
       email:
@@ -122,20 +139,33 @@ paths:
       - application/json
       description: User forgot password
       parameters:
-      - description: Verification Code
-        in: path
-        name: verificationCode
+      - description: Confirm forget password
+        in: body
+        name: forget
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/models.ForgotPasswordInput'
       produces:
       - application/json
       responses:
-        "209":
-          description: ""
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "401":
+          description: Unauthorized
           schema:
             $ref: '#/definitions/payload.Response'
         "403":
           description: Forbidden
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
           schema:
             $ref: '#/definitions/payload.Response'
       security:
@@ -255,16 +285,21 @@ paths:
       - application/json
       description: Validate the reset token and update the user’s password
       parameters:
-      - description: Verification Code
-        in: path
-        name: verificationCode
+      - description: New password
+        in: body
+        name: password
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/models.ResetPasswordInput'
       produces:
       - application/json
       responses:
-        "209":
-          description: ""
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/payload.Response'
         "403":

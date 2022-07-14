@@ -514,9 +514,12 @@ func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param verificationCode path string true "Verification Code"
+// @Param forget body models.ForgotPasswordInput true "Confirm forget password"
+// @Failure 400 {object} payload.Response
+// @Failure 401 {object} payload.Response
 // @Failure 403 {object} payload.Response
-// @Success 209 {object} payload.Response
+// @Failure 502 {object} payload.Response
+// @Success 200 {object} payload.Response
 // @Router /auth/forgotpassword [post]
 func (ac *AuthController) ForgotPassword(ctx *gin.Context) {
 	var userCredential *models.ForgotPasswordInput
@@ -636,9 +639,10 @@ func (ac *AuthController) ForgotPassword(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param verificationCode path string true "Verification Code"
+// @Param password body models.ResetPasswordInput true "New password"
+// @Failure 400 {object} payload.Response
 // @Failure 403 {object} payload.Response
-// @Success 209 {object} payload.Response
+// @Success 200 {object} payload.Response
 // @Router /auth/resetpassword/{resetToken} [patch]
 func (ac *AuthController) ResetPassword(ctx *gin.Context) {
 	resetToken := ctx.Params.ByName("resetToken")

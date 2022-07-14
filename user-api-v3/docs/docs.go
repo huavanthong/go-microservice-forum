@@ -37,22 +37,42 @@ const docTemplate = `{
                 "summary": "Forgot password",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Verification Code",
-                        "name": "verificationCode",
-                        "in": "path",
-                        "required": true
+                        "description": "Confirm forget password",
+                        "name": "forget",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ForgotPasswordInput"
+                        }
                     }
                 ],
                 "responses": {
-                    "209": {
-                        "description": "",
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/payload.Response"
                         }
                     },
                     "403": {
                         "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
                         "schema": {
                             "$ref": "#/definitions/payload.Response"
                         }
@@ -250,16 +270,24 @@ const docTemplate = `{
                 "summary": "Reset password",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Verification Code",
-                        "name": "verificationCode",
-                        "in": "path",
-                        "required": true
+                        "description": "New password",
+                        "name": "password",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ResetPasswordInput"
+                        }
                     }
                 ],
                 "responses": {
-                    "209": {
-                        "description": "",
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/payload.Response"
                         }
@@ -398,6 +426,32 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.ForgotPasswordInput": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ResetPasswordInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "passwordConfirm"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "passwordConfirm": {
+                    "type": "string"
+                }
+            }
+        },
         "models.SignInInput": {
             "type": "object",
             "required": [
