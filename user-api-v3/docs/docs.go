@@ -38,7 +38,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "Confirm forget password",
-                        "name": "forget",
+                        "name": "email",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -433,7 +433,8 @@ const docTemplate = `{
             ],
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "johndoe@gmail.com"
                 }
             }
         },
@@ -445,10 +446,12 @@ const docTemplate = `{
             ],
             "properties": {
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "password1234"
                 },
                 "passwordConfirm": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "password1234"
                 }
             }
         },

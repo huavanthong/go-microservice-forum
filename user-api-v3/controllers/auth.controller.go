@@ -514,7 +514,7 @@ func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param forget body models.ForgotPasswordInput true "Confirm forget password"
+// @Param email body models.ForgotPasswordInput true "Confirm forget password"
 // @Failure 400 {object} payload.Response
 // @Failure 401 {object} payload.Response
 // @Failure 403 {object} payload.Response
@@ -608,7 +608,7 @@ func (ac *AuthController) ForgotPassword(ctx *gin.Context) {
 
 	//  Send Email
 	emailData := utils.EmailData{
-		URL:       config.Origin + "/forgotPassword/" + resetToken,
+		URL:       config.Origin + "/api/v3/auth/forgotPassword/" + resetToken,
 		FirstName: firstName,
 		Subject:   "Your password reset token (valid for 10min)",
 	}

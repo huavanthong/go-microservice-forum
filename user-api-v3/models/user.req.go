@@ -41,11 +41,11 @@ type UpdateDBUser struct {
 
 //  ForgotPasswordInput struct
 type ForgotPasswordInput struct {
-	Email string `json:"email" binding:"required"`
+	Email string `json:"email" binding:"required" example:"johndoe@gmail.com"`
 }
 
 //  ResetPasswordInput struct
 type ResetPasswordInput struct {
-	Password        string `json:"password" binding:"required"`
-	PasswordConfirm string `json:"passwordConfirm" binding:"required"`
+	Password        string `json:"password" binding:"required" example:"password1234"`
+	PasswordConfirm string `json:"passwordConfirm" binding:"required" example:"password1234"`
 }

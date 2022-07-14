@@ -3,6 +3,7 @@ definitions:
   models.ForgotPasswordInput:
     properties:
       email:
+        example: johndoe@gmail.com
         type: string
     required:
     - email
@@ -10,8 +11,10 @@ definitions:
   models.ResetPasswordInput:
     properties:
       password:
+        example: password1234
         type: string
       passwordConfirm:
+        example: password1234
         type: string
     required:
     - password
@@ -141,7 +144,7 @@ paths:
       parameters:
       - description: Confirm forget password
         in: body
-        name: forget
+        name: email
         required: true
         schema:
           $ref: '#/definitions/models.ForgotPasswordInput'
