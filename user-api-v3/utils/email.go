@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"crypto/tls"
+	"fmt"
 	"html/template"
 	"log"
 	"os"
@@ -33,6 +34,8 @@ func ParseTemplateDir(dir string) (*template.Template, error) {
 		}
 		return nil
 	})
+
+	fmt.Println("Am parsing templates...")
 
 	if err != nil {
 		return nil, err
