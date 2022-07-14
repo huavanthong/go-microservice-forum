@@ -34,4 +34,15 @@
     - Convert user's password in plain text to bcrypt. [here](https://github.com/huavanthong/microservice-golang/blob/master/user-api/security/bcrypt.go)
     - Avoid SQL Injection. Refer: [here](https://github.com/huavanthong/microservice-golang/blob/master/user-api/security/bcrypt.go)
 * Database.
-    - Design database for user-microservice. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#design-database-for-user-microservice)
+    - MongoDB
+        - Design database for user-microservice. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#design-database-for-user-microservice)   
+    - PostgreSQL
+        - Migrate database to PostgreSQL. Refer: [here] https://dev.to/techschoolguru/how-to-write-run-database-migration-in-golang-5h6g    
+
+## User microservice version 3
+* gRPC
+    - Communication between microservice. Refer: [here](https://techdozo.dev/grpc-for-microservices-communication/)
+    - Traefik with gRPC. Refer: [here](https://doc.traefik.io/traefik/user-guides/grpc/)
+    - What is Traefik. Refer: [here](https://www.devopsschool.com/blog/what-is-traefik-how-to-learn-traefik/)
+* Microservice pattern
+    - Circuit pattern. Refer: [here](https://medium.com/nerd-for-tech/design-patterns-for-microservices-circuit-breaker-pattern-ba402a45aac2)

@@ -3,11 +3,13 @@ CRUD RESTful API with Golang + MongoDB + Redis + Gin Gonic
 #### Part 1
 * API with Golang + MongoDB + Redis + Gin Gonic: Project Setup
     - API with Golang + MongoDB + Redis + Gin Gonic: Project Setup. [Refer](https://codevoweb.com/api-golang-mongodb-gin-gonic-project-setup)
+	- Understand about method to design. [Refer](https://blog.logrocket.com/building-microservices-go-gin/)
 
 #### Part 2
 * Golang & MongoDB: JWT Authentication and Authorization
     - Golang & MongoDB: JWT Authentication and Authorization. [Refer](https://codevoweb.com/golang-mongodb-jwt-authentication-authorization)
     - [Solution](#solution-for-design-object-id) To create a object ID from Primitive.  [Refer](https://kb.objectrocket.com/mongo-db/how-to-find-a-mongodb-document-by-its-bson-objectid-using-golang-452)
+    - [Solution] Design feature login attempt in Golang. [Refer](https://www.stackhawk.com/blog/golang-broken-authentication-guide-examples-and-prevention/)
 #### Part 3
 * API with Golang + MongoDB: Send HTML Emails with Gomail
     - API with Golang + MongoDB: Send HTML Emails with Gomail. [Refer](https://codevoweb.com/api-golang-mongodb-send-html-emails-gomail)

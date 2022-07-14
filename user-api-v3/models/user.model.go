@@ -30,6 +30,6 @@ type LoginAttempt struct {
 	Password    string `bson:"password" json:"password"`
 	IPNumber    string `bson:"ipnumber" json:"ipnumber"`
 	BrowerType  string `bson:"browertype" json:"browertype"`
-	Success     string `bson:"success" json:"success"`
+	Success     bool   `bson:"success" json:"success"`
 	CreateDate  string `bson:"createdate" json:"createdate"`
 }
