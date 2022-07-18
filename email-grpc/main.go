@@ -1,7 +1,12 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
+	"time"
+
+	pb "github.com/huavanthong/microservice-golang/email-grpc/proto/email"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -13,11 +18,31 @@ const (
 
 func main() {
 	// create connection to grpc email service
-	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()), grcp.WithBlock())
+	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithBlock())
+
 	if err != nil {
-		log.Fatal("Failed to connect: %v", err)
+		log.Fatalf("failed to connect: %v", err)
 	}
+
 	defer conn.Close()
 
-	// client := pb.
+	client := pb.NewAuthServiceClient(conn)
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Millisecond*5000))
+	defer cancel()
+
+	newUser := &pb.SignUpUserInput{
+		Name:            "James Smith",
+		Email:           "jamesmith@gmail.com",
+		Password:        "password123",
+		PasswordConfirm: "password123",
+	}
+
+	res, err := client.SignUpUser(ctx, newUser)
+	if err != nil {
+		log.Fatalf("SignUpUser: %v", err)
+	}
+
+	fmt.Println(res)
+
 }
