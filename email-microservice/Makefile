@@ -1,11 +1,6 @@
 .PHONY: proto
 
 proto:
-	protoc --proto_path=proto ./proto/*.proto --go_out=  --go-grpc_out=. 
+	protoc --proto_path=proto --go_out=./proto/email --go_opt=paths=source_relative \
+							--go-grpc_out=./proto/email --go-grpc_opt=paths=source_relative proto/*.proto
 
-prototemp:
-	protoc --proto_path=proto ./proto/email.proto --go_out=. --go-grpc_out=.
-
-
-# --go_opt=paths=source_relative \
-	 --go-grpc_opt=paths=source_relative \
