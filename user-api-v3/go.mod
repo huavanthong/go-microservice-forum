@@ -12,8 +12,8 @@ require (
 	github.com/swaggo/gin-swagger v1.5.0
 	github.com/swaggo/swag v1.8.3
 	github.com/thanhpk/randstr v1.0.4
-	go.mongodb.org/mongo-driver v1.9.1
-	golang.org/x/crypto v0.0.0-20220513210258-46612604a0f9
+	go.mongodb.org/mongo-driver v1.10.0
+	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 )
 
@@ -34,7 +34,8 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/huavanthong/microservice-golang/email-grpc v0.0.0-20220718034438-da6e2c4d97a1
+	github.com/huavanthong/microservice-golang v0.0.0-20220719144428-a366bb6b5a8e // indirect
+	github.com/huavanthong/microservice-golang/email-grpc v0.0.0-20220719144428-a366bb6b5a8e
 	github.com/huavanthong/microservice-golang/user-api-v2 v0.0.0-20220706140543-d70316b9dfeb // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
@@ -57,15 +58,13 @@ require (
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
-	github.com/xdg-go/scram v1.0.2 // indirect
-	github.com/xdg-go/stringprep v1.0.2 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	golang.org/x/net v0.0.0-20220630215102-69896b714898 // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect
 	golang.org/x/sys v0.0.0-20220704084225-05e143d24a9e // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.11 // indirect
-	google.golang.org/grpc v1.46.0
+	google.golang.org/grpc v1.48.0
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
