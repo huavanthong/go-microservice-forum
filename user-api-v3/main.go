@@ -22,6 +22,10 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+
+	docs "github.com/huavanthong/microservice-golang/user-api-v3/docs"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 var (
@@ -125,7 +129,7 @@ func main() {
 }
 
 func startGrpcServer(config config.Config) {
-	server, err := email.NewGrpcServer(config, authService, userService, authCollection)
+	server, err := server.NewGrpcServer(config, authService, userService, authCollection)
 	if err != nil {
 		log.Fatal("cannot create grpc server: ", err)
 	}

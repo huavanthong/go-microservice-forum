@@ -12,6 +12,8 @@ type Config struct {
 	RedisUri string `mapstructure:"REDIS_URL"`
 	Port     string `mapstructure:"PORT"`
 
+	GrpcServerAddress string `mapstructure:"GRPC_SERVER_ADDRESS"`
+
 	ClientOrigin string `mapstructure:"CLIENT_ORIGIN"`
 
 	AccessTokenPrivateKey  string        `mapstructure:"ACCESS_TOKEN_PRIVATE_KEY"`
