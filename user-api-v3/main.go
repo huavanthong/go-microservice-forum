@@ -4,22 +4,24 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
+	redis "github.com/go-redis/redis/v8"
+	pb "github.com/huavanthong/microservice-golang/email-grpc/proto/email"
 	"github.com/huavanthong/microservice-golang/user-api-v3/config"
 	"github.com/huavanthong/microservice-golang/user-api-v3/controllers"
 	"github.com/huavanthong/microservice-golang/user-api-v3/routes"
 	"github.com/huavanthong/microservice-golang/user-api-v3/services"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
-	docs "github.com/huavanthong/microservice-golang/user-api-v3/docs"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 var (
@@ -116,6 +118,36 @@ func main() {
 
 	defer mongoclient.Disconnect(ctx)
 
+	/************************ Start internal server *************************/
+	startGinServer(config)
+	startGrpcServer(config)
+
+}
+
+func startGrpcServer(config config.Config) {
+	server, err := email.NewGrpcServer(config, authService, userService, authCollection)
+	if err != nil {
+		log.Fatal("cannot create grpc server: ", err)
+	}
+
+	grpcServer := grpc.NewServer()
+	pb.RegisterAuthServiceServer(grpcServer, server)
+	reflection.Register(grpcServer)
+
+	listener, err := net.Listen("tcp", config.GrpcServerAddress)
+	if err != nil {
+		log.Fatal("cannot create grpc server: ", err)
+	}
+
+	log.Printf("start gRPC server on %s", listener.Addr().String())
+	err = grpcServer.Serve(listener)
+	if err != nil {
+		log.Fatal("cannot create grpc server: ", err)
+	}
+}
+
+func startGinServer(config config.Config) {
+
 	/************************ Connect Redis *************************/
 	value, err := redisclient.Get(ctx, "test").Result()
 	if err == redis.Nil {
@@ -125,6 +157,10 @@ func main() {
 	}
 
 	/************************ Allow Cross Orgin Resource Sharing  *************************/
+	// corsConfig := cors.DefaultConfig()
+	// corsConfig.AllowOrigins = []string{config.Origin}
+	// corsConfig.AllowCredentials = true
+
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:8000", "http://localhost:3000"}
 	corsConfig.AllowCredentials = true

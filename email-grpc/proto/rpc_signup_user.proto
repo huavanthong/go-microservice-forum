@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/huavanthong/microservice-golang/email-microservice/proto/email";
+
+import "user.proto";
+
+message SignUpUserInput {
+    string name = 1;
+    string email = 2;
+    string password = 3;
+    string passwordConfirm = 4;
+}
+
+message SignUpUserResponse { 
+    User user = 1;
+}
