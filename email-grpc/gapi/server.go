@@ -1,4 +1,4 @@
-package server
+package gapi
 
 import (
 	pb "github.com/huavanthong/microservice-golang/email-grpc/proto/email"
