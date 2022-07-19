@@ -399,9 +399,11 @@ github.com/huavanthong/microservice-golang v0.0.0-20220507071640-37bc3cd59bc1/go
 github.com/huavanthong/microservice-golang v0.0.0-20220609031934-734ae2984479 h1:TheHwLtgeVaG2gRNapSZNDM2hGQVxqmf2/oIlIHzvO0=
 github.com/huavanthong/microservice-golang v0.0.0-20220609031934-734ae2984479/go.mod h1:R+G1NQr1SbGM4jSjsba6KkVQGokd+PourtRTweoH/b4=
 github.com/huavanthong/microservice-golang v0.0.0-20220718034438-da6e2c4d97a1 h1:CGLPi4+d6AwAmAox+P2t0vRrQulsfuE9E7eqd8GmqOY=
+github.com/huavanthong/microservice-golang v0.0.0-20220719144428-a366bb6b5a8e h1:M33HPBwMbb75dwDVkBzFBZD9aSecqEAkMIocxQauA/4=
 github.com/huavanthong/microservice-golang/currency v0.0.0-20220507034548-1beb3ecf07a1/go.mod h1:h78qF7xQwcSZyrR6LMyYGuvbBi/QFmd4lVvM7F12rfE=
 github.com/huavanthong/microservice-golang/email-grpc v0.0.0-20220718034438-da6e2c4d97a1 h1:4fQH/NlDx+jWDLK4vi+cylvTU9HDfc7W1UfIrU+x7Wg=
 github.com/huavanthong/microservice-golang/email-grpc v0.0.0-20220718034438-da6e2c4d97a1/go.mod h1:OAP+RHFoGd8ra4NvPA6q4dwRcExpiqnH9RLMEUAU8vQ=
+github.com/huavanthong/microservice-golang/email-grpc v0.0.0-20220719144428-a366bb6b5a8e h1:/+extOtNlXq9KnpgYlK/kiwhMWKYKwVo8yE+iiw4Xyw=
 github.com/huavanthong/microservice-golang/product-api v0.0.0-20220611125308-97d788b312fa/go.mod h1:1OxWWkoQf6MYccf5A6dxA1i4faZWnWi8N1qiiPsD3EM=
 github.com/huavanthong/microservice-golang/user-api-v2 v0.0.0-20220706140543-d70316b9dfeb h1:RvEa5212mBXVnn4UsuDmtve4KuE9Iy2LI53KIAGhMME=
 github.com/huavanthong/microservice-golang/user-api-v2 v0.0.0-20220706140543-d70316b9dfeb/go.mod h1:sVapbbF/5KWgzax/fqXLy6f+sUI1OV28WtQETI7tLCY=
