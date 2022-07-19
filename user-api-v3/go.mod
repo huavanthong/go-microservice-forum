@@ -35,7 +35,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/huavanthong/microservice-golang/email-grpc v0.0.0-20220718034438-da6e2c4d97a1
-	github.com/huavanthong/microservice-golang/user-api-v2 v0.0.0-20220706140543-d70316b9dfeb
+	github.com/huavanthong/microservice-golang/user-api-v2 v0.0.0-20220706140543-d70316b9dfeb // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect

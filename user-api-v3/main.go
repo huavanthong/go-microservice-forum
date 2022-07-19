@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	redis "github.com/go-redis/redis/v8"
 	pb "github.com/huavanthong/microservice-golang/email-grpc/proto/email"
+	emailServer "github.com/huavanthong/microservice-golang/email-grpc/server"
 	"github.com/huavanthong/microservice-golang/user-api-v3/config"
 	"github.com/huavanthong/microservice-golang/user-api-v3/controllers"
 	"github.com/huavanthong/microservice-golang/user-api-v3/routes"
@@ -129,7 +130,7 @@ func main() {
 }
 
 func startGrpcServer(config config.Config) {
-	server, err := server.NewGrpcServer(config, authService, userService, authCollection)
+	server, err := emailServer.NewGrpcServer(config, authService, userService, authCollection)
 	if err != nil {
 		log.Fatal("cannot create grpc server: ", err)
 	}
