@@ -13,8 +13,8 @@ Swagger message example: [here](https://docs.swagger.io/spec.html#511-object-exa
 
 // Error defines the response error
 type Response struct {
-	Status  string `json:"status" example:"success"`
-	Code    int    `json:"code" example:"27"`
+	Status  string `json:"status" example:"failed"`
+	Code    int    `json:"code" example:"400"`
 	Message string `json:"message" example:"Error message"`
 	// Errors  []ErrorItem `json:"errors"`
 }

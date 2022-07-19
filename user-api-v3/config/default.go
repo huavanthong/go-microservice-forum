@@ -12,6 +12,8 @@ type Config struct {
 	RedisUri string `mapstructure:"REDIS_URL"`
 	Port     string `mapstructure:"PORT"`
 
+	GrpcServerAddress string `mapstructure:"GRPC_SERVER_ADDRESS"`
+
 	ClientOrigin string `mapstructure:"CLIENT_ORIGIN"`
 
 	AccessTokenPrivateKey  string        `mapstructure:"ACCESS_TOKEN_PRIVATE_KEY"`
@@ -26,6 +28,14 @@ type Config struct {
 	GoogleClientID         string `mapstructure:"GOOGLE_OAUTH_CLIENT_ID"`
 	GoogleClientSecret     string `mapstructure:"GOOGLE_OAUTH_CLIENT_SECRET"`
 	GoogleOAuthRedirectUrl string `mapstructure:"GOOGLE_OAUTH_REDIRECT_URL"`
+
+	Origin string `mapstructure:"CLIENT_ORIGIN"`
+
+	EmailFrom string `mapstructure:"EMAIL_FROM"`
+	SMTPHost  string `mapstructure:"SMTP_HOST"`
+	SMTPPass  string `mapstructure:"SMTP_PASS"`
+	SMTPPort  int    `mapstructure:"SMTP_PORT"`
+	SMTPUser  string `mapstructure:"SMTP_USER"`
 }
 
 // LoadConfig loads configuration from the config file

@@ -21,7 +21,7 @@ type User struct {
 	Activated       bool               `bson:"activated" json:"activated"`
 	CreatedAt       time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt       time.Time          `json:"updated_at" bson:"updated_at"`
-	LastLoginAt     string             `json:"lastloginat" bson:"lastloginat"`
+	LastLoginAt     string             `json:"lastlogin_at" bson:"lastlogin_at"`
 }
 
 // Login is a retrieved and authentiacted user.
@@ -30,6 +30,6 @@ type LoginAttempt struct {
 	Password    string `bson:"password" json:"password"`
 	IPNumber    string `bson:"ipnumber" json:"ipnumber"`
 	BrowerType  string `bson:"browertype" json:"browertype"`
-	Success     string `bson:"success" json:"success"`
+	Success     bool   `bson:"success" json:"success"`
 	CreateDate  string `bson:"createdate" json:"createdate"`
 }

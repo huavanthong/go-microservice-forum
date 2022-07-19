@@ -4,18 +4,24 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
+	redis "github.com/go-redis/redis/v8"
+	pb "github.com/huavanthong/microservice-golang/email-grpc/proto/email"
 	"github.com/huavanthong/microservice-golang/user-api-v3/config"
 	"github.com/huavanthong/microservice-golang/user-api-v3/controllers"
 	"github.com/huavanthong/microservice-golang/user-api-v3/routes"
 	"github.com/huavanthong/microservice-golang/user-api-v3/services"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 
 	docs "github.com/huavanthong/microservice-golang/user-api-v3/docs"
 	swaggerfiles "github.com/swaggo/files"
@@ -87,7 +93,7 @@ func init() {
 	authCollection = mongoclient.Database("golang_mongodb").Collection("users")
 	userService = services.NewUserServiceImpl(authCollection, ctx)
 	authService = services.NewAuthService(authCollection, ctx)
-	AuthController = controllers.NewAuthController(authService, userService)
+	AuthController = controllers.NewAuthController(authService, userService, ctx, authCollection)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
 	SessionRouteController = routes.NewSessionRouteController(AuthController)
 
@@ -116,6 +122,36 @@ func main() {
 
 	defer mongoclient.Disconnect(ctx)
 
+	/************************ Start internal server *************************/
+	startGinServer(config)
+	startGrpcServer(config)
+
+}
+
+func startGrpcServer(config config.Config) {
+	server, err := server.NewGrpcServer(config, authService, userService, authCollection)
+	if err != nil {
+		log.Fatal("cannot create grpc server: ", err)
+	}
+
+	grpcServer := grpc.NewServer()
+	pb.RegisterAuthServiceServer(grpcServer, server)
+	reflection.Register(grpcServer)
+
+	listener, err := net.Listen("tcp", config.GrpcServerAddress)
+	if err != nil {
+		log.Fatal("cannot create grpc server: ", err)
+	}
+
+	log.Printf("start gRPC server on %s", listener.Addr().String())
+	err = grpcServer.Serve(listener)
+	if err != nil {
+		log.Fatal("cannot create grpc server: ", err)
+	}
+}
+
+func startGinServer(config config.Config) {
+
 	/************************ Connect Redis *************************/
 	value, err := redisclient.Get(ctx, "test").Result()
 	if err == redis.Nil {
@@ -125,6 +161,10 @@ func main() {
 	}
 
 	/************************ Allow Cross Orgin Resource Sharing  *************************/
+	// corsConfig := cors.DefaultConfig()
+	// corsConfig.AllowOrigins = []string{config.Origin}
+	// corsConfig.AllowCredentials = true
+
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{"http://localhost:8000", "http://localhost:3000"}
 	corsConfig.AllowCredentials = true
@@ -133,13 +173,14 @@ func main() {
 
 	docs.SwaggerInfo.BasePath = "/api/v3"
 
+	/************************ Server routing  *************************/
 	router := server.Group("/api/v3")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": value})
 	})
 
 	/************************ Controller  *************************/
-	AuthRouteController.AuthRoute(router)
+	AuthRouteController.AuthRoute(router, userService)
 	UserRouteController.UserRoute(router, userService)
 	SessionRouteController.SessionRoute(router)
 
