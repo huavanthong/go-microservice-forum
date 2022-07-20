@@ -130,20 +130,29 @@ func main() {
 }
 
 func startGrpcServer(config config.Config) {
+	// create an instance of the Email server
 	server, err := gapi.NewGrpcServer(config, authService, userService, authCollection)
 	if err != nil {
 		log.Fatal("cannot create grpc server: ", err)
 	}
 
+	// create a new gRPC server, use WithInsecure to allow http connections
 	grpcServer := grpc.NewServer()
+
+	// register the email server
 	pb.RegisterAuthServiceServer(grpcServer, server)
+
+	// register the reflection service which allows clients to determine the methods
+	// for this gRPC service
 	reflection.Register(grpcServer)
 
+	// accept connection for grcp port
 	listener, err := net.Listen("tcp", config.GrpcServerAddress)
 	if err != nil {
-		log.Fatal("cannot create grpc server: ", err)
+		log.Fatal("Unable to create listener: %s, err: %s", config.GrpcServerAddress, err)
 	}
 
+	// listen for requests
 	log.Printf("start gRPC server on %s", listener.Addr().String())
 	err = grpcServer.Serve(listener)
 	if err != nil {

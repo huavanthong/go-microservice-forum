@@ -8,20 +8,24 @@ CRUD RESTful API with Golang + MongoDB + Redis + Gin Gonic
 #### Part 2
 * Golang & MongoDB: JWT Authentication and Authorization
     - Golang & MongoDB: JWT Authentication and Authorization. [Refer](https://codevoweb.com/golang-mongodb-jwt-authentication-authorization)
-    - [Solution](#solution-for-design-object-id) To create a object ID from Primitive.  [Refer](https://kb.objectrocket.com/mongo-db/how-to-find-a-mongodb-document-by-its-bson-objectid-using-golang-452)
-    - [Solution] Design feature login attempt in Golang. [Refer](https://www.stackhawk.com/blog/golang-broken-authentication-guide-examples-and-prevention/)
+    - [MongoDB ObjectID](#solution-for-design-object-id) To create a object ID from Primitive.  [Refer](https://kb.objectrocket.com/mongo-db/how-to-find-a-mongodb-document-by-its-bson-objectid-using-golang-452)
+	- [Refresh Token](#work-flow-for-implementation-of-refresh-token) Understand how to implement refresh token. 
+    - [Login Attempt](#solution-for-login-attempt) Design feature login attempt in Golang. [Refer](https://www.stackhawk.com/blog/golang-broken-authentication-guide-examples-and-prevention/)
 #### Part 3
 * API with Golang + MongoDB: Send HTML Emails with Gomail
     - API with Golang + MongoDB: Send HTML Emails with Gomail. [Refer](https://codevoweb.com/api-golang-mongodb-send-html-emails-gomail)
+	- [Solution](#solution-to-use-a-temporary-to-store-verification-code-from-email) How to use temporary in MongoDB. 
+
 
 #### Part 4
 * API with Golang, Gin Gonic & MongoDB: Forget/Reset Password
     - API with Golang, Gin Gonic & MongoDB: Forget/Reset Password. [Refer](https://codevoweb.com/api-golang-gin-gonic-mongodb-forget-reset-password)
+	- [gRPC](#solution-to-use-email-grpc-server) Step to design, implement and use gRPC email server.
+	- [Evans](#solution-to-use-evans-for-testing-grpc) How to use evans for testing email grpc on server. [Refer](https://github.com/ktr0731/evans#installation)
 
 #### Part 5
 * Build Golang gRPC Server and Client: SignUp User & Verify Email
     - Build Golang gRPC Server and Client: SignUp User & Verify Email. [Refer](https://codevoweb.com/golang-grpc-server-and-client-signup-user-verify-email)
-    - [Solution](#solution-to-use-a-temporary-to-store-verification-code-from-email) How to use temporary in MongoDB. 
 
 #### Part 6
 * Build Golang gRPC Server and Client: Access & Refresh Tokens
@@ -68,6 +72,24 @@ At file: [auth.service.impl.go](./services/auth.service.impl.go).
 // Step 4: find your result
     err = uc.collection.FindOne(uc.ctx, query).Decode(&newUser)
 ```
+### Work flow for implementation of refresh token
+From requirement, design protobuf for email server
+```go
+// Step 1: At SignInUser controller, when user login success.
+// 		+ we will set access token, refresh token by our private key with the expired time 
+// 		+ then we also set max age for each token.
+// 		+ Difference between expire and max age. Refer: (https://www.mnot.net/blog/2007/05/15/expires_max-age)
+	ctx.SetCookie("access_token", access_token, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
+	ctx.SetCookie("refresh_token", refresh_token, config.RefreshTokenMaxAge*60, "/", "localhost", false, true)
+	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
+
+// Step 2: At RefreshAccessToken controller, we will get refresh token, and validate access token. And update access token again.
+
+```
+* Note:  
+	- The access token can be refreshed after every 15 minutes as long as the user has a valid refresh token. This approach is not the best so later we’ll integrate Redis for an extra layer of security. 
+
+### Solution for login attempt
 
 ### Solution to use a temporary to store verification code from email
 #### Requirement
@@ -99,3 +121,22 @@ At file: [auth.controller.go](./controllers/auth.controller.go).
 	result, err := ac.collection.UpdateOne(ac.ctx, query, update)
 ```
 
+### Solution to use email gRPC server
+
+
+### Solution to use Evans for testing gRPC
+#### Requirement
+* Install evans to your local machine
+* Then is enable [gRPC reflection](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md) on server side following the below code.
+```
+	reflection.Register(grpcServer)
+```
+#### Getting Started
+* Start evans with your gRPC
+```
+evans --host localhost --port 8080 -r repl
+```
+* Show service
+* Call API.  
+#### More details
+![Evans usage](./docs/images/evans/getting-started-evans.png)
