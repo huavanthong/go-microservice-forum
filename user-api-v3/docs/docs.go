@@ -710,9 +710,6 @@ const docTemplate = `{
                     "type": "string",
                     "example": "The post tutorial with Golang"
                 },
-                "created_at": {
-                    "type": "string"
-                },
                 "image": {
                     "type": "string",
                     "example": "default.png"
@@ -720,9 +717,6 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "My post"
-                },
-                "updated_at": {
-                    "type": "string"
                 },
                 "user": {
                     "type": "string",
@@ -837,11 +831,9 @@ const docTemplate = `{
                     "type": "string",
                     "example": "The post tutorial with Golang + Gin"
                 },
-                "created_at": {
-                    "type": "string"
-                },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "5bbdadf782ebac06a695a8a2"
                 },
                 "image": {
                     "type": "string",
@@ -850,9 +842,6 @@ const docTemplate = `{
                 "title": {
                     "type": "string",
                     "example": "My post update"
-                },
-                "updated_at": {
-                    "type": "string"
                 },
                 "user": {
                     "type": "string",

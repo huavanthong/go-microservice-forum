@@ -5,15 +5,11 @@ definitions:
       content:
         example: The post tutorial with Golang
         type: string
-      created_at:
-        type: string
       image:
         example: default.png
         type: string
       title:
         example: My post
-        type: string
-      updated_at:
         type: string
       user:
         example: 5bbdadf782ebac06a695a8e7
@@ -98,17 +94,14 @@ definitions:
       content:
         example: The post tutorial with Golang + Gin
         type: string
-      created_at:
-        type: string
       id:
+        example: 5bbdadf782ebac06a695a8a2
         type: string
       image:
         example: default.png
         type: string
       title:
         example: My post update
-        type: string
-      updated_at:
         type: string
       user:
         example: 5bbdadf782ebac06a695a8e7
