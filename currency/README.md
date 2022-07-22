@@ -108,6 +108,21 @@ You can send a message to the server using the following payload
 }
 ```
 
+## Testing with Evans
+As you can see, the above demonstration help you understand and know how to test gRPC with command grpcurl.  
+However, we also have a powerful tool to help you test with gRPC. It is Evans
+### To install it
+Refer: 
+* https://github.com/ktr0731/evans#installation
+### Started gRCP with Evans
+**Step 1:** Start your currency service.
+```
+./currency.exe
+```
+**Step 2:**  Start Evans tool with your gRPC server.
+```
+evans --host localhost --port 9092 -r repl
+```
 ## Data package
 Reference: 
 * [guideline for testing](https://www.digitalocean.com/community/tutorials/how-to-write-unit-tests-in-go-using-go-test-and-the-testing-package)
