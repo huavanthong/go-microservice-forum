@@ -205,6 +205,8 @@ func startGinServer(config config.Config) {
 	AuthRouteController.AuthRoute(router, userService)
 	UserRouteController.UserRoute(router, userService)
 	SessionRouteController.SessionRoute(router)
+	// 👇 Evoke the PostRoute
+	PostRouteController.PostRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
