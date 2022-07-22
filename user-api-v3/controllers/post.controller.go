@@ -74,7 +74,7 @@ func (pc *PostController) CreatePost(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusCreated,
 			Message: "Create a new post success",
-			Data:    newPost,
+			Data:    models.FilteredPostResponse(newPost),
 		})
 }
 
@@ -134,7 +134,7 @@ func (pc *PostController) UpdatePost(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Update a exist post success",
-			Data:    updatedPost,
+			Data:    models.FilteredPostResponse(updatedPost),
 		})
 }
 
@@ -181,7 +181,7 @@ func (pc *PostController) FindPostById(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get the post success",
-			Data:    post,
+			Data:    models.FilteredPostResponse(post),
 		})
 }
 

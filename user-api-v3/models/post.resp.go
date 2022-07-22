@@ -21,7 +21,7 @@ type PostResponse struct {
 	UpdatedAt time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
 }
 
-func FilteredResponse(post *DBPost) PostResponse {
+func FilteredPostResponse(post *DBPost) PostResponse {
 	return PostResponse{
 		ID:        post.ID,
 		Title:     post.Title,

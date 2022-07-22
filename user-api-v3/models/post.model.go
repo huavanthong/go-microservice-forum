@@ -7,7 +7,7 @@ import (
 )
 
 type DBPost struct {
-	Id        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Title     string             `json:"title,omitempty" bson:"title,omitempty"`
 	Content   string             `json:"content,omitempty" bson:"content,omitempty"`
 	Image     string             `json:"image,omitempty" bson:"image,omitempty"`

@@ -18,19 +18,19 @@ type CreatePostSuccess struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Create a new post success"`
-	Data    models.DBPost
+	Data    models.PostResponse
 }
 
 type GetPostSuccess struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Get the post success"`
-	Data    models.DBPost
+	Data    models.PostResponse
 }
 
 type UpdatePostSuccess struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Update a exist post success"`
-	Data    models.DBPost
+	Data    models.PostResponse
 }
