@@ -47,6 +47,12 @@ var (
 	AuthController         controllers.AuthController
 	AuthRouteController    routes.AuthRouteController
 	SessionRouteController routes.SessionRouteController
+
+	// 👇 Add the Post Service, Controllers and Routes
+	postService         services.PostService
+	PostController      controllers.PostController
+	postCollection      *mongo.Collection
+	PostRouteController routes.PostRouteController
 )
 
 func init() {
@@ -100,6 +106,12 @@ func init() {
 
 	UserController = controllers.NewUserController(userService)
 	UserRouteController = routes.NewRouteUserController(UserController)
+
+	// 👇 Add the Post Service, Controllers and Routes
+	postCollection = mongoclient.Database("golang_mongodb").Collection("posts")
+	postService = services.NewPostService(postCollection, ctx)
+	PostController = controllers.NewPostController(postService)
+	PostRouteController = routes.NewPostControllerRoute(PostController)
 
 	// Default returns an Engine instance with the Logger and Recovery middleware already attached.
 	server = gin.Default()
