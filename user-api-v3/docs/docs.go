@@ -707,26 +707,42 @@ const docTemplate = `{
             ],
             "properties": {
                 "content": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "The post tutorial with Golang"
                 },
                 "created_at": {
                     "type": "string"
                 },
                 "image": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "default.png"
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "My post"
                 },
                 "updated_at": {
                     "type": "string"
                 },
                 "user": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "5bbdadf782ebac06a695a8e7"
                 }
             }
         },
-        "models.DBPost": {
+        "models.ForgotPasswordInput": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "johndoe@gmail.com"
+                }
+            }
+        },
+        "models.PostResponse": {
             "type": "object",
             "properties": {
                 "content": {
@@ -749,18 +765,6 @@ const docTemplate = `{
                 },
                 "user": {
                     "type": "string"
-                }
-            }
-        },
-        "models.ForgotPasswordInput": {
-            "type": "object",
-            "required": [
-                "email"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "johndoe@gmail.com"
                 }
             }
         },
@@ -830,7 +834,8 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "content": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "The post tutorial with Golang + Gin"
                 },
                 "created_at": {
                     "type": "string"
@@ -839,16 +844,19 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "image": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "default.png"
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "My post update"
                 },
                 "updated_at": {
                     "type": "string"
                 },
                 "user": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "5bbdadf782ebac06a695a8e7"
                 }
             }
         },
@@ -895,7 +903,7 @@ const docTemplate = `{
                     "example": 201
                 },
                 "data": {
-                    "$ref": "#/definitions/models.DBPost"
+                    "$ref": "#/definitions/models.PostResponse"
                 },
                 "message": {
                     "type": "string",

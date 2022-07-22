@@ -8,7 +8,7 @@ import (
 
 // understanding json encoding, [here](https://pkg.go.dev/encoding/json#Marshal)
 type User struct {
-	ID              primitive.ObjectID `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7" `
+	ID              primitive.ObjectID `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7"`
 	Name            string             `json:"name" bson:"name" binding:"required" example:"John Doe"`
 	Email           string             `json:"email" bson:"email" binding:"required" example:"johndoe@gmail.com"`
 	Password        string             `json:"password" bson:"password" binding:"required,min=8" example:"password123"`

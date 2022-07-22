@@ -3,23 +3,35 @@ definitions:
   models.CreatePostRequest:
     properties:
       content:
+        example: The post tutorial with Golang
         type: string
       created_at:
         type: string
       image:
+        example: default.png
         type: string
       title:
+        example: My post
         type: string
       updated_at:
         type: string
       user:
+        example: 5bbdadf782ebac06a695a8e7
         type: string
     required:
     - content
     - title
     - user
     type: object
-  models.DBPost:
+  models.ForgotPasswordInput:
+    properties:
+      email:
+        example: johndoe@gmail.com
+        type: string
+    required:
+    - email
+    type: object
+  models.PostResponse:
     properties:
       content:
         type: string
@@ -35,14 +47,6 @@ definitions:
         type: string
       user:
         type: string
-    type: object
-  models.ForgotPasswordInput:
-    properties:
-      email:
-        example: johndoe@gmail.com
-        type: string
-    required:
-    - email
     type: object
   models.ResetPasswordInput:
     properties:
@@ -92,18 +96,22 @@ definitions:
   models.UpdatePost:
     properties:
       content:
+        example: The post tutorial with Golang + Gin
         type: string
       created_at:
         type: string
       id:
         type: string
       image:
+        example: default.png
         type: string
       title:
+        example: My post update
         type: string
       updated_at:
         type: string
       user:
+        example: 5bbdadf782ebac06a695a8e7
         type: string
     type: object
   models.UserResponse:
@@ -137,7 +145,7 @@ definitions:
         example: 201
         type: integer
       data:
-        $ref: '#/definitions/models.DBPost'
+        $ref: '#/definitions/models.PostResponse'
       message:
         example: Create a new post success
         type: string
