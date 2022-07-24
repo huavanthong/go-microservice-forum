@@ -6,9 +6,9 @@ import (
 
 	pb "github.com/huavanthong/microservice-golang/email-grpc/proto/email"
 	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
+	"go.mongodb.org/mongo-driver/bson"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"gopkg.in/mgo.v2/bson"
 )
 
 func (server *Server) VerifyEmail(ctx context.Context, req *pb.VerifyEmailRequest) (*pb.GenericResponse, error) {
