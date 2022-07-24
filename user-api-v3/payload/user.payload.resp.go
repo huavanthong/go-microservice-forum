@@ -32,3 +32,9 @@ type UserRefreshTokenSuccess struct {
 	Message     string `json:"message" example:"Refresh token success"`
 	AccessToken string `json:"access_token" example:"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTc0NTg2NzcsImlhdCI6MTY1NzQ1Nzc3NywibmJmIjoxNjU3NDU3Nzc3LCJzdWIiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifQ.WbRHMAdggCfHR06XKpmbFCu3DNjPkjOPYs9b8TuvBZym1d_TD7JCMadmNCq_Sim9bOzhMi8muDZBb1wRBkli2A"`
 }
+
+type GetUserSuccess struct {
+	Status  string `json:"status" example:"success"`
+	Message string `json:"message" example:"Get user success"`
+	Data    models.UserResponse
+}

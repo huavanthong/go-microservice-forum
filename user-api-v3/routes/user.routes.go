@@ -20,4 +20,6 @@ func (uc *UserRouteController) UserRoute(rg *gin.RouterGroup, userService servic
 	router := rg.Group("users")
 	router.Use(middleware.DeserializeUser(userService))
 	router.GET("/me", uc.userController.GetMe)
+	router.GET("/:userId", uc.userController.GetUserByID)
+	router.GET("/:userId", uc.userController.GetUserByEmail)
 }

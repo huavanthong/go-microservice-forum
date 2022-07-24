@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/user-api-v3/models"
@@ -36,6 +37,100 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 			Code:    http.StatusOK,
 			Message: "Get the current user info",
 			Data:    models.FilteredResponse(currentUser),
+		})
+
+}
+
+// GetUserByID godoc
+// @Summary Get user by ID
+// @Description User find another user by ID
+// @Tags users
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Param userId path string true "User ID"
+// @Success 200 {object} payload.UserRegisterSuccess
+// @Router /users/me [get]
+// SignUp User
+func (uc *UserController) GetUserByID(ctx *gin.Context) {
+
+	// get user ID from URL path
+	userId := ctx.Param("userId")
+
+	// call post service to find post by ID
+	user, err := uc.userService.FindUserById(userId)
+	if err != nil {
+		if strings.Contains(err.Error(), "Id exists") {
+			ctx.JSON(http.StatusNotFound,
+				payload.Response{
+					Status:  "fail",
+					Code:    http.StatusNotFound,
+					Message: err.Error(),
+				})
+			return
+		}
+		ctx.JSON(http.StatusBadGateway,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusBadGateway,
+				Message: err.Error(),
+			})
+		return
+	}
+
+	ctx.JSON(http.StatusOK,
+		payload.GetUserSuccess{
+			Status:  "success",
+			Code:    http.StatusOK,
+			Message: "Get user success",
+			Data:    models.FilteredResponse(user),
+		})
+
+}
+
+// GetUserByEmail godoc
+// @Summary Get user by Email
+// @Description User find another user by email
+// @Tags users
+// @Security ApiKeyAuth
+// @Accept  json
+// @Produce  json
+// @Param userId path string true "User ID"
+// @Success 200 {object} payload.UserRegisterSuccess
+// @Router /users/me [get]
+// SignUp User
+func (uc *UserController) GetUserByEmail(ctx *gin.Context) {
+
+	// get user ID from URL path
+	email := ctx.Param("email")
+
+	// call post service to find post by ID
+	user, err := uc.userService.FindUserByEmail(email)
+	if err != nil {
+		if strings.Contains(err.Error(), "Id exists") {
+			ctx.JSON(http.StatusNotFound,
+				payload.Response{
+					Status:  "fail",
+					Code:    http.StatusNotFound,
+					Message: err.Error(),
+				})
+			return
+		}
+		ctx.JSON(http.StatusBadGateway,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusBadGateway,
+				Message: err.Error(),
+			})
+		return
+	}
+
+	ctx.JSON(http.StatusOK,
+		payload.GetUserSuccess{
+			Status:  "success",
+			Code:    http.StatusOK,
+			Message: "Get user success",
+			Data:    models.FilteredResponse(user),
 		})
 
 }
