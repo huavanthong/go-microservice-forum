@@ -675,6 +675,34 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
+                "description": "Get the current user info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get the current user info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.UserRegisterSuccess"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{email}}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "User find another user by email",
                 "consumes": [
                     "application/json"
@@ -686,6 +714,43 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "Get user by Email",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.UserRegisterSuccess"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{userId}}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "User find another user by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get user by ID",
                 "parameters": [
                     {
                         "type": "string",

@@ -616,11 +616,34 @@ paths:
       summary: Sign in a new user by Google OAuth2
       tags:
       - auth
-  /users/me:
+  /users/{email}}:
     get:
       consumes:
       - application/json
       description: User find another user by email
+      parameters:
+      - description: Email
+        in: path
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.UserRegisterSuccess'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user by Email
+      tags:
+      - users
+  /users/{userId}}:
+    get:
+      consumes:
+      - application/json
+      description: User find another user by ID
       parameters:
       - description: User ID
         in: path
@@ -636,7 +659,24 @@ paths:
             $ref: '#/definitions/payload.UserRegisterSuccess'
       security:
       - ApiKeyAuth: []
-      summary: Get user by Email
+      summary: Get user by ID
+      tags:
+      - users
+  /users/me:
+    get:
+      consumes:
+      - application/json
+      description: Get the current user info
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.UserRegisterSuccess'
+      security:
+      - ApiKeyAuth: []
+      summary: Get the current user info
       tags:
       - users
 swagger: "2.0"

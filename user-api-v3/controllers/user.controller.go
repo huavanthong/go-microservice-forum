@@ -50,7 +50,7 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 // @Produce  json
 // @Param userId path string true "User ID"
 // @Success 200 {object} payload.UserRegisterSuccess
-// @Router /users/me [get]
+// @Router /users/{userId}} [get]
 // SignUp User
 func (uc *UserController) GetUserByID(ctx *gin.Context) {
 
@@ -95,9 +95,9 @@ func (uc *UserController) GetUserByID(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param userId path string true "User ID"
+// @Param email path string true "Email"
 // @Success 200 {object} payload.UserRegisterSuccess
-// @Router /users/me [get]
+// @Router /users/{email}} [get]
 // SignUp User
 func (uc *UserController) GetUserByEmail(ctx *gin.Context) {
 
