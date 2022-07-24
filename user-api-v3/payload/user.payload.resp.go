@@ -35,6 +35,7 @@ type UserRefreshTokenSuccess struct {
 
 type GetUserSuccess struct {
 	Status  string `json:"status" example:"success"`
+	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Get user success"`
 	Data    models.UserResponse
 }
