@@ -40,7 +40,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/huavanthong/microservice-golang/email-grpc v0.0.0-20220722043341-cc82c5f3c5c4
+	github.com/huavanthong/microservice-golang/email-grpc v0.0.0-20220724070233-48c6f920bf52
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
