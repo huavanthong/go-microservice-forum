@@ -675,7 +675,7 @@ const docTemplate = `{
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Get the current user info",
+                "description": "User find another user by email",
                 "consumes": [
                     "application/json"
                 ],
@@ -685,7 +685,16 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Get the current user info",
+                "summary": "Get user by Email",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
