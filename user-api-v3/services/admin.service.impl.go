@@ -8,16 +8,25 @@ import (
 )
 
 type AdminServiceImpl struct {
-	collection *mongo.Collection
-	ctx        context.Context
+	adminCollection *mongo.Collection
+	ctx             context.Context
 }
 
-func NewAdminService(collection *mongo.Collection, ctx context.Context) AdminService {
+func NewAdminServiceImpl(collection *mongo.Collection, ctx context.Context) AdminService {
 	return &AdminServiceImpl{collection, ctx}
 }
 
-func (ac *AdminServiceImpl) GetAllUsers(*models.SignUpInput) (*models.DBResponse, error) {
+func (ac *AdminServiceImpl) GetAllUsers(*models.SignUpInput) ([]*models.DBResponse, error) {
+
 	panic("implement me")
+
+	// query := bson.M{}
+
+	// users, err := ac.adminCollection.Find(ac.ctx, query, nil)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// defer users.Close(ac.ctx)
 }
 
 func (ac *AdminServiceImpl) GetUserByID(*models.SignInInput) (*models.DBResponse, error) {
