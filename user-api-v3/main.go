@@ -41,6 +41,11 @@ var (
 	UserController      controllers.UserController
 	UserRouteController routes.UserRouteController
 
+	// Admin Controller setting
+	adminService         services.AdminService
+	AdminController      controllers.AdminController
+	AdminRouteController routes.AdminRouteController
+
 	// Authenticate Controller setting
 	authCollection         *mongo.Collection
 	authService            services.AuthService
@@ -96,11 +101,15 @@ func init() {
 
 	fmt.Println("Redis client connected successfully...")
 
-	// Collections
+	// Init Collections
 	authCollection = mongoclient.Database("golang_mongodb").Collection("users")
+	// Setting service
 	userService = services.NewUserServiceImpl(authCollection, ctx)
+	adminService = services.NewAdminServiceImpl(authCollection, ctx)
 	authService = services.NewAuthService(authCollection, ctx)
+	// Setting controller
 	AuthController = controllers.NewAuthController(authService, userService, ctx, authCollection)
+	AdminController = controllers.NewAdminController(authService, adminService, ctx, authCollection)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
 	SessionRouteController = routes.NewSessionRouteController(AuthController)
 
