@@ -27,6 +27,22 @@ definitions:
     required:
     - email
     type: object
+  models.LoginAttempt:
+    properties:
+      accountname:
+        description: define account name is not correct with user id
+        type: string
+      browertype:
+        type: string
+      createdate:
+        type: string
+      ipnumber:
+        type: string
+      password:
+        type: string
+      success:
+        type: boolean
+    type: object
   models.PostResponse:
     properties:
       content:
@@ -107,6 +123,45 @@ definitions:
         example: 5bbdadf782ebac06a695a8e7
         type: string
     type: object
+  models.User:
+    properties:
+      activated:
+        type: boolean
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      lastlogin_at:
+        type: string
+      loginattempts:
+        items:
+          $ref: '#/definitions/models.LoginAttempt'
+        type: array
+      name:
+        type: string
+      password:
+        minLength: 8
+        type: string
+      passwordConfirm:
+        type: string
+      photo:
+        type: string
+      provider:
+        type: string
+      role:
+        type: string
+      updated_at:
+        type: string
+      verified:
+        type: boolean
+    required:
+    - email
+    - name
+    - password
+    - passwordConfirm
+    type: object
   models.UserResponse:
     properties:
       created_at:
@@ -130,6 +185,20 @@ definitions:
         example: user
         type: string
       updated_at:
+        type: string
+    type: object
+  payload.AdminGetUserSuccess:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/models.User'
+      message:
+        example: Admin get user success
+        type: string
+      status:
+        example: success
         type: string
     type: object
   payload.CreatePostSuccess:
@@ -218,6 +287,63 @@ info:
   title: UserManagement Service API Document
   version: "1.0"
 paths:
+  /admin/detail/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: Get a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.AdminGetUserSuccess'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Response'
+      summary: Get a user by ID
+      tags:
+      - admin
+  /admin/list:
+    get:
+      consumes:
+      - application/json
+      description: List all existing users
+      parameters:
+      - description: Post ID
+        in: path
+        name: page
+        required: true
+        type: string
+      - description: Post ID
+        in: path
+        name: limit
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Response'
+      summary: List all existing users
+      tags:
+      - admin
   /auth/forgotpassword/:
     post:
       consumes:

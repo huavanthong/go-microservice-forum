@@ -25,7 +25,8 @@ func NewAdminController(adminService services.AdminService) AdminController {
 // @Tags admin
 // @Accept  json
 // @Produce  json
-// @Param Authorization header string true "Token"
+// @Param page path string true "Post ID"
+// @Param limit path string true "Post ID"
 // @Failure 500 {object} payload.Response
 // @Success 200 {array} models.User
 // @Router /admin/list [get]
@@ -77,7 +78,6 @@ func (ac *AdminController) GetAllUsers(ctx *gin.Context) {
 // @Tags admin
 // @Accept  json
 // @Produce  json
-// @Param Authorization header string true "Token"
 // @Param userId path string true "User ID"
 // @Failure 500 {object} payload.Response
 // @Success 200 {object} payload.AdminGetUserSuccess
@@ -125,8 +125,8 @@ func (ac *AdminController) GetUserByID(ctx *gin.Context) {
 
 // GetUserByEmail godoc
 // @Summary Get user by Email
-// @Description User find another user by email
-// @Tags users
+// @Description Admin get user info by email
+// @Tags admin
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
