@@ -49,7 +49,9 @@ func (uc *UserController) GetMe(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param userId path string true "User ID"
-// @Success 200 {object} payload.UserRegisterSuccess
+// @Failure 404 {object} payload.Response
+// @Failure 502 {object} payload.Response
+// @Success 200 {object} payload.GetUserSuccess
 // @Router /users/{userId}} [get]
 // SignUp User
 func (uc *UserController) GetUserByID(ctx *gin.Context) {
@@ -96,7 +98,9 @@ func (uc *UserController) GetUserByID(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param email query string true "Email"
-// @Success 200 {object} payload.UserRegisterSuccess
+// @Failure 404 {object} payload.Response
+// @Failure 502 {object} payload.Response
+// @Success 200 {object} payload.GetUserSuccess
 // @Router /users/ [get]
 // SignUp User
 func (uc *UserController) GetUserByEmail(ctx *gin.Context) {
@@ -104,7 +108,7 @@ func (uc *UserController) GetUserByEmail(ctx *gin.Context) {
 	// get user ID from URL path
 	email := ctx.Request.URL.Query()["email"][0]
 
-	// call post service to find post by ID
+	// call user service to find user by email
 	user, err := uc.userService.FindUserByEmail(email)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {

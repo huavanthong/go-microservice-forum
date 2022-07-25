@@ -668,35 +668,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/me": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get the current user info",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get the current user info",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.UserRegisterSuccess"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{email}}": {
+        "/users/": {
             "get": {
                 "security": [
                     {
@@ -719,10 +691,50 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Email",
                         "name": "email",
-                        "in": "path",
+                        "in": "query",
                         "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.GetUserSuccess"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/me": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get the current user info",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get the current user info",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -764,7 +776,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.UserRegisterSuccess"
+                            "$ref": "#/definitions/payload.GetUserSuccess"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
                         }
                     }
                 }
@@ -971,6 +995,26 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "Create a new post success"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                }
+            }
+        },
+        "payload.GetUserSuccess": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {
+                    "$ref": "#/definitions/models.UserResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "Get user success"
                 },
                 "status": {
                     "type": "string",

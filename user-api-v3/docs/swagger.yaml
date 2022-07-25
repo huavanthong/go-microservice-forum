@@ -146,6 +146,20 @@ definitions:
         example: success
         type: string
     type: object
+  payload.GetUserSuccess:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/models.UserResponse'
+      message:
+        example: Get user success
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
   payload.Response:
     properties:
       code:
@@ -616,14 +630,14 @@ paths:
       summary: Sign in a new user by Google OAuth2
       tags:
       - auth
-  /users/{email}}:
+  /users/:
     get:
       consumes:
       - application/json
       description: User find another user by email
       parameters:
       - description: Email
-        in: path
+        in: query
         name: email
         required: true
         type: string
@@ -633,7 +647,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.UserRegisterSuccess'
+            $ref: '#/definitions/payload.GetUserSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
       security:
       - ApiKeyAuth: []
       summary: Get user by Email
@@ -656,7 +678,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.UserRegisterSuccess'
+            $ref: '#/definitions/payload.GetUserSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
       security:
       - ApiKeyAuth: []
       summary: Get user by ID
