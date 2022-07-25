@@ -21,9 +21,16 @@ type GetAllUsersSuccess struct {
 	Data    []models.User
 }
 
+type AdminGetAllUserSuccess struct {
+	Status  string `json:"status" example:"success"`
+	Code    int    `json:"code" example:"201"`
+	Message string `json:"message" example:"Admin get all user success"`
+	Data    []*models.User
+}
+
 type AdminGetUserSuccess struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Admin get user success"`
-	Data    models.User
+	Data    *models.User
 }

@@ -2,9 +2,12 @@ package services
 
 import (
 	"context"
-
 	"github.com/huavanthong/microservice-golang/user-api-v3/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"strings"
 )
 
 type AdminServiceImpl struct {
@@ -72,7 +75,7 @@ func (ac *AdminServiceImpl) GetAllUsers(page int, limit int) ([]*models.User, er
 	return users, nil
 }
 
-func (ac *AdminServiceImpl) GetUserByID(string id) (*models.User, error) {
+func (ac *AdminServiceImpl) GetUserByID(id string) (*models.User, error) {
 
 	// convert string id to object id
 	oid, _ := primitive.ObjectIDFromHex(id)
@@ -96,6 +99,24 @@ func (ac *AdminServiceImpl) GetUserByID(string id) (*models.User, error) {
 	return user, nil
 }
 
-func (ac *AdminServiceImpl) GetUserByParam(*models.SignInInput) (*models.DBResponse, error) {
-	panic("implement me")
+// GetUserByEmail
+func (us *AdminServiceImpl) GetUserByEmail(email string) (*models.User, error) {
+
+	// create container for data
+	var user *models.User
+
+	// create a query command
+	query := bson.M{"email": strings.ToLower(email)}
+
+	// find one user by query command
+	err := us.collection.FindOne(us.ctx, query).Decode(&user)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return &models.User{}, err
+		}
+		return nil, err
+	}
+
+	return user, nil
 }
