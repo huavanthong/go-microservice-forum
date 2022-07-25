@@ -1,5 +1,5 @@
 /*
- * @File: payload.user.resp.go
+ * @File: user.payload.resp.go
  * @Description: Return payload info for user
  * @Author: Hua Van Thong (huavanthong14@gmail.com)
  */
