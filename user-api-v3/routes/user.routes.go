@@ -21,5 +21,5 @@ func (uc *UserRouteController) UserRoute(rg *gin.RouterGroup, userService servic
 	router.Use(middleware.DeserializeUser(userService))
 	router.GET("/me", uc.userController.GetMe)
 	router.GET("/:userId", uc.userController.GetUserByID)
-	router.GET("/:email", uc.userController.GetUserByEmail)
+	router.GET("/", uc.userController.GetUserByEmail)
 }

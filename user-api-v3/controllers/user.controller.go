@@ -95,14 +95,14 @@ func (uc *UserController) GetUserByID(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param email path string true "Email"
+// @Param email query string true "Email"
 // @Success 200 {object} payload.UserRegisterSuccess
-// @Router /users/{email}} [get]
+// @Router /users/ [get]
 // SignUp User
 func (uc *UserController) GetUserByEmail(ctx *gin.Context) {
 
 	// get user ID from URL path
-	email := ctx.Param("email")
+	email := ctx.Request.URL.Query()["email"][0]
 
 	// call post service to find post by ID
 	user, err := uc.userService.FindUserByEmail(email)
