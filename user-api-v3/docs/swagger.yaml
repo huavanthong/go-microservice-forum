@@ -287,6 +287,37 @@ info:
   title: UserManagement Service API Document
   version: "1.0"
 paths:
+  /admin/:
+    get:
+      consumes:
+      - application/json
+      description: Admin get user info by email
+      parameters:
+      - description: Email
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.AdminGetUserSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get user by Email
+      tags:
+      - admin
   /admin/detail/{userId}:
     get:
       consumes:
@@ -305,8 +336,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/payload.AdminGetUserSuccess'
-        "500":
-          description: Internal Server Error
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
           schema:
             $ref: '#/definitions/payload.Response'
       summary: Get a user by ID
@@ -318,12 +353,12 @@ paths:
       - application/json
       description: List all existing users
       parameters:
-      - description: Post ID
+      - description: Page
         in: path
         name: page
         required: true
         type: string
-      - description: Post ID
+      - description: Limit
         in: path
         name: limit
         required: true

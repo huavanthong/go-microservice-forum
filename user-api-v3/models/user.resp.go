@@ -48,3 +48,21 @@ func FilteredResponse(user *DBResponse) UserResponse {
 		UpdatedAt: user.UpdatedAt,
 	}
 }
+
+func AdminFilteredResponse(user *User) User {
+	return User{
+		ID:            user.ID,
+		Email:         user.Email,
+		Password:      user.Password,
+		Name:          user.Name,
+		Role:          user.Role,
+		Provider:      user.Provider,
+		Photo:         user.Photo,
+		Verified:      user.Verified,
+		Activated:     user.Activated,
+		LoginAttempts: user.LoginAttempts,
+		LastLoginAt:   user.LastLoginAt,
+		CreatedAt:     user.CreatedAt,
+		UpdatedAt:     user.UpdatedAt,
+	}
+}

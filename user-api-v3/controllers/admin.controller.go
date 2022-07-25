@@ -1,12 +1,13 @@
 package controllers
 
 import (
+	"fmt"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"strings"
 
-	"github.com/gin-gonic/gin"
-
+	"github.com/huavanthong/microservice-golang/user-api-v3/models"
 	"github.com/huavanthong/microservice-golang/user-api-v3/payload"
 	"github.com/huavanthong/microservice-golang/user-api-v3/services"
 )
@@ -25,8 +26,8 @@ func NewAdminController(adminService services.AdminService) AdminController {
 // @Tags admin
 // @Accept  json
 // @Produce  json
-// @Param page path string true "Post ID"
-// @Param limit path string true "Post ID"
+// @Param page path string true "Page"
+// @Param limit path string true "Limit"
 // @Failure 500 {object} payload.Response
 // @Success 200 {array} models.User
 // @Router /admin/list [get]
@@ -79,7 +80,8 @@ func (ac *AdminController) GetAllUsers(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param userId path string true "User ID"
-// @Failure 500 {object} payload.Response
+// @Failure 404 {object} payload.Response
+// @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.AdminGetUserSuccess
 // @Router /admin/detail/{userId} [get]
 // GetUserByID get a user by id in DB
@@ -102,7 +104,6 @@ func (ac *AdminController) GetUserByID(ctx *gin.Context) {
 				})
 			return
 		}
-
 		ctx.JSON(http.StatusBadGateway,
 			payload.Response{
 				Status:  "fail",
@@ -118,7 +119,7 @@ func (ac *AdminController) GetUserByID(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Admin get user success",
-			Data:    user,
+			Data:    models.AdminFilteredResponse(user),
 		})
 
 }
@@ -134,8 +135,7 @@ func (ac *AdminController) GetUserByID(ctx *gin.Context) {
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.AdminGetUserSuccess
-// @Router /users/ [get]
-// SignUp User
+// @Router /admin/ [get]
 func (ac *AdminController) GetUserByEmail(ctx *gin.Context) {
 
 	// get user ID from URL path
@@ -167,7 +167,7 @@ func (ac *AdminController) GetUserByEmail(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get user success",
-			Data:    user,
+			Data:    models.AdminFilteredResponse(user),
 		})
 
 }

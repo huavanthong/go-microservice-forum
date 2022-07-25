@@ -32,5 +32,5 @@ type AdminGetUserSuccess struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Admin get user success"`
-	Data    *models.User
+	Data    models.User
 }

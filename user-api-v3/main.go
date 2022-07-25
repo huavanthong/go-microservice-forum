@@ -215,6 +215,7 @@ func startGinServer(config config.Config) {
 	/************************ Controller  *************************/
 	AuthRouteController.AuthRoute(router, userService)
 	UserRouteController.UserRoute(router, userService)
+	AdminRouteController.AdminRoute(router, adminService)
 	SessionRouteController.SessionRoute(router)
 	// 👇 Evoke the PostRoute
 	PostRouteController.PostRoute(router)
