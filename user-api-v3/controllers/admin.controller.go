@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 
 	"github.com/huavanthong/microservice-golang/user-api-v3/models"
 	"github.com/huavanthong/microservice-golang/user-api-v3/payload"

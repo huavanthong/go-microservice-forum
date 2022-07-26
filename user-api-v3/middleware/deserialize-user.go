@@ -13,9 +13,11 @@ import (
 
 func DeserializeUser(userService services.UserService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		// get access token from cache cookie
 		var access_token string
 		cookie, err := ctx.Cookie("access_token")
 
+		// check authorize
 		authorizationHeader := ctx.Request.Header.Get("Authorization")
 		fields := strings.Fields(authorizationHeader)
 
@@ -25,11 +27,13 @@ func DeserializeUser(userService services.UserService) gin.HandlerFunc {
 			access_token = cookie
 		}
 
+		// check user login or not
 		if access_token == "" {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": "You are not logged in"})
 			return
 		}
 
+		// get access token publickey to validate jwt token.
 		config, _ := config.LoadConfig(".")
 		sub, err := utils.ValidateToken(access_token, config.AccessTokenPublicKey)
 		if err != nil {
@@ -37,13 +41,17 @@ func DeserializeUser(userService services.UserService) gin.HandlerFunc {
 			return
 		}
 
+		// find user by id
 		user, err := userService.FindUserById(fmt.Sprint(sub))
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": "The user belonging to this token no logger exists"})
 			return
 		}
 
+		// set current user to cookie
 		ctx.Set("currentUser", user)
+
+		// pass to next handler
 		ctx.Next()
 	}
 }
