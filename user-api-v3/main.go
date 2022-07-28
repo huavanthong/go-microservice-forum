@@ -7,6 +7,8 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/casbin/casbin"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	redis "github.com/go-redis/redis/v8"
@@ -205,6 +207,10 @@ func startGinServer(config config.Config) {
 	server.Use(cors.New(corsConfig))
 
 	docs.SwaggerInfo.BasePath = "/api/v3"
+
+	/************************ Policy to authorize role user  *************************/
+	// load the casbin model and policy from files, database is also supported.
+	e := casbin.NewEnforcer("authz_model.conf", "authz_policy.csv")
 
 	/************************ Server routing  *************************/
 	router := server.Group("/api/v3")
