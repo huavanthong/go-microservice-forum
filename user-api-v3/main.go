@@ -10,6 +10,8 @@ import (
 	casbin "github.com/casbin/casbin/v2"
 	"github.com/gin-contrib/authz"
 
+	"github.com/gin-gonic/contrib/sessions"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	redis "github.com/go-redis/redis/v8"
@@ -19,6 +21,7 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api-v3/controllers"
 	"github.com/huavanthong/microservice-golang/user-api-v3/routes"
 	"github.com/huavanthong/microservice-golang/user-api-v3/services"
+	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -208,6 +211,19 @@ func startGinServer(config config.Config) {
 	server.Use(cors.New(corsConfig))
 
 	docs.SwaggerInfo.BasePath = "/api/v3"
+
+	/************************ Init GIN session  *************************/
+	// generate google token
+	token, err := utils.RandToken(64)
+	if err != nil {
+		log.Fatal("unable to generate random token: ", err)
+	}
+
+	store := sessions.NewCookieStore([]byte(token))
+	store.Options(sessions.Options{
+		Path:   "/",
+		MaxAge: 86400 * 7,
+	})
 
 	/************************ Server routing  *************************/
 	router := server.Group("/api/v3")
