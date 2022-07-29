@@ -8,11 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/casbin/casbin"
-	"github.com/zupzup/casbin-http-role-example/model"
+	"github.com/huavanthong/microservice-golang/user-api-v3/models"
 )
 
 // Authorizer is a middleware for authorization
-func Authorizer(e *casbin.Enforcer, users model.Users) gin.HandlerFunc {
+func Authorizer(e *casbin.Enforcer, user models.SignUpInput) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		session := sessions.Default(ctx)
@@ -36,7 +36,7 @@ func Authorizer(e *casbin.Enforcer, users model.Users) gin.HandlerFunc {
 				return
 			}
 
-			exists := users.Exists(uid)
+			exists := user.Exists(uid)
 			if !exists {
 				ctx.JSON(http.StatusForbidden, gin.H{"status": "fail", "message": errors.New("user does not exist")})
 				return

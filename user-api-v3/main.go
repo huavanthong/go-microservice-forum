@@ -7,9 +7,6 @@ import (
 	"net"
 	"net/http"
 
-	casbin "github.com/casbin/casbin/v2"
-	"github.com/gin-contrib/authz"
-
 	"github.com/gin-gonic/contrib/sessions"
 
 	"github.com/gin-contrib/cors"
@@ -240,19 +237,6 @@ func startGinServer(config config.Config) {
 	PostRouteController.PostRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-
-	/************************ Policy to authorize role user  *************************/
-	// load the casbin model and policy from files, database is also supported.
-	e, _ := casbin.NewEnforcer("authz_model.conf", "authz_policy.csv")
-	router.Use(authz.NewAuthorizer(e))
-	router.GET("/dataset1/", func(c *gin.Context) {
-
-		c.JSON(http.StatusOK, gin.H{
-			"status":  "posted",
-			"message": "Hello authz",
-			"nick":    "alice test",
-		})
-	})
 
 	log.Fatal(server.Run(":" + config.Port))
 }

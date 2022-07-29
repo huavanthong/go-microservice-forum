@@ -21,6 +21,7 @@ func DeserializeUser(userService services.UserService) gin.HandlerFunc {
 		authorizationHeader := ctx.Request.Header.Get("Authorization")
 		fields := strings.Fields(authorizationHeader)
 
+		// check authorization header is provided or not. If not, authorizationHeader is  empty
 		if len(fields) != 0 && fields[0] == "Bearer" {
 			access_token = fields[1]
 		} else if err == nil {
