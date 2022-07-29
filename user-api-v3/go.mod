@@ -3,6 +3,8 @@ module github.com/huavanthong/microservice-golang/user-api-v3
 go 1.18
 
 require (
+	github.com/casbin/casbin/v2 v2.41.0
+	github.com/gin-contrib/authz v0.0.1
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-redis/redis/v8 v8.11.5
@@ -18,6 +20,7 @@ require (
 )
 
 require (
+	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/xdg-go/scram v1.1.1 // indirect

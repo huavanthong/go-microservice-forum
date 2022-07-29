@@ -7,7 +7,8 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/casbin/casbin"
+	casbin "github.com/casbin/casbin/v2"
+	"github.com/gin-contrib/authz"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -208,10 +209,6 @@ func startGinServer(config config.Config) {
 
 	docs.SwaggerInfo.BasePath = "/api/v3"
 
-	/************************ Policy to authorize role user  *************************/
-	// load the casbin model and policy from files, database is also supported.
-	e := casbin.NewEnforcer("authz_model.conf", "authz_policy.csv")
-
 	/************************ Server routing  *************************/
 	router := server.Group("/api/v3")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
@@ -227,6 +224,19 @@ func startGinServer(config config.Config) {
 	PostRouteController.PostRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	/************************ Policy to authorize role user  *************************/
+	// load the casbin model and policy from files, database is also supported.
+	e, _ := casbin.NewEnforcer("authz_model.conf", "authz_policy.csv")
+	router.Use(authz.NewAuthorizer(e))
+	router.GET("/dataset1/", func(c *gin.Context) {
+
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "posted",
+			"message": "Hello authz",
+			"nick":    "alice test",
+		})
+	})
 
 	log.Fatal(server.Run(":" + config.Port))
 }
