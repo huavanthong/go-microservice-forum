@@ -37,7 +37,7 @@ func Authorizer(e *casbin.Enforcer, userService services.UserService) gin.Handle
 
 			// find user by ids
 			user, err := userService.FindUserById(fmt.Sprint(uid))
-
+			fmt.Println("[Middleware][Authorize] Found user: ", user)
 			if err != nil {
 				ctx.JSON(http.StatusForbidden, gin.H{"status": "fail", "message": errors.New("user does not exist")})
 				return

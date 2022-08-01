@@ -268,7 +268,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	// update the last login time for user
 	lastLogin := time.Now()
-	ac.userService.UpdateUserById(user.ID.Hex(), "lastlogin_at", lastLogin.String())
+	ac.userService.UpdateUserById(user.ID.Hex(), "lastlogin_at", lastLogin)
 
 	// sign in success
 	ctx.JSON(http.StatusOK,
