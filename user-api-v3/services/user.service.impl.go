@@ -25,11 +25,17 @@ func NewUserServiceImpl(collection *mongo.Collection, ctx context.Context) UserS
 
 // FindUserByID
 func (us *UserServiceImpl) FindUserById(id string) (*models.DBResponse, error) {
+
+	// convert string id to object id
 	oid, _ := primitive.ObjectIDFromHex(id)
 
+	// create a query command
+	query := bson.M{"_id": oid}
+
+	// create container for data
 	var user *models.DBResponse
 
-	query := bson.M{"_id": oid}
+	// find one user by query command
 	err := us.collection.FindOne(us.ctx, query).Decode(&user)
 
 	if err != nil {
@@ -44,9 +50,14 @@ func (us *UserServiceImpl) FindUserById(id string) (*models.DBResponse, error) {
 
 // FindUserByEmail
 func (us *UserServiceImpl) FindUserByEmail(email string) (*models.DBResponse, error) {
+
+	// create container for data
 	var user *models.DBResponse
 
+	// create a query command
 	query := bson.M{"email": strings.ToLower(email)}
+
+	// find one user by query command
 	err := us.collection.FindOne(us.ctx, query).Decode(&user)
 
 	if err != nil {
@@ -82,9 +93,16 @@ func (uc *UserServiceImpl) UpsertUser(email string, data *models.UpdateDBUser) (
 
 func (uc *UserServiceImpl) UpdateUserById(id string, field string, value string) (*models.DBResponse, error) {
 
-	userId, _ := primitive.ObjectIDFromHex(id)
-	query := bson.D{{Key: "_id", Value: userId}}
+	// convert string id to object id
+	objUserId, _ := primitive.ObjectIDFromHex(id)
+
+	// create a query command
+	query := bson.D{{Key: "_id", Value: objUserId}}
+
+	// create a updated data
 	update := bson.D{{Key: "$set", Value: bson.D{{Key: field, Value: value}}}}
+
+	// call mongo driver to update data
 	result, err := uc.collection.UpdateOne(uc.ctx, query, update)
 
 	fmt.Print(result.ModifiedCount)

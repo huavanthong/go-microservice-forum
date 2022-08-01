@@ -41,6 +41,11 @@ var (
 	UserController      controllers.UserController
 	UserRouteController routes.UserRouteController
 
+	// Admin Controller setting
+	adminService         services.AdminService
+	AdminController      controllers.AdminController
+	AdminRouteController routes.AdminRouteController
+
 	// Authenticate Controller setting
 	authCollection         *mongo.Collection
 	authService            services.AuthService
@@ -96,13 +101,19 @@ func init() {
 
 	fmt.Println("Redis client connected successfully...")
 
-	// Collections
+	// Init Collections
 	authCollection = mongoclient.Database("golang_mongodb").Collection("users")
+	// Setting service
 	userService = services.NewUserServiceImpl(authCollection, ctx)
+	adminService = services.NewAdminServiceImpl(authCollection, ctx)
 	authService = services.NewAuthService(authCollection, ctx)
+	// Setting controller
 	AuthController = controllers.NewAuthController(authService, userService, ctx, authCollection)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
 	SessionRouteController = routes.NewSessionRouteController(AuthController)
+
+	AdminController = controllers.NewAdminController(adminService)
+	AdminRouteController = routes.NewRouteAdminController(AdminController)
 
 	UserController = controllers.NewUserController(userService)
 	UserRouteController = routes.NewRouteUserController(UserController)
@@ -204,6 +215,7 @@ func startGinServer(config config.Config) {
 	/************************ Controller  *************************/
 	AuthRouteController.AuthRoute(router, userService)
 	UserRouteController.UserRoute(router, userService)
+	AdminRouteController.AdminRoute(router, adminService)
 	SessionRouteController.SessionRoute(router)
 	// 👇 Evoke the PostRoute
 	PostRouteController.PostRoute(router)

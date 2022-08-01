@@ -9,6 +9,7 @@ CRUD RESTful API with Golang + MongoDB + Redis + Gin Gonic
 * Golang & MongoDB: JWT Authentication and Authorization
     - Golang & MongoDB: JWT Authentication and Authorization. [Refer](https://codevoweb.com/golang-mongodb-jwt-authentication-authorization)
     - [MongoDB ObjectID](#solution-for-design-object-id) To create a object ID from Primitive.  [Refer](https://kb.objectrocket.com/mongo-db/how-to-find-a-mongodb-document-by-its-bson-objectid-using-golang-452)
+	- [Middleware](#middleware-for-authorization) Design middleware for authorizing access token. [Refer]
 	- [Refresh Token](#work-flow-for-implementation-of-refresh-token) Understand how to implement refresh token. 
     - [Login Attempt](#solution-for-login-attempt) Design feature login attempt in Golang. [Refer](https://www.stackhawk.com/blog/golang-broken-authentication-guide-examples-and-prevention/)
 #### Part 3
@@ -44,6 +45,29 @@ CRUD RESTful API with Golang + MongoDB + Redis + Gin Gonic
     - Google OAuth Authentication React.js, MongoDB and Golang.  [Refer](https://codevoweb.com/google-oauth-authentication-react-mongodb-and-golang)
 
 # Getting Started
+### Middleware for authorization
+```go
+// Step 1: User login, and provide access token to cookie
+	ctx.SetCookie("access_token", access_token, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
+
+// Step 2: For each controller want to authorize user, we will use this middleware
+	router.Use(middleware.DeserializeUser(userService))
+
+// Step 3: Get cookie to check user login or not
+	if access_token == "" {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": "You are not logged in"})
+		return
+	}
+
+// Step 4: If user login success, access_token was stored in cookie, then we will decode jwt token
+	sub, err := utils.ValidateToken(access_token, config.AccessTokenPublicKey)
+
+// Step 5: If decode success, we will get id user from claims jwt token.
+	user, err := userService.FindUserById(fmt.Sprint(sub))
+
+// Step 6: store the current user to cookie
+	ctx.Set("currentUser", user)
+```
 ### Solution for design object ID
 At file: [auth.service.impl.go](./services/auth.service.impl.go).  
 

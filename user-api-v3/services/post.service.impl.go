@@ -14,12 +14,12 @@ import (
 )
 
 type PostServiceImpl struct {
-	postCollection *mongo.Collection
-	ctx            context.Context
+	collection *mongo.Collection
+	ctx        context.Context
 }
 
-func NewPostService(postCollection *mongo.Collection, ctx context.Context) PostService {
-	return &PostServiceImpl{postCollection, ctx}
+func NewPostService(collection *mongo.Collection, ctx context.Context) PostService {
+	return &PostServiceImpl{collection, ctx}
 }
 
 func (p *PostServiceImpl) CreatePost(post *models.CreatePostRequest) (*models.DBPost, error) {
@@ -31,7 +31,7 @@ func (p *PostServiceImpl) CreatePost(post *models.CreatePostRequest) (*models.DB
 	tempPost.User = post.User
 	tempPost.CreatedAt = time.Now()
 	tempPost.UpdatedAt = tempPost.CreatedAt
-	res, err := p.postCollection.InsertOne(p.ctx, tempPost)
+	res, err := p.collection.InsertOne(p.ctx, tempPost)
 
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
@@ -45,13 +45,13 @@ func (p *PostServiceImpl) CreatePost(post *models.CreatePostRequest) (*models.DB
 
 	index := mongo.IndexModel{Keys: bson.M{"title": 1}, Options: opt}
 
-	if _, err := p.postCollection.Indexes().CreateOne(p.ctx, index); err != nil {
+	if _, err := p.collection.Indexes().CreateOne(p.ctx, index); err != nil {
 		return nil, errors.New("could not create index for title")
 	}
 
 	var newPost *models.DBPost
 	query := bson.M{"_id": res.InsertedID}
-	if err = p.postCollection.FindOne(p.ctx, query).Decode(&newPost); err != nil {
+	if err = p.collection.FindOne(p.ctx, query).Decode(&newPost); err != nil {
 		return nil, err
 	}
 
@@ -67,7 +67,7 @@ func (p *PostServiceImpl) UpdatePost(id string, data *models.UpdatePost) (*model
 	obId, _ := primitive.ObjectIDFromHex(id)
 	query := bson.D{{Key: "_id", Value: obId}}
 	update := bson.D{{Key: "$set", Value: doc}}
-	res := p.postCollection.FindOneAndUpdate(p.ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
+	res := p.collection.FindOneAndUpdate(p.ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
 
 	var updatedPost *models.DBPost
 
@@ -79,13 +79,17 @@ func (p *PostServiceImpl) UpdatePost(id string, data *models.UpdatePost) (*model
 }
 
 func (p *PostServiceImpl) FindPostById(id string) (*models.DBPost, error) {
+	// convert string id to objectID
 	obId, _ := primitive.ObjectIDFromHex(id)
 
+	// create a query command by id
 	query := bson.M{"_id": obId}
 
+	// create container
 	var post *models.DBPost
 
-	if err := p.postCollection.FindOne(p.ctx, query).Decode(&post); err != nil {
+	// find one post by query command
+	if err := p.collection.FindOne(p.ctx, query).Decode(&post); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, errors.New("no document with that Id exists")
 		}
@@ -97,10 +101,13 @@ func (p *PostServiceImpl) FindPostById(id string) (*models.DBPost, error) {
 }
 
 func (p *PostServiceImpl) FindPosts(page int, limit int) ([]*models.DBPost, error) {
+
+	// page return product
 	if page == 0 {
 		page = 1
 	}
 
+	// limit data return
 	if limit == 0 {
 		limit = 10
 	}
@@ -111,17 +118,20 @@ func (p *PostServiceImpl) FindPosts(page int, limit int) ([]*models.DBPost, erro
 	opt.SetLimit(int64(limit))
 	opt.SetSkip(int64(skip))
 
+	// create a query command
 	query := bson.M{}
 
-	cursor, err := p.postCollection.Find(p.ctx, query, &opt)
+	// find all posts with optional data
+	cursor, err := p.collection.Find(p.ctx, query, &opt)
 	if err != nil {
 		return nil, err
 	}
-
 	defer cursor.Close(p.ctx)
 
+	// create container for data
 	var posts []*models.DBPost
 
+	// with data find out, we will decode them and append to array
 	for cursor.Next(p.ctx) {
 		post := &models.DBPost{}
 		err := cursor.Decode(post)
@@ -133,10 +143,12 @@ func (p *PostServiceImpl) FindPosts(page int, limit int) ([]*models.DBPost, erro
 		posts = append(posts, post)
 	}
 
+	// if any item error, return err
 	if err := cursor.Err(); err != nil {
 		return nil, err
 	}
 
+	// if data is empty, return nil
 	if len(posts) == 0 {
 		return []*models.DBPost{}, nil
 	}
@@ -148,7 +160,7 @@ func (p *PostServiceImpl) DeletePost(id string) error {
 	obId, _ := primitive.ObjectIDFromHex(id)
 	query := bson.M{"_id": obId}
 
-	res, err := p.postCollection.DeleteOne(p.ctx, query)
+	res, err := p.collection.DeleteOne(p.ctx, query)
 	if err != nil {
 		return err
 	}
