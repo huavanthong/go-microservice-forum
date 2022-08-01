@@ -268,6 +268,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/payload.Response"
                         }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
                     }
                 }
             }
