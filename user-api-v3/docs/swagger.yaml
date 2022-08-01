@@ -1,5 +1,24 @@
 basePath: /api/v3
 definitions:
+  models.CreatePostRequest:
+    properties:
+      content:
+        example: The post tutorial with Golang
+        type: string
+      image:
+        example: default.png
+        type: string
+      title:
+        example: My post
+        type: string
+      user:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
+    required:
+    - content
+    - title
+    - user
+    type: object
   models.ForgotPasswordInput:
     properties:
       email:
@@ -7,6 +26,23 @@ definitions:
         type: string
     required:
     - email
+    type: object
+  models.PostResponse:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      image:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+      user:
+        type: string
     type: object
   models.ResetPasswordInput:
     properties:
@@ -53,6 +89,24 @@ definitions:
     - password
     - passwordConfirm
     type: object
+  models.UpdatePost:
+    properties:
+      content:
+        example: The post tutorial with Golang + Gin
+        type: string
+      id:
+        example: 5bbdadf782ebac06a695a8a2
+        type: string
+      image:
+        example: default.png
+        type: string
+      title:
+        example: My post update
+        type: string
+      user:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
+    type: object
   models.UserResponse:
     properties:
       created_at:
@@ -76,6 +130,20 @@ definitions:
         example: user
         type: string
       updated_at:
+        type: string
+    type: object
+  payload.CreatePostSuccess:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/models.PostResponse'
+      message:
+        example: Create a new post success
+        type: string
+      status:
+        example: success
         type: string
     type: object
   payload.Response:
@@ -346,6 +414,175 @@ paths:
       summary: Verify email user
       tags:
       - auth
+  /posts:
+    post:
+      consumes:
+      - application/json
+      description: User create a new post for topic
+      parameters:
+      - description: New Post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/payload.CreatePostSuccess'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Creates a new post
+      tags:
+      - posts
+  /posts/:
+    get:
+      consumes:
+      - application/json
+      description: User delete the post by postId
+      parameters:
+      - description: Post ID
+        in: path
+        name: page
+        required: true
+        type: string
+      - description: Post ID
+        in: path
+        name: limit
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Retrieve all posts
+      tags:
+      - posts
+  /posts/{postId}:
+    delete:
+      consumes:
+      - application/json
+      description: User delete the post by postId
+      parameters:
+      - description: Post ID
+        in: path
+        name: postId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a post
+      tags:
+      - posts
+    get:
+      consumes:
+      - application/json
+      description: User find the post by postId
+      parameters:
+      - description: Post ID
+        in: path
+        name: postId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Retrieve a single post
+      tags:
+      - posts
+    patch:
+      consumes:
+      - application/json
+      description: User update the exist post
+      parameters:
+      - description: Update post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePost'
+      - description: Post ID
+        in: path
+        name: postId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a post
+      tags:
+      - posts
   /sessions/oauth/google:
     get:
       consumes:

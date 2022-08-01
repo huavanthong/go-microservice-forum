@@ -23,9 +23,15 @@ func NewPostService(postCollection *mongo.Collection, ctx context.Context) PostS
 }
 
 func (p *PostServiceImpl) CreatePost(post *models.CreatePostRequest) (*models.DBPost, error) {
-	post.CreateAt = time.Now()
-	post.UpdatedAt = post.CreateAt
-	res, err := p.postCollection.InsertOne(p.ctx, post)
+
+	var tempPost models.DBPost
+	tempPost.Title = post.Title
+	tempPost.Content = post.Content
+	tempPost.Image = post.Image
+	tempPost.User = post.User
+	tempPost.CreatedAt = time.Now()
+	tempPost.UpdatedAt = tempPost.CreatedAt
+	res, err := p.postCollection.InsertOne(p.ctx, tempPost)
 
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
