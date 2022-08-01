@@ -11,6 +11,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/thanhpk/randstr"
 
+	"github.com/gin-gonic/contrib/sessions"
+
 	"github.com/huavanthong/microservice-golang/user-api-v3/config"
 	"github.com/huavanthong/microservice-golang/user-api-v3/models"
 	"github.com/huavanthong/microservice-golang/user-api-v3/payload"
@@ -151,6 +153,7 @@ func (ac *AuthController) SignUpUser(ctx *gin.Context) {
 // @Param user body models.SignInInput true "Authenticate user"
 // @Failure 400 {object} payload.Response
 // @Failure 401 {object} payload.Response
+// @Failure 500 {object} payload.Response
 // @Success 200 {object} payload.UserLoginSuccess
 // @Router /auth/login [post]
 // SignIn User
@@ -170,7 +173,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	// Find user by email
 	user, err := ac.userService.FindUserByEmail(credentials.Email)
-	fmt.Println(user)
+	fmt.Println("[Controller][Auth] Check result user: ", user)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			ctx.JSON(http.StatusBadRequest,
@@ -191,7 +194,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	}
 
 	// User'email verify or not
-	fmt.Println(user.Verified)
+	fmt.Println("[Controller][Auth] Check result user'email verify: ", user.Verified)
 	if !user.Verified {
 		ctx.JSON(http.StatusUnauthorized,
 			payload.Response{
@@ -243,6 +246,25 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	ctx.SetCookie("access_token", access_token, config.AccessTokenMaxAge*60, "/", "localhost", false, true)
 	ctx.SetCookie("refresh_token", refresh_token, config.RefreshTokenMaxAge*60, "/", "localhost", false, true)
 	ctx.SetCookie("logged_in", "true", config.AccessTokenMaxAge*60, "/", "localhost", false, false)
+
+	// Getting session default from main.go: NewCookieStore()
+	session := sessions.Default(ctx)
+
+	// Store user info to session for
+	session.Set("uid", user.ID.Hex())
+	session.Set("role", user.Role)
+
+	// Save session
+	err = session.Save()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusInternalServerError,
+				Message: err.Error(),
+			})
+		return
+	}
 
 	// update the last login time for user
 	lastLogin := time.Now()
@@ -497,7 +519,7 @@ func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Println(result)
+	fmt.Println("[Controller][Auth] Verify email: ", result)
 
 	ctx.JSON(http.StatusOK,
 		payload.Response{
