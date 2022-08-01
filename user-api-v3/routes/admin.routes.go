@@ -16,7 +16,9 @@ func NewRouteAdminController(adminController controllers.AdminController) AdminR
 
 func (ac *AdminRouteController) AdminRoute(rg *gin.RouterGroup, adminService services.AdminService) {
 
-	// router := rg.Group("admin")
+	router := rg.Group("admin")
 	// router.Use(middleware.DeserializeUser(adminService))
-	// router.GET("/me", ac.adminService.GetMe)
+	router.GET("/list", ac.adminController.GetAllUsers)
+	router.GET("/detail/:userId", ac.adminController.GetUserByID)
+	router.GET("/detail/", ac.adminController.GetUserByEmail)
 }

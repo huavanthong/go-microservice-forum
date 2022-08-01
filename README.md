@@ -2,7 +2,9 @@
 
 
 # Reference
-# Roadmap with Golang
+## Design with Golang
+* How to design
+    - Tutorial for designing on Golang. Refer: [here](https://github.com/techschool/simplebank)
 * Roadmap
     - For developer with Golang. Refer: [here](https://github.com/Alikhll/golang-developer-roadmap)
 ## Architecture

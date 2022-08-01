@@ -7,6 +7,10 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/gin-gonic/contrib/sessions"
+
+	casbin "github.com/casbin/casbin/v2"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	redis "github.com/go-redis/redis/v8"
@@ -16,6 +20,7 @@ import (
 	"github.com/huavanthong/microservice-golang/user-api-v3/controllers"
 	"github.com/huavanthong/microservice-golang/user-api-v3/routes"
 	"github.com/huavanthong/microservice-golang/user-api-v3/services"
+	"github.com/huavanthong/microservice-golang/user-api-v3/utils"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -40,6 +45,11 @@ var (
 	userService         services.UserService
 	UserController      controllers.UserController
 	UserRouteController routes.UserRouteController
+
+	// Admin Controller setting
+	adminService         services.AdminService
+	AdminController      controllers.AdminController
+	AdminRouteController routes.AdminRouteController
 
 	// Authenticate Controller setting
 	authCollection         *mongo.Collection
@@ -96,13 +106,19 @@ func init() {
 
 	fmt.Println("Redis client connected successfully...")
 
-	// Collections
+	// Init Collections
 	authCollection = mongoclient.Database("golang_mongodb").Collection("users")
+	// Setting service
 	userService = services.NewUserServiceImpl(authCollection, ctx)
+	adminService = services.NewAdminServiceImpl(authCollection, ctx)
 	authService = services.NewAuthService(authCollection, ctx)
+	// Setting controller
 	AuthController = controllers.NewAuthController(authService, userService, ctx, authCollection)
 	AuthRouteController = routes.NewAuthRouteController(AuthController)
 	SessionRouteController = routes.NewSessionRouteController(AuthController)
+
+	AdminController = controllers.NewAdminController(adminService)
+	AdminRouteController = routes.NewRouteAdminController(AdminController)
 
 	UserController = controllers.NewUserController(userService)
 	UserRouteController = routes.NewRouteUserController(UserController)
@@ -177,7 +193,7 @@ func startGinServer(config config.Config) {
 	/************************ Connect Redis *************************/
 	value, err := redisclient.Get(ctx, "test").Result()
 	if err == redis.Nil {
-		fmt.Println("key: test does not exist")
+		fmt.Println("[Main] key: test does not exist")
 	} else if err != nil {
 		panic(err)
 	}
@@ -195,15 +211,35 @@ func startGinServer(config config.Config) {
 
 	docs.SwaggerInfo.BasePath = "/api/v3"
 
+	/************************ Init GIN session  *************************/
+	// generate google token
+	token, err := utils.RandToken(64)
+	if err != nil {
+		log.Fatal("unable to generate random token: ", err)
+	}
+
+	store := sessions.NewCookieStore([]byte(token))
+	store.Options(sessions.Options{
+		Path:   "/",
+		MaxAge: 86400 * 7,
+	})
+
+	server.Use(sessions.Sessions("goquestsession", store))
+
 	/************************ Server routing  *************************/
 	router := server.Group("/api/v3")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": value})
 	})
 
+	/************************ Policy to authorize role user  *************************/
+	// load the casbin model and policy from files, database is also supported.
+	authorizeMiddeware, _ := casbin.NewEnforcer("authz_model.conf", "authz_policy.csv")
+
 	/************************ Controller  *************************/
-	AuthRouteController.AuthRoute(router, userService)
+	AuthRouteController.AuthRoute(router, userService, authorizeMiddeware)
 	UserRouteController.UserRoute(router, userService)
+	AdminRouteController.AdminRoute(router, adminService)
 	SessionRouteController.SessionRoute(router)
 	// 👇 Evoke the PostRoute
 	PostRouteController.PostRoute(router)

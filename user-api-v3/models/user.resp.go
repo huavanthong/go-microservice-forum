@@ -34,6 +34,7 @@ type DBResponse struct {
 	Verified        bool               `json:"verified" bson:"verified"`
 	CreatedAt       time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt       time.Time          `json:"updated_at" bson:"updated_at"`
+	LastLoginAt     time.Time          `json:"lastlogin_at" bson:"lastlogin_at"`
 }
 
 func FilteredResponse(user *DBResponse) UserResponse {
@@ -46,5 +47,23 @@ func FilteredResponse(user *DBResponse) UserResponse {
 		Photo:     user.Photo,
 		CreatedAt: user.CreatedAt,
 		UpdatedAt: user.UpdatedAt,
+	}
+}
+
+func AdminFilteredResponse(user *User) User {
+	return User{
+		ID:            user.ID,
+		Email:         user.Email,
+		Password:      user.Password,
+		Name:          user.Name,
+		Role:          user.Role,
+		Provider:      user.Provider,
+		Photo:         user.Photo,
+		Verified:      user.Verified,
+		Activated:     user.Activated,
+		LoginAttempts: user.LoginAttempts,
+		LastLoginAt:   user.LastLoginAt,
+		CreatedAt:     user.CreatedAt,
+		UpdatedAt:     user.UpdatedAt,
 	}
 }

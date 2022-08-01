@@ -199,6 +199,7 @@ func (pc *PostController) FindPostById(ctx *gin.Context) {
 // @Success 204 {object} payload.Response
 // @Router /posts/ [get]
 func (pc *PostController) FindPosts(ctx *gin.Context) {
+	// get parameter from client
 	var page = ctx.DefaultQuery("page", "1")
 	var limit = ctx.DefaultQuery("limit", "10")
 

@@ -33,7 +33,7 @@ func (uc *AuthServiceImpl) SignUpUser(userInfo *models.SignUpInput) (*models.DBR
 	user.PasswordConfirm = ""
 	user.Verified = false // member is verified by email
 	user.Activated = true
-	user.Role = "user"
+	user.Role = "member"
 	user.Photo = "default.png"
 	user.Provider = "local"
 	/*** Design ObjectID 1: Bson generate object id ***/
