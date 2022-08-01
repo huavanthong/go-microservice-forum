@@ -162,6 +162,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	// from context, bind user info to json
 	if err := ctx.ShouldBindJSON(&credentials); err != nil {
+		fmt.Println("Check 1")
 		ctx.JSON(http.StatusBadRequest,
 			payload.Response{
 				Status:  "fail",
@@ -173,9 +174,10 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	// Find user by email
 	user, err := ac.userService.FindUserByEmail(credentials.Email)
-	fmt.Println(user)
+	fmt.Println("[Controller][Auth] Check result user: ", user)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
+			fmt.Println("Check 2")
 			ctx.JSON(http.StatusBadRequest,
 				payload.Response{
 					Status:  "fail",
@@ -207,6 +209,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	// If user exists, verify password
 	if err := utils.VerifyPassword(user.Password, credentials.Password); err != nil {
+		fmt.Println("Check 3")
 		ctx.JSON(http.StatusBadRequest,
 			payload.Response{
 				Status:  "fail",
@@ -222,6 +225,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	// Generate Tokens
 	access_token, err := utils.CreateToken(config.AccessTokenExpiresIn, user.ID, config.AccessTokenPrivateKey)
 	if err != nil {
+		fmt.Println("Check 4")
 		ctx.JSON(http.StatusBadRequest,
 			payload.Response{
 				Status:  "fail",
@@ -233,6 +237,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	refresh_token, err := utils.CreateToken(config.RefreshTokenExpiresIn, user.ID, config.RefreshTokenPrivateKey)
 	if err != nil {
+		fmt.Println("Check 5")
 		ctx.JSON(http.StatusBadRequest,
 			payload.Response{
 				Status:  "fail",

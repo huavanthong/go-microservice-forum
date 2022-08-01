@@ -224,6 +224,8 @@ func startGinServer(config config.Config) {
 		MaxAge: 86400 * 7,
 	})
 
+	server.Use(sessions.Sessions("goquestsession", store))
+
 	/************************ Server routing  *************************/
 	router := server.Group("/api/v3")
 	router.GET("/healthchecker", func(ctx *gin.Context) {

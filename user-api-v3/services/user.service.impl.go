@@ -105,10 +105,10 @@ func (uc *UserServiceImpl) UpdateUserById(id string, field string, value string)
 	// call mongo driver to update data
 	result, err := uc.collection.UpdateOne(uc.ctx, query, update)
 
-	fmt.Print(result.ModifiedCount)
+	fmt.Println("[User][Service] Result after update: ", result.ModifiedCount)
 
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println("[User][Service]  error: ", err)
 		return &models.DBResponse{}, err
 	}
 
