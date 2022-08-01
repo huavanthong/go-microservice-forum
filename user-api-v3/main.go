@@ -9,6 +9,8 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 
+	casbin "github.com/casbin/casbin/v2"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	redis "github.com/go-redis/redis/v8"
@@ -228,8 +230,12 @@ func startGinServer(config config.Config) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": value})
 	})
 
+	/************************ Policy to authorize role user  *************************/
+	// load the casbin model and policy from files, database is also supported.
+	authorizeMiddeware, _ := casbin.NewEnforcer("authz_model.conf", "authz_policy.csv")
+
 	/************************ Controller  *************************/
-	AuthRouteController.AuthRoute(router, userService)
+	AuthRouteController.AuthRoute(router, userService, authorizeMiddeware)
 	UserRouteController.UserRoute(router, userService)
 	AdminRouteController.AdminRoute(router, adminService)
 	SessionRouteController.SessionRoute(router)

@@ -84,8 +84,6 @@ github.com/envoyproxy/protoc-gen-validate v0.1.0/go.mod h1:iSmxcyjqTsJpI2R4NaDN7
 github.com/fsnotify/fsnotify v1.5.1 h1:mZcQUHVQUQWoPXXtuf9yuEXKudkV2sx1E06UadKWpgI=
 github.com/fsnotify/fsnotify v1.5.1/go.mod h1:T3375wBYaZdLLcVNkcVbzGHY7f1l/uK5T5Ai1i3InKU=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
-github.com/gin-contrib/authz v0.0.1 h1:TpAYB4ossPFFMbnHQXrva/2S5ZTc5vrqY7lBlI5/uCc=
-github.com/gin-contrib/authz v0.0.1/go.mod h1:gzxlm7x/6BmE9eMiqA1m9It007CQFyesFKEx04/LvXw=
 github.com/gin-contrib/cors v1.3.1 h1:doAsuITavI4IOcd0Y19U4B+O0dNWihRyX//nn4sEmgA=
 github.com/gin-contrib/cors v1.3.1/go.mod h1:jjEJ4268OPZUcU7k9Pm653S7lXUGcqMADzFA61xsmDk=
 github.com/gin-contrib/gzip v0.0.5 h1:mhnVU32YnnBh2LPH2iqRqsA/eR7SAqRaD388jL2s/j0=
