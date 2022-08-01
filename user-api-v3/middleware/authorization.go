@@ -23,11 +23,9 @@ func Authorizer(e *casbin.Enforcer, userService services.UserService) gin.Handle
 		// 	ctx.JSON(http.StatusInternalServerError, gin.H{"status": "fail", "message": err.Errors()})
 		// 	return
 		// }
-		fmt.Println("Check 1: ", role)
+		fmt.Printf("Check 1: ", role)
 		if role == "" {
 			role = "anonymous"
-			fmt.Println("Check 2 nil: ", role)
-
 		}
 
 		// if it's a member, check if the user still exists
@@ -40,7 +38,7 @@ func Authorizer(e *casbin.Enforcer, userService services.UserService) gin.Handle
 
 			// find user by ids
 			user, err := userService.FindUserById(fmt.Sprint(uid))
-			fmt.Println("Check 2: ", user)
+			fmt.Printf("Check 2: ", user)
 
 			if err != nil {
 				ctx.JSON(http.StatusForbidden, gin.H{"status": "fail", "message": errors.New("user does not exist")})
@@ -52,7 +50,7 @@ func Authorizer(e *casbin.Enforcer, userService services.UserService) gin.Handle
 		method := ctx.Request.Method
 		path := ctx.Request.URL.Path
 		allowed, err := e.Enforce(role, path, method)
-		fmt.Println("Check 3 at allowwed: ", allowed)
+		fmt.Printf("Check 3: ", allowed)
 
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"status": "fail", "message": err.Error()})

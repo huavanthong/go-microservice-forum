@@ -162,7 +162,6 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	// from context, bind user info to json
 	if err := ctx.ShouldBindJSON(&credentials); err != nil {
-		fmt.Println("Check 1")
 		ctx.JSON(http.StatusBadRequest,
 			payload.Response{
 				Status:  "fail",
@@ -177,7 +176,6 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	fmt.Println("[Controller][Auth] Check result user: ", user)
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			fmt.Println("Check 2")
 			ctx.JSON(http.StatusBadRequest,
 				payload.Response{
 					Status:  "fail",
@@ -196,7 +194,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	}
 
 	// User'email verify or not
-	fmt.Println(user.Verified)
+	fmt.Println("[Controller][Auth] Check result user'email verify: ", user.Verified)
 	if !user.Verified {
 		ctx.JSON(http.StatusUnauthorized,
 			payload.Response{
@@ -209,7 +207,6 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	// If user exists, verify password
 	if err := utils.VerifyPassword(user.Password, credentials.Password); err != nil {
-		fmt.Println("Check 3")
 		ctx.JSON(http.StatusBadRequest,
 			payload.Response{
 				Status:  "fail",
@@ -225,7 +222,6 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	// Generate Tokens
 	access_token, err := utils.CreateToken(config.AccessTokenExpiresIn, user.ID, config.AccessTokenPrivateKey)
 	if err != nil {
-		fmt.Println("Check 4")
 		ctx.JSON(http.StatusBadRequest,
 			payload.Response{
 				Status:  "fail",
@@ -237,7 +233,6 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 
 	refresh_token, err := utils.CreateToken(config.RefreshTokenExpiresIn, user.ID, config.RefreshTokenPrivateKey)
 	if err != nil {
-		fmt.Println("Check 5")
 		ctx.JSON(http.StatusBadRequest,
 			payload.Response{
 				Status:  "fail",
@@ -524,7 +519,7 @@ func (ac *AuthController) VerifyEmail(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Println(result)
+	fmt.Println("[Controller][Auth] Verify email: ", result)
 
 	ctx.JSON(http.StatusOK,
 		payload.Response{

@@ -193,7 +193,7 @@ func startGinServer(config config.Config) {
 	/************************ Connect Redis *************************/
 	value, err := redisclient.Get(ctx, "test").Result()
 	if err == redis.Nil {
-		fmt.Println("key: test does not exist")
+		fmt.Println("[Main] key: test does not exist")
 	} else if err != nil {
 		panic(err)
 	}
