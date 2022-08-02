@@ -26,7 +26,6 @@ type Product struct {
 	SKU         string             `json:"sku" bson:"sku" binding:"required"`
 	CreatedAt   time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt   time.Time          `json:"updated_at" bson:"updated_at"`
-	LastLoginAt time.Time          `json:"lastlogin_at" bson:"lastlogin_at"`
 }
 
 // Products defines a slice of Product
