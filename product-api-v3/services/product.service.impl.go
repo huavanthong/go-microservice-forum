@@ -17,12 +17,12 @@ import (
 )
 
 type ProductServiceImpl struct {
-	log        zap.Logger
+	log        *zap.Logger
 	collection *mongo.Collection
 	ctx        context.Context
 }
 
-func NewProductServiceImpl(log zap.Logger, collection *mongo.Collection, ctx context.Context) ProductService {
+func NewProductServiceImpl(log *zap.Logger, collection *mongo.Collection, ctx context.Context) ProductService {
 	return &ProductServiceImpl{log, collection, ctx}
 }
 
@@ -66,7 +66,7 @@ func (p *ProductServiceImpl) CreateProduct(pr *models.Product) (*models.Product,
 
 }
 
-func (p *ProductServiceImpl) FindAllProducts(page int, limit int, currency string) (models.Products, error) {
+func (p *ProductServiceImpl) FindAllProducts(page int, limit int, currency string) ([]*models.Product, error) {
 
 	// page return product
 	if page == 0 {
@@ -132,7 +132,7 @@ func (p *ProductServiceImpl) FindAllProducts(page int, limit int, currency strin
 	// }
 
 	// // create a array to contain the rate products
-	// pr := models.Products{}
+	// pr := models.Product{}
 	// // loop in productList to update to the product with rate
 	// for _, p := range products {
 	// 	// get a product
@@ -226,7 +226,7 @@ func (p *ProductServiceImpl) FindProductByCategory(category string, currency str
 	return product, nil
 }
 
-func (p *ProductServiceImpl) UpdateProduct(pr *models.Product) (*models.Product, error) {
+func (p *ProductServiceImpl) UpdateProduct(id string, pr *models.Product) (*models.Product, error) {
 
 	doc, err := utils.ToDoc(pr)
 	if err != nil {

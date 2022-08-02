@@ -38,9 +38,7 @@ definitions:
         example: 201
         type: integer
       data:
-        items:
-          $ref: '#/definitions/models.Product'
-        type: array
+        $ref: '#/definitions/models.Product'
       message:
         example: Get product success
         type: string
@@ -115,7 +113,7 @@ paths:
         name: limit
         required: true
         type: string
-      - description: Limit
+      - description: Currency
         in: path
         name: currency
         required: true
@@ -175,6 +173,11 @@ paths:
       - description: Product ID
         in: path
         name: id
+        required: true
+        type: string
+      - description: Currency
+        in: path
+        name: currency
         required: true
         type: string
       produces:

@@ -6,8 +6,10 @@ import (
 
 // Configuration stores setting environment values
 type Config struct {
-	Port         string `mapstructure:"PORT"`
-	EnableLogger bool   `mapstructure:"ENABLE_LOGGER"`
+	DBUri string `mapstructure:"MONGODB_LOCAL_URI"`
+	Port  string `mapstructure:"PORT"`
+
+	EnableLogger bool `mapstructure:"ENABLE_LOGGER"`
 
 	GrpcServerAddress string `mapstructure:"GRPC_SERVER_ADDRESS"`
 

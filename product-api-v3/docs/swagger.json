@@ -89,7 +89,7 @@
                     },
                     {
                         "type": "string",
-                        "description": "Limit",
+                        "description": "Currency",
                         "name": "currency",
                         "in": "path",
                         "required": true
@@ -132,6 +132,13 @@
                         "type": "string",
                         "description": "Product ID",
                         "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Currency",
+                        "name": "currency",
                         "in": "path",
                         "required": true
                     }
@@ -316,10 +323,7 @@
                     "example": 201
                 },
                 "data": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.Product"
-                    }
+                    "$ref": "#/definitions/models.Product"
                 },
                 "message": {
                     "type": "string",

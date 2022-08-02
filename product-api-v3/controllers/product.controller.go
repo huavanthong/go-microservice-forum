@@ -14,12 +14,12 @@ import (
 )
 
 type ProductController struct {
-	logger         zap.Logger
+	log            *zap.Logger
 	productService services.ProductService
 }
 
-func NewProductController(logger zap.Logger, productService services.ProductService) ProductController {
-	return ProductController{logger, productService}
+func NewProductController(log *zap.Logger, productService services.ProductService) ProductController {
+	return ProductController{log, productService}
 }
 
 // GetAllProducts godoc
@@ -30,7 +30,7 @@ func NewProductController(logger zap.Logger, productService services.ProductServ
 // @Produce  json
 // @Param page path string true "Page"
 // @Param limit path string true "Limit"
-// @Param currency path string true "Limit"
+// @Param currency path string true "Currency"
 // @Failure 500 {object} payload.Response
 // @Success 200 {array} models.Product
 // @Router /products [get]
@@ -81,6 +81,7 @@ func (pc *ProductController) GetAllProducts(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path string true "Product ID"
+// @Param currency path string true "Currency"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
@@ -91,8 +92,10 @@ func (pc *ProductController) GetProductByID(ctx *gin.Context) {
 	// filter parameter id from context
 	productId := ctx.Params.ByName("id")
 
+	var currency = ctx.DefaultQuery("currency", "USD")
+
 	// find user by id
-	user, err := pc.productService.FindProductByID(productId)
+	product, err := pc.productService.FindProductByID(productId, currency)
 
 	// catch error
 	if err != nil {
@@ -120,7 +123,7 @@ func (pc *ProductController) GetProductByID(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get product success",
-			Data:    models.Product,
+			Data:    product,
 		})
 
 }
@@ -133,17 +136,20 @@ func (pc *ProductController) GetProductByID(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param name query string true "Name of Product"
+// @Param currency path string true "Currency"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
 // @Router /admin/ [get]
 func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 
-	// get user ID from URL path
-	email := ctx.Request.URL.Query()["name"][0]
+	// get name from URL path
+	name := ctx.Request.URL.Query()["name"][0]
+
+	var currency = ctx.DefaultQuery("currency", "USD")
 
 	// call admin service to get user by email
-	user, err := pc.productService.GetUserByEmail(email)
+	product, err := pc.productService.FindProductByName(name, currency)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -168,7 +174,7 @@ func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get product success",
-			Data:    models.Product,
+			Data:    product,
 		})
 
 }
@@ -181,6 +187,7 @@ func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param category query string true "Category"
+// @Param currency path string true "Currency"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
@@ -190,8 +197,10 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 	// get category ID from URL path
 	category := ctx.Request.URL.Query()["category"][0]
 
+	var currency = ctx.DefaultQuery("currency", "USD")
+
 	// call admin service to get user by email
-	user, err := pc.productService.GetUserByEmail(category)
+	product, err := pc.productService.FindProductByCategory(category, currency)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -216,7 +225,7 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get product success",
-			Data:    payload.Product,
+			Data:    product,
 		})
 
 }
@@ -250,7 +259,7 @@ func (pc *ProductController) AddProduct(ctx *gin.Context) {
 	}
 
 	// call post service to create the post
-	newPost, err := pc.productService.CreatePost(product)
+	product, err := pc.productService.CreateProduct(product)
 	if err != nil {
 		if strings.Contains(err.Error(), "title already exists") {
 			ctx.JSON(http.StatusConflict,
@@ -276,7 +285,7 @@ func (pc *ProductController) AddProduct(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusCreated,
 			Message: "Create a product success",
-			Data:    models.Product,
+			Data:    product,
 		})
 
 }
@@ -312,7 +321,7 @@ func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 	}
 
 	// call post service to update info
-	updatedProduct, err := pc.productService.UpdatePost(id, product)
+	updatedProduct, err := pc.productService.UpdateProduct(id, product)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -333,11 +342,11 @@ func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.UpdatePostSuccess{
+		payload.UpdateProductSuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Update a exist post success",
-			Data:    models.FilteredPostResponse(updatedProduct),
+			Data:    updatedProduct,
 		})
 }
 
@@ -358,7 +367,7 @@ func (pc *ProductController) DeleteProductByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	// call post service to delete post by ID
-	err := pc.productService.DeletePost(id)
+	err := pc.productService.DeleteProduct(id)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {

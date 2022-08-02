@@ -30,7 +30,7 @@ var (
 	server      *gin.Engine     // The framework's instance, it contains the muxer, middleware and configuration settings.
 	ctx         context.Context // Context running in background
 	mongoclient *mongo.Client   // MongoDB
-	logger      zap.Logger
+	logger      *zap.Logger
 
 	// Product Controller setting
 	productService         services.ProductService
@@ -69,9 +69,9 @@ func init() {
 
 	// Add the Product Service, Controllers and Routes
 	productCollection = mongoclient.Database("golang_mongodb").Collection("products")
-	productService = services.NewProductServiceImpl(productCollection, ctx)
+	productService = services.NewProductServiceImpl(logger, productCollection, ctx)
 	ProductController = controllers.NewProductController(logger, productService)
-	ProductRouteController = routes.NewProductControllerRoute(ProductController)
+	ProductRouteController = routes.NewRouteProductController(ProductController)
 
 	// Default returns an Engine instance with the Logger and Recovery middleware already attached.
 	server = gin.Default()
@@ -118,7 +118,7 @@ func startGinServer(config config.Config) {
 	})
 
 	/************************ Controller  *************************/
-	ProductRouteController.PostRoute(router)
+	ProductRouteController.ProductRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 

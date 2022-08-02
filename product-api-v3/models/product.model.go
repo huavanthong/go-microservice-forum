@@ -24,3 +24,18 @@ type Product struct {
 	CreatedAt   time.Time          `json:"created_at" bson:"created_at"`
 	UpdatedAt   time.Time          `json:"updated_at" bson:"updated_at"`
 }
+
+func FilteredResponse(product *Product) Product {
+	return Product{
+		ID:          product.ID,
+		Name:        product.Name,
+		Category:    product.Category,
+		Summary:     product.Summary,
+		Description: product.Description,
+		ImageFile:   product.ImageFile,
+		Price:       product.Price,
+		SKU:         product.SKU,
+		CreatedAt:   product.CreatedAt,
+		UpdatedAt:   product.UpdatedAt,
+	}
+}
