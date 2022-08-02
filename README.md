@@ -11,6 +11,10 @@
 * Project
     - Project ASP.NET example for demo microservice. Refer: [here](https://mehmetozkaya.medium.com/aspnetrun-microservices-renewed-d08901b5e06f), [doc](https://medium.com/aspnetrun/microservices-architecture-on-net-3b4865eea03f), [source](https://github.com/aspnetrun/run-aspnetcore-microservices)
 
+## Product microservice
+* Logger
+    - Design logger for Golang project - product service. [Refer](https://techmaster.vn/posts/36655/su-dung-uber-zap-thay-the-cho-logging-mac-dinh-cua-golang)
+
 ## gRPC (g Remote Procedure Call)
 gRPC is a modern open source high performance Remote Procedure Call (RPC) framework that can run in any environment. It can efficiently connect services in and across data centers with pluggable support for load balancing, tracing, health checking and authentication. It is also applicable in last mile of distributed computing to connect devices, mobile applications and browsers to backend services.
 * Purpose
