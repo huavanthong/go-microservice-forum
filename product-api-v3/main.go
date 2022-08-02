@@ -19,6 +19,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
+	docs "github.com/huavanthong/microservice-golang/product-api-v3/docs"
+
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -107,7 +109,7 @@ func startGinServer(config config.Config) {
 
 	server.Use(cors.New(corsConfig))
 
-	// docs.SwaggerInfo.BasePath = "/api/v3"
+	docs.SwaggerInfo.BasePath = "/api/v3"
 
 	/************************ Server routing  *************************/
 	router := server.Group("/api/v3")

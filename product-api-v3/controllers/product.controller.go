@@ -116,11 +116,11 @@ func (pc *ProductController) GetProductByID(ctx *gin.Context) {
 
 	// succes
 	ctx.JSON(http.StatusOK,
-		payload.AdminGetUserSuccess{
+		payload.GetProductSuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
-			Message: "Admin get user success",
-			Data:    models.AdminFilteredResponse(user),
+			Message: "Get product success",
+			Data:    models.Product,
 		})
 
 }
@@ -164,11 +164,11 @@ func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.AdminGetUserSuccess{
+		payload.GetProductSuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
-			Message: "Get user success",
-			Data:    models.AdminFilteredResponse(user),
+			Message: "Get product success",
+			Data:    models.Product,
 		})
 
 }
@@ -183,7 +183,7 @@ func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 // @Param category query string true "Category"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
-// @Success 200 {object} payload.AdminGetUserSuccess
+// @Success 200 {object} payload.GetProductSuccess
 // @Router /admin/ [get]
 func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 
@@ -212,11 +212,11 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.AdminGetUserSuccess{
+		payload.GetProductSuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get product success",
-			Data:    payload.GetProductSuccess,
+			Data:    payload.Product,
 		})
 
 }
@@ -231,7 +231,7 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 // @Param email query string true "Email"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
-// @Success 200 {object} payload.AdminGetUserSuccess
+// @Success 200 {object} payload.GetProductSuccess
 // @Router /admin/ [get]
 func (pc *ProductController) AddProduct(ctx *gin.Context) {
 

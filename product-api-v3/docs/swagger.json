@@ -17,7 +17,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "Admin get user info by email",
+                "description": "User create a product",
                 "consumes": [
                     "application/json"
                 ],
@@ -25,9 +25,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "products"
                 ],
-                "summary": "Get user by Email",
+                "summary": "Create a product",
                 "parameters": [
                     {
                         "type": "string",
@@ -41,7 +41,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.AdminGetUserSuccess"
+                            "$ref": "#/definitions/payload.GetProductSuccess"
                         }
                     },
                     "404": {
@@ -59,9 +59,9 @@
                 }
             }
         },
-        "/admin/detail/{userId}": {
+        "/products": {
             "get": {
-                "description": "Get a user by ID",
+                "description": "List all existing products of store",
                 "consumes": [
                     "application/json"
                 ],
@@ -69,53 +69,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "products"
                 ],
-                "summary": "Get a user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "userId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.AdminGetUserSuccess"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/admin/list": {
-            "get": {
-                "description": "List all existing users",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "admin"
-                ],
-                "summary": "List all existing users",
+                "summary": "List all existing products",
                 "parameters": [
                     {
                         "type": "string",
@@ -130,6 +86,13 @@
                         "name": "limit",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Limit",
+                        "name": "currency",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -138,7 +101,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.User"
+                                "$ref": "#/definitions/models.Product"
                             }
                         }
                     },
@@ -151,134 +114,9 @@
                 }
             }
         },
-        "/auth/forgotpassword/": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "User forgot password",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Forgot password",
-                "parameters": [
-                    {
-                        "description": "Confirm forget password",
-                        "name": "email",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.ForgotPasswordInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/login": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "User sign in to service",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Sign In User",
-                "parameters": [
-                    {
-                        "description": "Authenticate user",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.SignInInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.UserLoginSuccess"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/logout": {
+        "/products/{id}": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Delete all cookie in session",
+                "description": "Get a product by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -286,142 +124,14 @@
                     "application/json"
                 ],
                 "tags": [
-                    "auth"
+                    "products"
                 ],
-                "summary": "Log out user",
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/refresh": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Refresh access token after the specific time",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Refresh access token",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.UserRefreshTokenSuccess"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/register": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Register a new user for service",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Register a new user",
+                "summary": "Get a product by ID",
                 "parameters": [
-                    {
-                        "description": "New User",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.SignUpInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/payload.UserRegisterSuccess"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/resetpassword/{resetToken}": {
-            "patch": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Validate the reset token and update the user’s password",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Reset password",
-                "parameters": [
-                    {
-                        "description": "New password",
-                        "name": "password",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.ResetPasswordInput"
-                        }
-                    },
                     {
                         "type": "string",
-                        "description": "reset password",
-                        "name": "resetToken",
+                        "description": "Product ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -430,212 +140,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/auth/verifyemail/{verificationCode}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Verify email user that sign up to service",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Verify email user",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Verification Code",
-                        "name": "verificationCode",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "209": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/posts": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "User create a new post for topic",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "posts"
-                ],
-                "summary": "Creates a new post",
-                "parameters": [
-                    {
-                        "description": "New Post",
-                        "name": "post",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.CreatePostRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "$ref": "#/definitions/payload.CreatePostSuccess"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/posts/": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "User delete the post by postId",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "posts"
-                ],
-                "summary": "Retrieve all posts",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Post ID",
-                        "name": "page",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Post ID",
-                        "name": "limit",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "No Content",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/posts/{postId}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "User find the post by postId",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "posts"
-                ],
-                "summary": "Retrieve a single post",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Post ID",
-                        "name": "postId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/payload.GetProductSuccess"
                         }
                     },
                     "404": {
@@ -658,7 +163,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "User delete the post by postId",
+                "description": "User delete the product by product ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -666,14 +171,14 @@
                     "application/json"
                 ],
                 "tags": [
-                    "posts"
+                    "product"
                 ],
-                "summary": "Delete a post",
+                "summary": "Delete a post by ID",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Post ID",
-                        "name": "postId",
+                        "description": "Product ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -705,7 +210,7 @@
                         "ApiKeyAuth": []
                     }
                 ],
-                "description": "User update the exist post",
+                "description": "User update product info",
                 "consumes": [
                     "application/json"
                 ],
@@ -713,23 +218,23 @@
                     "application/json"
                 ],
                 "tags": [
-                    "posts"
+                    "products"
                 ],
-                "summary": "Update a post",
+                "summary": "Update a product",
                 "parameters": [
                     {
                         "description": "Update post",
-                        "name": "post",
+                        "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.UpdatePost"
+                            "$ref": "#/definitions/models.Product"
                         }
                     },
                     {
                         "type": "string",
-                        "description": "Post ID",
-                        "name": "postId",
+                        "description": "Product ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -739,184 +244,6 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/sessions/oauth/google": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Sign in a new user by Google OAtuth2, then save a new user to DB",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Sign in a new user by Google OAuth2",
-                "responses": {
-                    "201": {
-                        "description": "Created",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "307": {
-                        "description": "Temporary Redirect",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "User find another user by email",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get user by Email",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Email",
-                        "name": "email",
-                        "in": "query",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.GetUserSuccess"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/me": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get the current user info",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get the current user info",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.UserRegisterSuccess"
-                        }
-                    }
-                }
-            }
-        },
-        "/users/{userId}}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "User find another user by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "Get user by ID",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "userId",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.GetUserSuccess"
                         }
                     },
                     "404": {
@@ -936,326 +263,67 @@
         }
     },
     "definitions": {
-        "models.CreatePostRequest": {
+        "models.Product": {
             "type": "object",
             "required": [
-                "content",
-                "title",
-                "user"
+                "category",
+                "description",
+                "imageFile",
+                "name",
+                "price",
+                "sku",
+                "summary"
             ],
             "properties": {
-                "content": {
-                    "type": "string",
-                    "example": "The post tutorial with Golang"
-                },
-                "image": {
-                    "type": "string",
-                    "example": "default.png"
-                },
-                "title": {
-                    "type": "string",
-                    "example": "My post"
-                },
-                "user": {
-                    "type": "string",
-                    "example": "5bbdadf782ebac06a695a8e7"
-                }
-            }
-        },
-        "models.ForgotPasswordInput": {
-            "type": "object",
-            "required": [
-                "email"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "johndoe@gmail.com"
-                }
-            }
-        },
-        "models.LoginAttempt": {
-            "type": "object",
-            "properties": {
-                "accountname": {
-                    "description": "define account name is not correct with user id",
-                    "type": "string"
-                },
-                "browertype": {
-                    "type": "string"
-                },
-                "createdate": {
-                    "type": "string"
-                },
-                "ipnumber": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "success": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "models.PostResponse": {
-            "type": "object",
-            "properties": {
-                "content": {
+                "category": {
                     "type": "string"
                 },
                 "created_at": {
                     "type": "string"
                 },
+                "description": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "string"
                 },
-                "image": {
+                "imageFile": {
                     "type": "string"
                 },
-                "title": {
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "string",
+                    "minLength": 0
+                },
+                "sku": {
+                    "type": "string"
+                },
+                "summary": {
                     "type": "string"
                 },
                 "updated_at": {
                     "type": "string"
-                },
-                "user": {
-                    "type": "string"
                 }
             }
         },
-        "models.ResetPasswordInput": {
-            "type": "object",
-            "required": [
-                "password",
-                "passwordConfirm"
-            ],
-            "properties": {
-                "password": {
-                    "type": "string",
-                    "example": "password1234"
-                },
-                "passwordConfirm": {
-                    "type": "string",
-                    "example": "password1234"
-                }
-            }
-        },
-        "models.SignInInput": {
-            "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "johndoe@gmail.com"
-                },
-                "password": {
-                    "type": "string",
-                    "example": "password123"
-                }
-            }
-        },
-        "models.SignUpInput": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password",
-                "passwordConfirm"
-            ],
-            "properties": {
-                "email": {
-                    "type": "string",
-                    "example": "johndoe@gmail.com"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "password": {
-                    "type": "string",
-                    "minLength": 8,
-                    "example": "password123"
-                },
-                "passwordConfirm": {
-                    "type": "string",
-                    "example": "password123"
-                }
-            }
-        },
-        "models.UpdatePost": {
+        "payload.GetProductSuccess": {
             "type": "object",
             "properties": {
-                "content": {
-                    "type": "string",
-                    "example": "The post tutorial with Golang + Gin"
+                "code": {
+                    "type": "integer",
+                    "example": 201
                 },
-                "id": {
-                    "type": "string",
-                    "example": "5bbdadf782ebac06a695a8a2"
-                },
-                "image": {
-                    "type": "string",
-                    "example": "default.png"
-                },
-                "title": {
-                    "type": "string",
-                    "example": "My post update"
-                },
-                "user": {
-                    "type": "string",
-                    "example": "5bbdadf782ebac06a695a8e7"
-                }
-            }
-        },
-        "models.User": {
-            "type": "object",
-            "required": [
-                "email",
-                "name",
-                "password",
-                "passwordConfirm"
-            ],
-            "properties": {
-                "activated": {
-                    "type": "boolean"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "lastlogin_at": {
-                    "type": "string"
-                },
-                "loginattempts": {
+                "data": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.LoginAttempt"
+                        "$ref": "#/definitions/models.Product"
                     }
                 },
-                "name": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string",
-                    "minLength": 8
-                },
-                "passwordConfirm": {
-                    "type": "string"
-                },
-                "photo": {
-                    "type": "string"
-                },
-                "provider": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "verified": {
-                    "type": "boolean"
-                }
-            }
-        },
-        "models.UserResponse": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string",
-                    "example": "johndoe@gmail.com"
-                },
-                "id": {
-                    "type": "string",
-                    "example": "5bbdadf782ebac06a695a8e7"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "John Doe"
-                },
-                "photo": {
-                    "type": "string",
-                    "example": "http://www.golangprograms.com/skin/frontend/base/default/logo.png"
-                },
-                "provider": {
-                    "type": "string",
-                    "example": "google oauth2"
-                },
-                "role": {
-                    "type": "string",
-                    "example": "user"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "payload.AdminGetUserSuccess": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 201
-                },
-                "data": {
-                    "$ref": "#/definitions/models.User"
-                },
                 "message": {
                     "type": "string",
-                    "example": "Admin get user success"
-                },
-                "status": {
-                    "type": "string",
-                    "example": "success"
-                }
-            }
-        },
-        "payload.CreatePostSuccess": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 201
-                },
-                "data": {
-                    "$ref": "#/definitions/models.PostResponse"
-                },
-                "message": {
-                    "type": "string",
-                    "example": "Create a new post success"
-                },
-                "status": {
-                    "type": "string",
-                    "example": "success"
-                }
-            }
-        },
-        "payload.GetUserSuccess": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 201
-                },
-                "data": {
-                    "$ref": "#/definitions/models.UserResponse"
-                },
-                "message": {
-                    "type": "string",
-                    "example": "Get user success"
+                    "example": "Get product success"
                 },
                 "status": {
                     "type": "string",
@@ -1277,60 +345,6 @@
                 "status": {
                     "type": "string",
                     "example": "failed"
-                }
-            }
-        },
-        "payload.UserLoginSuccess": {
-            "type": "object",
-            "properties": {
-                "access_token": {
-                    "type": "string",
-                    "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTc0NTg2NzcsImlhdCI6MTY1NzQ1Nzc3NywibmJmIjoxNjU3NDU3Nzc3LCJzdWIiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifQ.WbRHMAdggCfHR06XKpmbFCu3DNjPkjOPYs9b8TuvBZym1d_TD7JCMadmNCq_Sim9bOzhMi8muDZBb1wRBkli2A"
-                },
-                "message": {
-                    "type": "string",
-                    "example": "Generate token success"
-                },
-                "status": {
-                    "type": "string",
-                    "example": "success"
-                }
-            }
-        },
-        "payload.UserRefreshTokenSuccess": {
-            "type": "object",
-            "properties": {
-                "access_token": {
-                    "type": "string",
-                    "example": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NTc0NTg2NzcsImlhdCI6MTY1NzQ1Nzc3NywibmJmIjoxNjU3NDU3Nzc3LCJzdWIiOiIwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAifQ.WbRHMAdggCfHR06XKpmbFCu3DNjPkjOPYs9b8TuvBZym1d_TD7JCMadmNCq_Sim9bOzhMi8muDZBb1wRBkli2A"
-                },
-                "message": {
-                    "type": "string",
-                    "example": "Refresh token success"
-                },
-                "status": {
-                    "type": "string",
-                    "example": "success"
-                }
-            }
-        },
-        "payload.UserRegisterSuccess": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "integer",
-                    "example": 201
-                },
-                "data": {
-                    "$ref": "#/definitions/models.UserResponse"
-                },
-                "message": {
-                    "type": "string",
-                    "example": "Register a new user successfully"
-                },
-                "status": {
-                    "type": "string",
-                    "example": "success"
                 }
             }
         }
