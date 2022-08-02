@@ -136,11 +136,11 @@ func (pc *ProductController) GetProductByID(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param name query string true "Name of Product"
-// @Param currency path string true "Currency"
+// @Param currency query string true "Currency"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
-// @Router /admin/ [get]
+// @Router /products/ [get]
 func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 
 	// get name from URL path
@@ -187,11 +187,11 @@ func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param category query string true "Category"
-// @Param currency path string true "Currency"
+// @Param currency query string true "Currency"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
-// @Router /admin/ [get]
+// @Router /products/ [get]
 func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 
 	// get category ID from URL path
@@ -237,11 +237,11 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param email query string true "Email"
+// @Param product body models.Product true "New Product"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
-// @Router /admin/ [get]
+// @Router /products/ [post]
 func (pc *ProductController) AddProduct(ctx *gin.Context) {
 
 	// prepare a post request from ctx
