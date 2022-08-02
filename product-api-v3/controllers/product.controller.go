@@ -32,7 +32,7 @@ func NewProductController(logger zap.Logger, productService services.ProductServ
 // @Param limit path string true "Limit"
 // @Param currency path string true "Limit"
 // @Failure 500 {object} payload.Response
-// @Success 200 {array} models.User
+// @Success 200 {array} models.Product
 // @Router /products [get]
 func (pc *ProductController) GetAllProducts(ctx *gin.Context) {
 
@@ -83,7 +83,7 @@ func (pc *ProductController) GetAllProducts(ctx *gin.Context) {
 // @Param id path string true "Product ID"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
-// @Success 200 {object} payload.AdminGetUserSuccess
+// @Success 200 {object} payload.GetProductSuccess
 // @Router /products/{id} [get]
 // GetUserByID get a user by id in DB
 func (pc *ProductController) GetProductByID(ctx *gin.Context) {
@@ -126,16 +126,16 @@ func (pc *ProductController) GetProductByID(ctx *gin.Context) {
 }
 
 // GetProductByName godoc
-// @Summary Get user by Email
-// @Description Admin get user info by email
-// @Tags admin
+// @Summary Get product by name
+// @Description Get product by name
+// @Tags products
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
 // @Param name query string true "Name of Product"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
-// @Success 200 {object} payload.AdminGetUserSuccess
+// @Success 200 {object} payload.GetProductSuccess
 // @Router /admin/ [get]
 func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 
@@ -173,25 +173,25 @@ func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 
 }
 
-// GetUserByEmail godoc
-// @Summary Get user by Email
-// @Description Admin get user info by email
-// @Tags admin
+// GetProductByCategory godoc
+// @Summary Get user by Category
+// @Description Get user by Category
+// @Tags products
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param email query string true "Email"
+// @Param category query string true "Category"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.AdminGetUserSuccess
 // @Router /admin/ [get]
 func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 
-	// get user ID from URL path
-	email := ctx.Request.URL.Query()["email"][0]
+	// get category ID from URL path
+	category := ctx.Request.URL.Query()["category"][0]
 
 	// call admin service to get user by email
-	user, err := ac.adminService.GetUserByEmail(email)
+	user, err := pc.productService.GetUserByEmail(category)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -215,16 +215,16 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 		payload.AdminGetUserSuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
-			Message: "Get user success",
-			Data:    models.AdminFilteredResponse(user),
+			Message: "Get product success",
+			Data:    payload.GetProductSuccess,
 		})
 
 }
 
-// GetUserByEmail godoc
-// @Summary Get user by Email
-// @Description Admin get user info by email
-// @Tags admin
+// AddProduct godoc
+// @Summary Create a product
+// @Description User create a product
+// @Tags products
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
@@ -235,21 +235,33 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 // @Router /admin/ [get]
 func (pc *ProductController) AddProduct(ctx *gin.Context) {
 
-	// get user ID from URL path
-	email := ctx.Request.URL.Query()["email"][0]
+	// prepare a post request from ctx
+	var product *models.Product
 
-	// call admin service to get user by email
-	user, err := ac.adminService.GetUserByEmail(email)
+	// from context, bind a new post info to json
+	if err := ctx.ShouldBindJSON(&product); err != nil {
+		ctx.JSON(http.StatusBadRequest,
+			payload.Response{
+				Status:  "fail",
+				Code:    http.StatusBadRequest,
+				Message: err.Error(),
+			})
+		return
+	}
+
+	// call post service to create the post
+	newPost, err := pc.productService.CreatePost(product)
 	if err != nil {
-		if strings.Contains(err.Error(), "Id exists") {
-			ctx.JSON(http.StatusNotFound,
+		if strings.Contains(err.Error(), "title already exists") {
+			ctx.JSON(http.StatusConflict,
 				payload.Response{
 					Status:  "fail",
-					Code:    http.StatusNotFound,
+					Code:    http.StatusConflict,
 					Message: err.Error(),
 				})
 			return
 		}
+
 		ctx.JSON(http.StatusBadGateway,
 			payload.Response{
 				Status:  "fail",
@@ -259,37 +271,37 @@ func (pc *ProductController) AddProduct(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK,
-		payload.AdminGetUserSuccess{
+	ctx.JSON(http.StatusCreated,
+		payload.CreateProductSuccess{
 			Status:  "success",
-			Code:    http.StatusOK,
-			Message: "Get user success",
-			Data:    models.AdminFilteredResponse(user),
+			Code:    http.StatusCreated,
+			Message: "Create a product success",
+			Data:    models.Product,
 		})
 
 }
 
-// UpdatePost godoc
-// @Summary Update a post
-// @Description User update the exist post
-// @Tags posts
+// UpdateProduct godoc
+// @Summary Update a product
+// @Description User update product info
+// @Tags products
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param post body models.UpdatePost true "Update post"
-// @Param postId path string true "Post ID"
+// @Param product body models.Product true "Update post"
+// @Param id path string true "Product ID"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.Response
-// @Router /posts/{postId} [patch]
+// @Router /products/{id} [patch]
 func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 
 	// get post ID from URL path
-	postId := ctx.Param("postId")
+	id := ctx.Param("id")
 
 	// from context, bind a new post info to json
-	var post *models.UpdatePost
-	if err := ctx.ShouldBindJSON(&post); err != nil {
+	var product *models.Product
+	if err := ctx.ShouldBindJSON(&product); err != nil {
 		ctx.JSON(http.StatusBadGateway,
 			payload.Response{
 				Status:  "fail",
@@ -300,7 +312,7 @@ func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 	}
 
 	// call post service to update info
-	updatedPost, err := pc.postService.UpdatePost(postId, post)
+	updatedProduct, err := pc.productService.UpdatePost(id, product)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -325,28 +337,28 @@ func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Update a exist post success",
-			Data:    models.FilteredPostResponse(updatedPost),
+			Data:    models.FilteredPostResponse(updatedProduct),
 		})
 }
 
 // DeleteProduct godoc
-// @Summary Delete a post
-// @Description User delete the post by postId
-// @Tags posts
+// @Summary Delete a post by ID
+// @Description User delete the product by product ID
+// @Tags product
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param postId path string true "Post ID"
+// @Param id path string true "Product ID"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 204 {object} payload.Response
-// @Router /posts/{postId} [delete]
+// @Router /products/{id} [delete]
 func (pc *ProductController) DeleteProductByID(ctx *gin.Context) {
 	// get post ID from URL path
-	postId := ctx.Param("postId")
+	id := ctx.Param("id")
 
 	// call post service to delete post by ID
-	err := pc.postService.DeletePost(postId)
+	err := pc.productService.DeletePost(id)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
@@ -371,6 +383,6 @@ func (pc *ProductController) DeleteProductByID(ctx *gin.Context) {
 		payload.Response{
 			Status:  "success",
 			Code:    http.StatusNoContent,
-			Message: "Delete post success",
+			Message: "Delete product success",
 		})
 }
