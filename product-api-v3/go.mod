@@ -13,10 +13,8 @@ require (
 	github.com/gorilla/handlers v1.4.2
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/go-hclog v1.2.2
-	github.com/huavanthong/microservice-golang v0.0.0-20220507071640-37bc3cd59bc1 // indirect
 	github.com/huavanthong/microservice-golang/currency v0.0.0-20220507034548-1beb3ecf07a1
 	github.com/leodido/go-urn v1.2.1 // indirect
-	github.com/nicholasjackson/building-microservices-youtube/product-api v0.0.0-20211011132451-0cd586295712
 	github.com/nicholasjackson/env v0.6.0
 	github.com/stretchr/testify v1.7.2
 	go.uber.org/atomic v1.9.0 // indirect
