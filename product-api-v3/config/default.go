@@ -10,10 +10,6 @@ type Config struct {
 	Port  string `mapstructure:"PORT"`
 
 	EnableLogger bool `mapstructure:"ENABLE_LOGGER"`
-
-	GrpcServerAddress string `mapstructure:"GRPC_SERVER_ADDRESS"`
-
-	ClientOrigin string `mapstructure:"CLIENT_ORIGIN"`
 }
 
 // LoadConfig loads configuration from the config file

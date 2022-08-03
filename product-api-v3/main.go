@@ -42,7 +42,7 @@ var (
 func init() {
 
 	// Loading config from variable environment
-	config, err := config.LoadConfig("./config/")
+	config, err := config.LoadConfig("./")
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}
@@ -82,7 +82,7 @@ func init() {
 // @description List APIs of UserManagement Service
 // @termsOfService http://swagger.io/terms/
 
-// @host localhost:8000
+// @host localhost:9090
 // @BasePath /api/v3
 func main() {
 
@@ -104,7 +104,7 @@ func startGinServer(config config.Config) {
 
 	/************************ Allow Cross Orgin Resource Sharing  *************************/
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:8000", "http://localhost:3000"}
+	corsConfig.AllowOrigins = []string{"http://localhost:9090"}
 	corsConfig.AllowCredentials = true
 
 	server.Use(cors.New(corsConfig))

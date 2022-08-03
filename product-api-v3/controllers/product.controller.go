@@ -135,16 +135,19 @@ func (pc *ProductController) GetProductByID(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param name query string true "Name of Product"
+// @Param name path string true "Name of Product"
 // @Param currency query string true "Currency"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
-// @Router /products/ [get]
+// @Router /products/name/{name} [get]
 func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 
-	// get name from URL path
-	name := ctx.Request.URL.Query()["name"][0]
+	// // get name from URL path
+	// name := ctx.Request.URL.Query()["name"][0]
+
+	// filter parameter id from context
+	name := ctx.Params.ByName("name")
 
 	var currency = ctx.DefaultQuery("currency", "USD")
 
@@ -180,22 +183,25 @@ func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 }
 
 // GetProductByCategory godoc
-// @Summary Get user by Category
-// @Description Get user by Category
+// @Summary Get product by Category
+// @Description Get product by Category
 // @Tags products
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param category query string true "Category"
+// @Param category path string true "Category"
 // @Param currency query string true "Currency"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
-// @Router /products/ [get]
+// @Router /products/category/{category} [get]
 func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 
-	// get category ID from URL path
-	category := ctx.Request.URL.Query()["category"][0]
+	// // get category ID from URL path
+	// category := ctx.Request.URL.Query()["category"][0]
+
+	// filter parameter id from context
+	category := ctx.Params.ByName("category")
 
 	var currency = ctx.DefaultQuery("currency", "USD")
 

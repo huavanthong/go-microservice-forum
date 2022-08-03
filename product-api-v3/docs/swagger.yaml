@@ -58,7 +58,7 @@ definitions:
         example: failed
         type: string
     type: object
-host: localhost:8000
+host: localhost:9090
 info:
   contact: {}
   description: List APIs of UserManagement Service
@@ -104,41 +104,6 @@ paths:
       tags:
       - products
   /products/:
-    get:
-      consumes:
-      - application/json
-      description: Get user by Category
-      parameters:
-      - description: Category
-        in: query
-        name: category
-        required: true
-        type: string
-      - description: Currency
-        in: query
-        name: currency
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/payload.GetProductSuccess'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/payload.Response'
-        "502":
-          description: Bad Gateway
-          schema:
-            $ref: '#/definitions/payload.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: Get user by Category
-      tags:
-      - products
     post:
       consumes:
       - application/json
@@ -268,6 +233,78 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update a product
+      tags:
+      - products
+  /products/category/{category}:
+    get:
+      consumes:
+      - application/json
+      description: Get product by Category
+      parameters:
+      - description: Category
+        in: path
+        name: category
+        required: true
+        type: string
+      - description: Currency
+        in: query
+        name: currency
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.GetProductSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get product by Category
+      tags:
+      - products
+  /products/name/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Get product by name
+      parameters:
+      - description: Name of Product
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Currency
+        in: query
+        name: currency
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.GetProductSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get product by name
       tags:
       - products
 swagger: "2.0"
