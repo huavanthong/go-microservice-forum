@@ -36,6 +36,7 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 	temp.Description = pr.Description
 	temp.ImageFile = pr.ImageFile
 	temp.Price = pr.Price
+	temp.SKU = "test"
 	temp.CreatedAt = time.Now()
 	temp.UpdatedAt = temp.CreatedAt
 

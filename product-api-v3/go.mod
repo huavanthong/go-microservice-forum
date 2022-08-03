@@ -1,6 +1,6 @@
 module github.com/huavanthong/microservice-golang/product-api-v3
 
-go 1.14
+go 1.16
 
 require (
 	github.com/gin-contrib/cors v1.4.0

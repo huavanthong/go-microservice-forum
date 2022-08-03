@@ -399,7 +399,6 @@ const docTemplate = `{
                 "imageFile",
                 "name",
                 "price",
-                "sku",
                 "summary"
             ],
             "properties": {
@@ -422,8 +421,8 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "price": {
-                    "type": "string",
-                    "minLength": 0
+                    "type": "number",
+                    "minimum": 0.01
                 },
                 "sku": {
                     "type": "string"
@@ -484,9 +483,9 @@ const docTemplate = `{
                     "example": "Iphone 14 Pro"
                 },
                 "price": {
-                    "type": "string",
-                    "minLength": 0,
-                    "example": "1400$"
+                    "type": "number",
+                    "minimum": 0.01,
+                    "example": 1400
                 },
                 "summary": {
                     "type": "string",

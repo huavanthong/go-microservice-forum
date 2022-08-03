@@ -15,8 +15,8 @@ definitions:
       name:
         type: string
       price:
-        minLength: 0
-        type: string
+        minimum: 0.01
+        type: number
       sku:
         type: string
       summary:
@@ -29,7 +29,6 @@ definitions:
     - imageFile
     - name
     - price
-    - sku
     - summary
     type: object
   payload.GetProductSuccess:
@@ -61,9 +60,9 @@ definitions:
         example: Iphone 14 Pro
         type: string
       price:
-        example: 1400$
-        minLength: 0
-        type: string
+        example: 1400
+        minimum: 0.01
+        type: number
       summary:
         example: Iphone 14 Pro Gold
         type: string

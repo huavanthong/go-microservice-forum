@@ -251,10 +251,10 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 func (pc *ProductController) AddProduct(ctx *gin.Context) {
 
 	// prepare a post request from ctx
-	var product *payload.RequestCreateProduct
+	var reqProduct *payload.RequestCreateProduct
 
 	// from context, bind a new post info to json
-	if err := ctx.ShouldBindJSON(&product); err != nil {
+	if err := ctx.ShouldBindJSON(&reqProduct); err != nil {
 		ctx.JSON(http.StatusBadRequest,
 			payload.Response{
 				Status:  "fail",
@@ -265,7 +265,7 @@ func (pc *ProductController) AddProduct(ctx *gin.Context) {
 	}
 
 	// call post service to create the post
-	product, err := pc.productService.CreateProduct(product)
+	product, err := pc.productService.CreateProduct(reqProduct)
 	if err != nil {
 		if strings.Contains(err.Error(), "title already exists") {
 			ctx.JSON(http.StatusConflict,
