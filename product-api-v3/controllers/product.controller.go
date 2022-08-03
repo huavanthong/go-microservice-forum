@@ -372,7 +372,7 @@ func (pc *ProductController) DeleteProductByID(ctx *gin.Context) {
 	// get post ID from URL path
 	id := ctx.Param("id")
 
-	// call post service to delete post by ID
+	// call product service to delete product by ID
 	err := pc.productService.DeleteProduct(id)
 
 	if err != nil {
