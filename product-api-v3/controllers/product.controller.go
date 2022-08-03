@@ -303,7 +303,7 @@ func (pc *ProductController) AddProduct(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param product body models.Product true "Update post"
+// @Param product body payload.RequestUpdateProduct true "Update post"
 // @Param id path string true "Product ID"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
@@ -315,8 +315,8 @@ func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	// from context, bind a new post info to json
-	var product *models.Product
-	if err := ctx.ShouldBindJSON(&product); err != nil {
+	var reqUpdateProduct *payload.RequestUpdateProduct
+	if err := ctx.ShouldBindJSON(&reqUpdateProduct); err != nil {
 		ctx.JSON(http.StatusBadGateway,
 			payload.Response{
 				Status:  "fail",
@@ -326,8 +326,8 @@ func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 		return
 	}
 
-	// call post service to update info
-	updatedProduct, err := pc.productService.UpdateProduct(id, product)
+	// call product service to update info
+	updatedProduct, err := pc.productService.UpdateProduct(id, reqUpdateProduct)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -352,7 +352,7 @@ func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Update a exist post success",
-			Data:    updatedProduct,
+			Data:    models.FilteredResponse(updatedProduct),
 		})
 }
 

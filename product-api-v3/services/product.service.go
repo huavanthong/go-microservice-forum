@@ -11,6 +11,6 @@ type ProductService interface {
 	FindProductByID(id string, currency string) (*models.Product, error)
 	FindProductByName(name string, currency string) (*models.Product, error)
 	FindProductByCategory(category string, currency string) (*models.Product, error)
-	UpdateProduct(id string, pr *models.Product) (*models.Product, error)
+	UpdateProduct(id string, pr *payload.RequestUpdateProduct) (*models.Product, error)
 	DeleteProduct(id string) error
 }

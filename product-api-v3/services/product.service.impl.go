@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
 	"time"
 
@@ -38,12 +37,12 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 	temp.ImageFile = pr.ImageFile
 	temp.Price = pr.Price
 	temp.ProductCode = "p" + utils.RandCode(9)
-	temp.SKU = "test"
+	temp.SKU = "ABC-XXX-YYY"
 	temp.CreatedAt = time.Now()
 	temp.UpdatedAt = temp.CreatedAt
 	/*** ObjectID: Bson generate object id ***/
 	temp.ID = primitive.NewObjectID()
-	fmt.Println(temp)
+
 	_, err := p.collection.InsertOne(p.ctx, temp)
 
 	if err != nil {
@@ -234,7 +233,7 @@ func (p *ProductServiceImpl) FindProductByCategory(category string, currency str
 	return product, nil
 }
 
-func (p *ProductServiceImpl) UpdateProduct(id string, pr *models.Product) (*models.Product, error) {
+func (p *ProductServiceImpl) UpdateProduct(id string, pr *payload.RequestUpdateProduct) (*models.Product, error) {
 
 	doc, err := utils.ToDoc(pr)
 	if err != nil {
