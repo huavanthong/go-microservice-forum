@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -36,15 +37,18 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 	temp.Description = pr.Description
 	temp.ImageFile = pr.ImageFile
 	temp.Price = pr.Price
+	temp.ProductCode = "p" + utils.RandCode(9)
 	temp.SKU = "test"
 	temp.CreatedAt = time.Now()
 	temp.UpdatedAt = temp.CreatedAt
-
-	res, err := p.collection.InsertOne(p.ctx, pr)
+	/*** ObjectID: Bson generate object id ***/
+	temp.ID = primitive.NewObjectID()
+	fmt.Println(temp)
+	_, err := p.collection.InsertOne(p.ctx, temp)
 
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
-			return nil, errors.New("producvt with that title already exists")
+			return nil, errors.New("product with that pcode already exists")
 		}
 		return nil, err
 	}
@@ -52,14 +56,16 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 	opt := options.Index()
 	opt.SetUnique(true)
 
-	index := mongo.IndexModel{Keys: bson.M{"category": 1}, Options: opt}
+	index := mongo.IndexModel{Keys: bson.M{"pcode": 1}, Options: opt}
 
 	if _, err := p.collection.Indexes().CreateOne(p.ctx, index); err != nil {
-		return nil, errors.New("could not create index for category")
+		return nil, errors.New("could not create index for pcode")
 	}
 
 	var product *models.Product
-	query := bson.M{"_id": res.InsertedID}
+	// query := bson.M{"_id": res.InsertedID}
+	query := bson.M{"_id": temp.ID}
+
 	if err = p.collection.FindOne(p.ctx, query).Decode(&product); err != nil {
 		return nil, err
 	}

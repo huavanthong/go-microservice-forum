@@ -398,6 +398,7 @@ const docTemplate = `{
                 "description",
                 "imageFile",
                 "name",
+                "pcode",
                 "price",
                 "summary"
             ],
@@ -418,6 +419,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "pcode": {
                     "type": "string"
                 },
                 "price": {

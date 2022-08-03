@@ -9,6 +9,7 @@ import (
 /************************ Define structure product ************************/
 type Product struct {
 	ID          primitive.ObjectID `bson:"_id" json:"id"`
+	ProductCode string             `bson:"pcode" json:"pcode" binding:"required"`
 	Name        string             `json:"name" bson:"name" binding:"required,gt=0,lt=255"`
 	Category    string             `json:"category" bson:"category" binding:"required,gt=0,lt=255"`
 	Summary     string             `json:"summary" bson:"summary" binding:"required,gt=0,lt=10000"`
@@ -23,6 +24,7 @@ type Product struct {
 func FilteredResponse(product *Product) Product {
 	return Product{
 		ID:          product.ID,
+		ProductCode: product.ProductCode,
 		Name:        product.Name,
 		Category:    product.Category,
 		Summary:     product.Summary,

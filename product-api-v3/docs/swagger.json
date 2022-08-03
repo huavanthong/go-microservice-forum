@@ -391,6 +391,7 @@
                 "description",
                 "imageFile",
                 "name",
+                "pcode",
                 "price",
                 "summary"
             ],
@@ -411,6 +412,9 @@
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "pcode": {
                     "type": "string"
                 },
                 "price": {

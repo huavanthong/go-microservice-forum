@@ -5,7 +5,6 @@
  */
 package payload
 
-// Error defines the response error
 type RequestCreateProduct struct {
 	Name        string  `json:"name" bson:"name" binding:"required,gt=0,lt=255" example:"Iphone 14 Pro"`
 	Category    string  `json:"category" bson:"category" binding:"required,gt=0,lt=255" example:"Phone"`
