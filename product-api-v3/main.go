@@ -104,7 +104,7 @@ func startGinServer(config config.Config) {
 
 	/************************ Allow Cross Orgin Resource Sharing  *************************/
 	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:9090"}
+	corsConfig.AllowOrigins = []string{"http://localhost:9090", "http://localhost:3000"}
 	corsConfig.AllowCredentials = true
 
 	server.Use(cors.New(corsConfig))
@@ -122,8 +122,8 @@ func startGinServer(config config.Config) {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	go func() {
-		log.Println("Starting server on port 9090")
-		log.Fatal(server.Run(":" + config.Port))
-	}()
+	log.Println("Starting server on port 9090")
+	log.Fatal(server.Run(":" + config.Port))
+	// 		go func() {
+	// 	}()
 }

@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/huavanthong/microservice-golang/product-api-v3/models"
+	"github.com/huavanthong/microservice-golang/product-api-v3/payload"
 	"github.com/huavanthong/microservice-golang/product-api-v3/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -26,7 +27,7 @@ func NewProductServiceImpl(log *zap.Logger, collection *mongo.Collection, ctx co
 	return &ProductServiceImpl{log, collection, ctx}
 }
 
-func (p *ProductServiceImpl) CreateProduct(pr *models.Product) (*models.Product, error) {
+func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*models.Product, error) {
 
 	var temp models.Product
 	temp.Name = pr.Name
@@ -35,14 +36,14 @@ func (p *ProductServiceImpl) CreateProduct(pr *models.Product) (*models.Product,
 	temp.Description = pr.Description
 	temp.ImageFile = pr.ImageFile
 	temp.Price = pr.Price
-	temp.SKU = pr.SKU
 	temp.CreatedAt = time.Now()
-	temp.UpdatedAt = pr.CreatedAt
+	temp.UpdatedAt = temp.CreatedAt
+
 	res, err := p.collection.InsertOne(p.ctx, pr)
 
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
-			return nil, errors.New("post with that title already exists")
+			return nil, errors.New("producvt with that title already exists")
 		}
 		return nil, err
 	}
@@ -50,10 +51,10 @@ func (p *ProductServiceImpl) CreateProduct(pr *models.Product) (*models.Product,
 	opt := options.Index()
 	opt.SetUnique(true)
 
-	index := mongo.IndexModel{Keys: bson.M{"title": 1}, Options: opt}
+	index := mongo.IndexModel{Keys: bson.M{"category": 1}, Options: opt}
 
 	if _, err := p.collection.Indexes().CreateOne(p.ctx, index); err != nil {
-		return nil, errors.New("could not create index for title")
+		return nil, errors.New("could not create index for category")
 	}
 
 	var product *models.Product

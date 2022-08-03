@@ -97,7 +97,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Product"
+                            "$ref": "#/definitions/payload.RequestCreateProduct"
                         }
                     }
                 ],
@@ -299,7 +299,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "product"
+                    "products"
                 ],
                 "summary": "Delete a post by ID",
                 "parameters": [
@@ -453,6 +453,44 @@ const docTemplate = `{
                 "status": {
                     "type": "string",
                     "example": "success"
+                }
+            }
+        },
+        "payload.RequestCreateProduct": {
+            "type": "object",
+            "required": [
+                "category",
+                "description",
+                "imageFile",
+                "name",
+                "price",
+                "summary"
+            ],
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "example": "Phone"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Iphone 14 Pro Gold 256GB"
+                },
+                "imageFile": {
+                    "type": "string",
+                    "example": "default.png"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Iphone 14 Pro"
+                },
+                "price": {
+                    "type": "string",
+                    "minLength": 0,
+                    "example": "1400$"
+                },
+                "summary": {
+                    "type": "string",
+                    "example": "Iphone 14 Pro Gold"
                 }
             }
         },

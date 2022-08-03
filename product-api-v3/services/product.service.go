@@ -1,9 +1,12 @@
 package services
 
-import "github.com/huavanthong/microservice-golang/product-api-v3/models"
+import (
+	"github.com/huavanthong/microservice-golang/product-api-v3/models"
+	"github.com/huavanthong/microservice-golang/product-api-v3/payload"
+)
 
 type ProductService interface {
-	CreateProduct(pr *models.Product) (*models.Product, error)
+	CreateProduct(pr *payload.RequestCreateProduct) (*models.Product, error)
 	FindAllProducts(page int, limit int, currency string) ([]*models.Product, error)
 	FindProductByID(id string, currency string) (*models.Product, error)
 	FindProductByName(name string, currency string) (*models.Product, error)

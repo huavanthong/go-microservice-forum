@@ -243,7 +243,7 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param product body models.Product true "New Product"
+// @Param product body payload.RequestCreateProduct true "New Product"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
@@ -251,7 +251,7 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 func (pc *ProductController) AddProduct(ctx *gin.Context) {
 
 	// prepare a post request from ctx
-	var product *models.Product
+	var product *payload.RequestCreateProduct
 
 	// from context, bind a new post info to json
 	if err := ctx.ShouldBindJSON(&product); err != nil {
@@ -291,7 +291,7 @@ func (pc *ProductController) AddProduct(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusCreated,
 			Message: "Create a product success",
-			Data:    product,
+			Data:    models.FilteredResponse(product),
 		})
 
 }
@@ -359,7 +359,7 @@ func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 // DeleteProduct godoc
 // @Summary Delete a post by ID
 // @Description User delete the product by product ID
-// @Tags product
+// @Tags products
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
