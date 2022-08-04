@@ -45,7 +45,12 @@ CRUD RESTful API with Golang + MongoDB + Redis + Gin Gonic
     - Google OAuth Authentication React.js, MongoDB and Golang.  [Refer](https://codevoweb.com/google-oauth-authentication-react-mongodb-and-golang)
 
 # Getting Started
+### Import data for MongoDB
+* Sample data. Refer: [here](https://github.com/talenteddeveloper/mongo_sample_dataset)
+```
 
+```
+### Build project
 * Start docker
 ```
 docker-compose up -d

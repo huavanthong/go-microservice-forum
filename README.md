@@ -1,7 +1,7 @@
 # go-microservice-forum
 
 
-# Reference
+## Reference
 ## Design with Golang
 * How to design
     - Tutorial for designing on Golang. Refer: [here](https://github.com/techschool/simplebank)
@@ -11,11 +11,12 @@
 * Project
     - Project ASP.NET example for demo microservice. Refer: [here](https://mehmetozkaya.medium.com/aspnetrun-microservices-renewed-d08901b5e06f), [doc](https://medium.com/aspnetrun/microservices-architecture-on-net-3b4865eea03f), [source](https://github.com/aspnetrun/run-aspnetcore-microservices)
 
-## Product microservice
+## Microservice
+### Product microservice
 * Logger
     - Design logger for Golang project - product service. [Refer](https://techmaster.vn/posts/36655/su-dung-uber-zap-thay-the-cho-logging-mac-dinh-cua-golang)
 
-## gRPC (g Remote Procedure Call)
+### gRPC (g Remote Procedure Call)
 gRPC is a modern open source high performance Remote Procedure Call (RPC) framework that can run in any environment. It can efficiently connect services in and across data centers with pluggable support for load balancing, tracing, health checking and authentication. It is also applicable in last mile of distributed computing to connect devices, mobile applications and browsers to backend services.
 * Purpose
     - When we need to use gRPC. Refer: [here](https://www.wallarm.com/what/the-concept-of-grpc)
@@ -23,12 +24,16 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
     - Communication between microservice. Refer: [here](https://techdozo.dev/grpc-for-microservices-communication/)
     - Traefik with gRPC. Refer: [here](https://doc.traefik.io/traefik/user-guides/grpc/)
     - What is Traefik. Refer: [here](https://www.devopsschool.com/blog/what-is-traefik-how-to-learn-traefik/)
-## Email microservice
+### Email microservice
 * Project
     - Example project email using **RabbitMQ**. Refer: [here](https://github.com/savsgio/microservice-email)
     - Document for email microserivce. Refer: [here](https://www.cloudbees.com/blog/email-as-a-microservice)
 
-## User microservice
+### Payment microservice
+* Project
+    - Example project email using **RabbitMQ**. Refer: [here](https://github.com/savsgio/microservice-email)
+    - Document for email microserivce. Refer: [here](https://www.cloudbees.com/blog/email-as-a-microservice)
+### User microservice
 * Project
     - Example project user-microservice. Refer: [here](https://github.com/raycad/go-microservices)
     - Architecture for user-microserivce. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#architecture)
@@ -53,7 +58,9 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
     - MongoDB
         - Design database for user-microservice. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#design-database-for-user-microservice)   
     - PostgreSQL
-        - Migrate database to PostgreSQL. Refer: [here] https://dev.to/techschoolguru/how-to-write-run-database-migration-in-golang-5h6g    
+        - Migrate database to PostgreSQL. Refer: [here](https://dev.to/techschoolguru/how-to-write-run-database-migration-in-golang-5h6g)
+
+### Payment microservice
 
 ## User microservice version 3
 
