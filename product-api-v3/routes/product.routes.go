@@ -19,7 +19,7 @@ func (pc *ProductRouteController) ProductRoute(rg *gin.RouterGroup) {
 	// router.Use(middleware.MiddlewareValidateProduct())
 	router.GET("/", pc.productController.GetAllProducts)
 	router.GET("/:id", pc.productController.GetProductByID)
-	router.GET("/name/:ss", pc.productController.GetProductByName)
+	router.GET("/name/:name", pc.productController.GetProductByName)
 	router.GET("/category/:category", pc.productController.GetProductByCategory)
 	router.POST("/", pc.productController.AddProduct)
 	router.PATCH("/:id", pc.productController.UpdateProduct)

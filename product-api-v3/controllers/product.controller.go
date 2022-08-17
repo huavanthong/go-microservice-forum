@@ -152,7 +152,7 @@ func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 	var currency = ctx.DefaultQuery("currency", "USD")
 
 	// call admin service to get user by email
-	product, err := pc.productService.FindProductByName(name, currency)
+	products, err := pc.productService.FindProductByName(name, currency)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -173,11 +173,11 @@ func (pc *ProductController) GetProductByName(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.GetProductSuccess{
+		payload.GetProductsSuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get product success",
-			Data:    product,
+			Data:    products,
 		})
 
 }
@@ -206,7 +206,7 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 	var currency = ctx.DefaultQuery("currency", "USD")
 
 	// call admin service to get user by email
-	product, err := pc.productService.FindProductByCategory(category, currency)
+	products, err := pc.productService.FindProductByCategory(category, currency)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -227,11 +227,11 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.GetProductSuccess{
+		payload.GetProductsSuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get product success",
-			Data:    product,
+			Data:    products,
 		})
 
 }

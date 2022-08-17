@@ -94,7 +94,7 @@ func (p *ProductServiceImpl) FindAllProducts(page int, limit int, currency strin
 	// create a query command
 	query := bson.M{}
 
-	// find all posts with optional data
+	// find all products with optional data
 	cursor, err := p.collection.Find(p.ctx, query, &opt)
 	if err != nil {
 		return nil, err
@@ -180,57 +180,111 @@ func (p *ProductServiceImpl) FindProductByID(id string, currency string) (*model
 
 	return product, nil
 }
-func (p *ProductServiceImpl) FindProductByName(name string, currency string) (*models.Product, error) {
+func (p *ProductServiceImpl) FindProductByName(name string, currency string) ([]*models.Product, error) {
 
-	// create container for data
-	var product *models.Product
+	// we should create query option
 
 	// create a query command
 	query := bson.M{"name": strings.ToLower(name)}
 
 	// find one user by query command
-	err := p.collection.FindOne(p.ctx, query).Decode(&product)
+	cursor, err := p.collection.Find(p.ctx, query, nil)
 
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return &models.Product{}, err
-		}
 		return nil, err
 	}
-
-	// if currency is empty, it return productList with the default of
-	// base currency
-	if currency == "" {
-		return product, nil
-	}
-
-	return product, nil
-}
-func (p *ProductServiceImpl) FindProductByCategory(category string, currency string) (*models.Product, error) {
+	defer cursor.Close(p.ctx)
 
 	// create container for data
-	var product *models.Product
+	var products []*models.Product
 
-	// create a query command
-	query := bson.M{"category": strings.ToLower(category)}
+	// with data find out, we will decode them and append to array
+	for cursor.Next(p.ctx) {
+		product := &models.Product{}
+		err := cursor.Decode(product)
 
-	// find one user by query command
-	err := p.collection.FindOne(p.ctx, query).Decode(&product)
-
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return &models.Product{}, err
+		if err != nil {
+			return nil, err
 		}
+
+		products = append(products, product)
+	}
+
+	// if any item error, return err
+	if err := cursor.Err(); err != nil {
 		return nil, err
+	}
+
+	// if data is empty, return nil
+	if len(products) == 0 {
+		return []*models.Product{}, nil
 	}
 
 	// if currency is empty, it return productList with the default of
 	// base currency
 	if currency == "" {
-		return product, nil
+		return products, nil
 	}
 
-	return product, nil
+	return products, nil
+}
+
+func (p *ProductServiceImpl) FindProductByCategory(category string, currency string) ([]*models.Product, error) {
+
+	// we should create query option
+
+	// create a query command
+	// query := bson.M{"category": strings.ToLower(category)}
+	// fmt.Println("Check 1: ", query)
+	query := bson.D{{"category", category}}
+
+	// find one user by query command
+	cursor, err := p.collection.Find(p.ctx, query, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(p.ctx)
+
+	// // Find all documents in which the "name" field is "Bob".
+	// // Specify the Sort option to sort the returned documents by age in
+	// // ascending order.
+	// opts := options.Find().SetSort(bson.D{{"age", 1}})
+	// cursor, err := p.Find(context.TODO(), bson.D{{"name", "Bob"}}, opts)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
+	// create container for data
+	var products []*models.Product
+
+	// with data find out, we will decode them and append to array
+	for cursor.Next(p.ctx) {
+		product := &models.Product{}
+		err := cursor.Decode(product)
+		if err != nil {
+			return nil, err
+		}
+
+		products = append(products, product)
+	}
+
+	// if any item error, return err
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	// if data is empty, return nil
+	if len(products) == 0 {
+		return []*models.Product{}, nil
+	}
+
+	// if currency is empty, it return productList with the default of
+	// base currency
+	if currency == "" {
+		return products, nil
+	}
+
+	return products, nil
 }
 
 func (p *ProductServiceImpl) UpdateProduct(id string, pr *payload.RequestUpdateProduct) (*models.Product, error) {
