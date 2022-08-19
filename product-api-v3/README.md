@@ -18,8 +18,12 @@ There are a lot of content you need to remember.
 * Indexes in Mongodb.
 	- [Measure time](#measure-time) Measure query time in Mongodb. [Refer](https://viblo.asia/p/tim-hieu-ve-index-trong-mongodb-924lJL4WKPM)
 	- [Indexes](#indexes-in-mongodb) How to use Indexes in MongoDB. [Refer](https://viblo.asia/p/su-dung-index-trong-sql-query-1ZnbRlPQR2Xo)
-
-
+* Experience using NoSQL Database.
+	- Design database for product. Refer: [here](https://dev.to/fabric_commerce/building-a-hybrid-sql-nosql-e-commerce-data-model-3fc3)
+### Part 3
+* Design Pattern for Product/
+	- Template for design pattern on product. Refer: [here](https://ui-patterns.com/patterns/ProductPage)
+	- [Builder](#design-pattern---builder-for-product) Design pattern for product in microservice. Refer: [here](https://github.com/anhthii/golang-design-pattern)
 # Designer
 ### Measure time
 * Step 1: Start Mongodb Shell
@@ -96,3 +100,5 @@ Using Mongosh:          1.5.0
 ```s
 > db.users.find({username: 'user112'}).explain("executionStats")["executionStats"]
 ```
+
+### Design Pattern - Builder for product.
