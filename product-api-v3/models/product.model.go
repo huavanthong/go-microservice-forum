@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -17,8 +15,9 @@ type Product struct {
 	ImageFile   string             `json:"imageFile" bson:"imageFile" binding:"required" example:"default.png"`
 	Price       float64            `json:"price" bson:"price" binding:"required,min=0.01" example:"1400"`
 	SKU         string             `json:"sku" bson:"sku" example:"ABC-XYZ-OXY"`
-	CreatedAt   time.Time          `json:"created_at" bson:"created_at"`
-	UpdatedAt   time.Time          `json:"updated_at" bson:"updated_at"`
+	CreatedAt   string             `json:"created_at" bson:"created_at"`
+	UpdatedAt   string             `json:"updated_at" bson:"updated_at"`
+	DeleteAt    string             `json:"deleted_at" bson:"deleted_at"`
 }
 
 func FilteredResponse(product *Product) Product {

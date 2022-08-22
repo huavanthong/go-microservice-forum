@@ -2,6 +2,10 @@
 This is a product-api-service version 3. In this version, we will port all the old source to new source using GIN Framework Golang.  
 There are a lot of content you need to remember.
 
+
+# Database Design
+![Database Product Microservice](./docs/images/database/product-database.png)
+
 # Table of Contents
 1. [Part 1:](#part-1) CRUD REST Api on product service.
 
@@ -18,8 +22,10 @@ There are a lot of content you need to remember.
 * Indexes in Mongodb.
 	- [Measure time](#measure-time) Measure query time in Mongodb. [Refer](https://viblo.asia/p/tim-hieu-ve-index-trong-mongodb-924lJL4WKPM)
 	- [Indexes](#indexes-in-mongodb) How to use Indexes in MongoDB. [Refer](https://viblo.asia/p/su-dung-index-trong-sql-query-1ZnbRlPQR2Xo)
+
 * Experience using NoSQL Database.
-	- Design database for product. Refer: [here](https://dev.to/fabric_commerce/building-a-hybrid-sql-nosql-e-commerce-data-model-3fc3)
+	- Building a Hybrid SQL + NoSQL E-Commerce Data Model . Refer: [here](https://dev.to/fabric_commerce/building-a-hybrid-sql-nosql-e-commerce-data-model-3fc3)
+	- What's an Example of Good E-Commerce Database Design. Refer: [here](https://dev.to/fabric_commerce/what-s-an-example-of-good-e-commerce-database-design-3e9l)
 ### Part 3
 * Design Pattern for Product/
 	- Template for design pattern on product. Refer: [here](https://ui-patterns.com/patterns/ProductPage)
