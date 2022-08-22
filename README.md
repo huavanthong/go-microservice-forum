@@ -6,6 +6,7 @@
 * How to design
     - Tutorial for designing on Golang. Refer: [here](https://github.com/techschool/simplebank)
     - Design Pattern with experience. Refer: [here](https://github.com/iluwatar/java-design-patterns)
+    - Design RESTful API with microservice, perfect design. Refer: [here](https://github.com/restuwahyu13/gin-rest-api)
 * Roadmap
     - For developer with Golang. Refer: [here](https://github.com/Alikhll/golang-developer-roadmap)
 * Database

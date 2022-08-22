@@ -29,6 +29,7 @@ func NewProductServiceImpl(log *zap.Logger, collection *mongo.Collection, ctx co
 
 func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*models.Product, error) {
 
+	// Initialize the basic info of product
 	var temp models.Product
 	temp.Name = pr.Name
 	temp.Category = pr.Category
@@ -40,6 +41,7 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 	temp.SKU = "ABC-XXX-YYY"
 	temp.CreatedAt = time.Now()
 	temp.UpdatedAt = temp.CreatedAt
+
 	/*** ObjectID: Bson generate object id ***/
 	temp.ID = primitive.NewObjectID()
 
@@ -51,7 +53,7 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 		}
 		return nil, err
 	}
-
+	// Create Indexesfor pcode, it help you easy to find product by pcode
 	opt := options.Index()
 	opt.SetUnique(true)
 
