@@ -5,7 +5,7 @@ import (
 )
 
 /************************ Define structure product ************************/
-type Product struct {
+type product struct {
 	ID          primitive.ObjectID `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7"`
 	ProductCode string             `bson:"pcode" json:"pcode" binding:"required" example:"p123456789"`
 	Name        string             `json:"name" bson:"name" binding:"required,gt=0,lt=255" example:"Iphone 14 Pro"`
@@ -20,6 +20,9 @@ type Product struct {
 	DeleteAt    string             `json:"deleted_at" bson:"deleted_at"`
 }
 
+/************************ Implement design pattern for Product ************************/
+
+/************************ Filter info ************************/
 func FilteredResponse(product *Product) Product {
 	return Product{
 		ID:          product.ID,
