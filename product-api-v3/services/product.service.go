@@ -1,7 +1,7 @@
 package services
 
 import (
-	"github.com/huavanthong/microservice-golang/product-api-v3/models"
+	models "github.com/huavanthong/microservice-golang/product-api-v3/models/product"
 	"github.com/huavanthong/microservice-golang/product-api-v3/payload"
 )
 

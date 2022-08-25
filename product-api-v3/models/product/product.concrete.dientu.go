@@ -1,13 +1,13 @@
 package models
 
 type product_dientu struct {
-	product
+	Product
 }
 
-func NewProductDienTu iProduct {
+func NewProductDienTu() iProduct {
 	return &product_dientu{
-        product: product{
-            Name:  "AK47 gun",
-        },
-    }
+		Product: Product{
+			Name: "AK47 gun",
+		},
+	}
 }

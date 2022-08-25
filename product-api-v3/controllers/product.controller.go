@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"github.com/huavanthong/microservice-golang/product-api-v3/models"
+	models "github.com/huavanthong/microservice-golang/product-api-v3/models/product"
 	"github.com/huavanthong/microservice-golang/product-api-v3/payload"
 	"github.com/huavanthong/microservice-golang/product-api-v3/services"
 )

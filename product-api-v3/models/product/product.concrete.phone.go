@@ -1,13 +1,13 @@
 package models
 
 type product_phone struct {
-	product
+	Product
 }
 
-func NewProductPhone iProduct {
+func NewProductPhone() iProduct {
 	return &product_phone{
-        product: product{
-            Name:  "Phone",
-        },
-    }
+		Product: Product{
+			Name: "Phone",
+		},
+	}
 }

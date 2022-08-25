@@ -1,14 +1,13 @@
 package models
 
 type product_thoitrang struct {
-	product
+	Product
 }
 
-
-func NewProductThoiTrang iProduct {
+func NewProductThoiTrang() iProduct {
 	return &product_thoitrang{
-        product: product{
-            Name:  "Thoi trang gun",
-        },
-    }
+		Product: Product{
+			Name: "Thoi trang gun",
+		},
+	}
 }

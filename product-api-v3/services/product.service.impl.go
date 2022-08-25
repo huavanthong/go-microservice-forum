@@ -8,7 +8,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/huavanthong/microservice-golang/product-api-v3/models"
+	models "github.com/huavanthong/microservice-golang/product-api-v3/models/product"
 	"github.com/huavanthong/microservice-golang/product-api-v3/payload"
 	"github.com/huavanthong/microservice-golang/product-api-v3/utils"
 	"go.mongodb.org/mongo-driver/bson"
@@ -39,7 +39,7 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 	temp.Price = pr.Price
 	temp.ProductCode = "p" + utils.RandCode(9)
 	temp.SKU = "ABC-XXX-YYY"
-	temp.CreatedAt = time.Now()
+	temp.CreatedAt = time.Now().String()
 	temp.UpdatedAt = temp.CreatedAt
 
 	/*** ObjectID: Bson generate object id ***/
