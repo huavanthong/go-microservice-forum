@@ -2,12 +2,15 @@ package models
 
 import "fmt"
 
-func getProductType(gunType string) (iGun, error) {
-	if gunType == "ak47" {
-		return newAk47(), nil
+func getProductType(productType string) (iProduct, error) {
+	if productType == "phone" {
+		return NewProductPhone(), nil
 	}
-	if gunType == "maverick" {
-		return newMaverick(), nil
+	if productType == "dien-tu" {
+		return NewProductDienTu(), nil
 	}
-	return nil, fmt.Errorf("Wrong gun type passed")
+	if productType == "cloths" {
+		return NewProductThoiTrang(), nil
+	}
+	return nil, fmt.Errorf("Wrong product type passed")
 }

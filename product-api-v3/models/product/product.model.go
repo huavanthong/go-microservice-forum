@@ -20,21 +20,125 @@ type product struct {
 	DeleteAt    string             `json:"deleted_at" bson:"deleted_at"`
 }
 
-/************************ Implement design pattern for Product ************************/
+/************************ Implement setter/getter method for Product ************************/
+func (product *product) GetID() primitive.ObjectID {
+	return product.ID
+}
+
+func (product *product) SetID(ID primitive.ObjectID) *product {
+	product.ID = ID
+	return product
+}
+
+func (product *product) GetProductCode() string {
+	return product.ProductCode
+}
+
+func (product *product) SetProductCode(ProductCode string) *product {
+	product.ProductCode = ProductCode
+	return product
+}
+
+func (product *product) GetName() string {
+	return product.Name
+}
+
+func (product *product) SetName(Name string) *product {
+	product.Name = Name
+	return product
+}
+
+func (product *product) GetCategory() string {
+	return product.Category
+}
+
+func (product *product) SetCategory(Category string) *product {
+	product.Category = Category
+	return product
+}
+
+func (product *product) GetSummary() string {
+	return product.Summary
+}
+
+func (product *product) SetSummary(Summary string) *product {
+	product.Summary = Summary
+	return product
+}
+
+func (product *product) GetDescription() string {
+	return product.Description
+}
+
+func (product *product) SetDescription(Description string) *product {
+	product.Description = Description
+	return product
+}
+
+func (product *product) GetImageFile() string {
+	return product.ImageFile
+}
+
+func (product *product) SetImageFile(ImageFile string) *product {
+	product.ImageFile = ImageFile
+	return product
+}
+
+func (product *product) GetPrice() float64 {
+	return product.Price
+}
+func (product *product) SetPrice(Price float64) *product {
+	product.Price = Price
+	return product
+}
+
+func (product *product) GetSKU() string {
+	return product.SKU
+}
+func (product *product) SetSKU(SKU string) *product {
+	product.SKU = SKU
+	return product
+}
+
+func (product *product) GetCreatedAt() string {
+	return product.CreatedAt
+}
+
+func (product *product) SetCreatedAt(CreatedAt string) *product {
+	product.CreatedAt = CreatedAt
+	return product
+}
+func (product *product) GetUpdatedAt() string {
+	return product.UpdatedAt
+}
+
+func (product *product) SetUpdatedAt(UpdatedAt string) *product {
+	product.UpdatedAt = UpdatedAt
+	return product
+}
+
+func (product *product) GetDeleteAt() string {
+	return product.DeleteAt
+}
+
+func (product *product) SetDeleteAt(DeleteAt string) *product {
+	product.DeleteAt = DeleteAt
+	return product
+}
 
 /************************ Filter info ************************/
-func FilteredResponse(product *Product) Product {
-	return Product{
-		ID:          product.ID,
-		ProductCode: product.ProductCode,
-		Name:        product.Name,
-		Category:    product.Category,
-		Summary:     product.Summary,
-		Description: product.Description,
-		ImageFile:   product.ImageFile,
-		Price:       product.Price,
-		SKU:         product.SKU,
-		CreatedAt:   product.CreatedAt,
-		UpdatedAt:   product.UpdatedAt,
+func FilteredResponse(p *product) product {
+	return product{
+		ID:          p.ID,
+		ProductCode: p.ProductCode,
+		Name:        p.Name,
+		Category:    p.Category,
+		Summary:     p.Summary,
+		Description: p.Description,
+		ImageFile:   p.ImageFile,
+		Price:       p.Price,
+		SKU:         p.SKU,
+		CreatedAt:   p.CreatedAt,
+		UpdatedAt:   p.UpdatedAt,
 	}
 }
