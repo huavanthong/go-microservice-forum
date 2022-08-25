@@ -4,27 +4,27 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type iProduct interface {
 	GetID() primitive.ObjectID
-	SetID(ID primitive.ObjectID) *product
+	SetID(ID primitive.ObjectID) *Product
 	GetProductCode() string
-	SetProductCode(ProductCode string) *product
+	SetProductCode(ProductCode string) *Product
 	GetName() string
-	SetName(Name string) *product
+	SetName(Name string) *Product
 	GetCategory() string
-	SetCategory(Category string) *product
+	SetCategory(Category string) *Product
 	GetSummary() string
-	SetSummary(Summary string) *product
+	SetSummary(Summary string) *Product
 	GetDescription() string
-	SetDescription(Description string) *product
+	SetDescription(Description string) *Product
 	GetImageFile() string
-	SetImageFile(ImageFile string) *product
+	SetImageFile(ImageFile string) *Product
 	GetPrice() float64
-	SetPrice(Price float64) *product
+	SetPrice(Price float64) *Product
 	GetSKU() string
-	SetSKU(SKU string) *product
+	SetSKU(SKU string) *Product
 	GetCreatedAt() string
-	SetCreatedAt(CreatedAt string) *product
+	SetCreatedAt(CreatedAt string) *Product
 	GetUpdatedAt() string
-	SetUpdatedAt(UpdatedAt string) *product
+	SetUpdatedAt(UpdatedAt string) *Product
 	GetDeleteAt() string
-	SetDeleteAt(DeleteAt string) *product
+	SetDeleteAt(DeleteAt string) *Product
 }

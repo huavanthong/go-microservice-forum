@@ -5,7 +5,7 @@
  */
 package payload
 
-import "github.com/huavanthong/microservice-golang/product-api-v3/models"
+import models "github.com/huavanthong/microservice-golang/product-api-v3/models/product"
 
 // Error defines the response error
 type CreateProductSuccess struct {
