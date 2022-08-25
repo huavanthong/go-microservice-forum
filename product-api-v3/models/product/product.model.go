@@ -8,6 +8,7 @@ import (
 type Product struct {
 	ID          primitive.ObjectID `bson:"_id" json:"id" example:"5bbdadf782ebac06a695a8e7"`
 	ProductCode string             `bson:"pcode" json:"pcode" binding:"required" example:"p123456789"`
+	ProductType string             `bson:"ptype" json:"ptype" binding:"required" example:"phone"`
 	Name        string             `json:"name" bson:"name" binding:"required,gt=0,lt=255" example:"Iphone 14 Pro"`
 	Category    string             `json:"category" bson:"category" binding:"required,gt=0,lt=255" example:"Phone"`
 	Summary     string             `json:"summary" bson:"summary" binding:"required,gt=0,lt=10000" example:"Iphone 14 Pro Gold"`

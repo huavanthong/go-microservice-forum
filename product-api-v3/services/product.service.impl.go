@@ -32,6 +32,7 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 	// Initialize the basic info of product
 	var temp models.Product
 	temp.Name = pr.Name
+	temp.ProductType = pr.Name
 	temp.Category = pr.Category
 	temp.Summary = pr.Summary
 	temp.Description = pr.Description
