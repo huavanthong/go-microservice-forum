@@ -29,9 +29,15 @@ type GetProductSuccess struct {
 	Data    *models.Product
 }
 
+type GetProductsSuccess struct {
+	Status  string `json:"status" example:"success"`
+	Code    int    `json:"code" example:"201"`
+	Message string `json:"message" example:"Get product success"`
+	Data    []*models.Product
+}
 type UpdateProductSuccess struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Update a exist post success"`
-	Data    *models.Product
+	Data    models.Product
 }

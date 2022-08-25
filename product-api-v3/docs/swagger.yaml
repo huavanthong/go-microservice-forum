@@ -3,25 +3,34 @@ definitions:
   models.Product:
     properties:
       category:
+        example: Phone
         type: string
       created_at:
         type: string
       description:
+        example: Iphone 14 Pro Gold 256GB
         type: string
       id:
+        example: 5bbdadf782ebac06a695a8e7
         type: string
       imageFile:
+        example: default.png
         type: string
       name:
+        example: Iphone 14 Pro
         type: string
       pcode:
+        example: p123456789
         type: string
       price:
+        example: 1400
         minimum: 0.01
         type: number
       sku:
+        example: ABC-XYZ-OXY
         type: string
       summary:
+        example: Iphone 14 Pro Gold
         type: string
       updated_at:
         type: string
@@ -49,6 +58,35 @@ definitions:
         type: string
     type: object
   payload.RequestCreateProduct:
+    properties:
+      category:
+        example: Phone
+        type: string
+      description:
+        example: Iphone 14 Pro Gold 256GB
+        type: string
+      imageFile:
+        example: default.png
+        type: string
+      name:
+        example: Iphone 14 Pro
+        type: string
+      price:
+        example: 1400
+        minimum: 0.01
+        type: number
+      summary:
+        example: Iphone 14 Pro Gold
+        type: string
+    required:
+    - category
+    - description
+    - imageFile
+    - name
+    - price
+    - summary
+    type: object
+  payload.RequestUpdateProduct:
     properties:
       category:
         example: Phone
@@ -240,7 +278,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/models.Product'
+          $ref: '#/definitions/payload.RequestUpdateProduct'
       - description: Product ID
         in: path
         name: id

@@ -5,8 +5,12 @@
 ## Design with Golang
 * How to design
     - Tutorial for designing on Golang. Refer: [here](https://github.com/techschool/simplebank)
+    - Design Pattern with experience. Refer: [here](https://github.com/iluwatar/java-design-patterns)
+    - Design RESTful API with microservice, perfect design. Refer: [here](https://github.com/restuwahyu13/gin-rest-api)
 * Roadmap
     - For developer with Golang. Refer: [here](https://github.com/Alikhll/golang-developer-roadmap)
+* Database
+    - Think about database. Refer: [here](https://dev.to/fabric_commerce/building-a-hybrid-sql-nosql-e-commerce-data-model-3fc3)
 ## Architecture
 * Project
     - Project ASP.NET example for demo microservice. Refer: [here](https://mehmetozkaya.medium.com/aspnetrun-microservices-renewed-d08901b5e06f), [doc](https://medium.com/aspnetrun/microservices-architecture-on-net-3b4865eea03f), [source](https://github.com/aspnetrun/run-aspnetcore-microservices)

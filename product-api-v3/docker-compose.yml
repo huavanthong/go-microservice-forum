@@ -1,8 +1,8 @@
 version: '3'
 services:
-  mongodb:
+  productdb:
     image: mongo
-    container_name: mongodb
+    container_name: productdb
     restart: always
     env_file:
       - ./app.env
@@ -10,7 +10,7 @@ services:
     ports:
       - '6000:27017'
     volumes:
-      - mongodb:/data/db
+      - productdb:/data/db
 
 volumes:
-  mongodb:
+  productdb:

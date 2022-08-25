@@ -356,7 +356,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Product"
+                            "$ref": "#/definitions/payload.RequestUpdateProduct"
                         }
                     },
                     {
@@ -404,35 +404,44 @@ const docTemplate = `{
             ],
             "properties": {
                 "category": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Phone"
                 },
                 "created_at": {
                     "type": "string"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Iphone 14 Pro Gold 256GB"
                 },
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "5bbdadf782ebac06a695a8e7"
                 },
                 "imageFile": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "default.png"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Iphone 14 Pro"
                 },
                 "pcode": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "p123456789"
                 },
                 "price": {
                     "type": "number",
-                    "minimum": 0.01
+                    "minimum": 0.01,
+                    "example": 1400
                 },
                 "sku": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "ABC-XYZ-OXY"
                 },
                 "summary": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Iphone 14 Pro Gold"
                 },
                 "updated_at": {
                     "type": "string"
@@ -460,6 +469,44 @@ const docTemplate = `{
             }
         },
         "payload.RequestCreateProduct": {
+            "type": "object",
+            "required": [
+                "category",
+                "description",
+                "imageFile",
+                "name",
+                "price",
+                "summary"
+            ],
+            "properties": {
+                "category": {
+                    "type": "string",
+                    "example": "Phone"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Iphone 14 Pro Gold 256GB"
+                },
+                "imageFile": {
+                    "type": "string",
+                    "example": "default.png"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Iphone 14 Pro"
+                },
+                "price": {
+                    "type": "number",
+                    "minimum": 0.01,
+                    "example": 1400
+                },
+                "summary": {
+                    "type": "string",
+                    "example": "Iphone 14 Pro Gold"
+                }
+            }
+        },
+        "payload.RequestUpdateProduct": {
             "type": "object",
             "required": [
                 "category",
