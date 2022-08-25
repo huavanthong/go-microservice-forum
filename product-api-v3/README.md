@@ -4,13 +4,14 @@ There are a lot of content you need to remember.
 
 
 # Database Design
-![Database Product Microservice](./docs/images/database/product-database.png)
+![Database Product Microservice](./docs/images/database/product-database-v2.png)
 
 # Table of Contents
-1. [Part 1:](#part-1) CRUD REST Api on product service.
+1. [Part 1: CRUD REST Api on product service.](#part-1-crud-api) 
+2. [Part 2: MongoDB](#part-2-monogdb)
+3. [Part 3: Design Pattern](#part-3-design-pattern)
 
-
-### Part 1
+### Part 1: CRUD API
 * CRUD REST Api on product service.
 	- Understand the difference between... [Refer](https://pkg.go.dev/github.com/gin-gonic/gin#readme-parameters-in-path)
 		- Parameter in path. [Solution 1](#parameter-in-path)
@@ -18,7 +19,7 @@ There are a lot of content you need to remember.
 		- Multipart/Urlencoded Form
 		- Map asj
 
-### Part 2 
+### Part 2: MonogDB
 * Indexes in Mongodb.
 	- [Measure time](#measure-time) Measure query time in Mongodb. [Refer](https://viblo.asia/p/tim-hieu-ve-index-trong-mongodb-924lJL4WKPM)
 	- [Indexes](#indexes-in-mongodb) How to use Indexes in MongoDB. [Refer](https://viblo.asia/p/su-dung-index-trong-sql-query-1ZnbRlPQR2Xo)
@@ -26,10 +27,13 @@ There are a lot of content you need to remember.
 * Experience using NoSQL Database.
 	- Building a Hybrid SQL + NoSQL E-Commerce Data Model . Refer: [here](https://dev.to/fabric_commerce/building-a-hybrid-sql-nosql-e-commerce-data-model-3fc3)
 	- What's an Example of Good E-Commerce Database Design. Refer: [here](https://dev.to/fabric_commerce/what-s-an-example-of-good-e-commerce-database-design-3e9l)
-### Part 3
-* Design Pattern for Product/
+### Part 3: Design Pattern
+* Design Pattern for Product
 	- Template for design pattern on product. Refer: [here](https://ui-patterns.com/patterns/ProductPage)
 	- [Builder](#design-pattern---builder-for-product) Design pattern for product in microservice. Refer: [here](https://github.com/anhthii/golang-design-pattern)
+* Concepts.
+	- Difference between Product Types and Product Category. Refer: [here](https://support.sugarcrm.com/Knowledge_Base/Products_Quotes/Product_Types_vs_Product_Categories/)
+
 # Designer
 ### Measure time
 * Step 1: Start Mongodb Shell
