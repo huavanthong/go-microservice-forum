@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	"github.com/huavanthong/microservice-golang/product-api-v3/models"
 	"github.com/huavanthong/microservice-golang/product-api-v3/payload"
 	"github.com/huavanthong/microservice-golang/product-api-v3/services"
 )
@@ -64,7 +63,7 @@ func (cc *CategoryController) GetAllCategories(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.GetAllProductSuccess{
+		payload.GetAllCategoriesSuccess{
 			Status:  "success",
 			Code:    http.StatusCreated,
 			Message: "Get all categories success",
@@ -86,10 +85,10 @@ func (cc *CategoryController) GetAllCategories(ctx *gin.Context) {
 func (cc *CategoryController) GetCategoryByID(ctx *gin.Context) {
 
 	// filter parameter id from context
-	productId := ctx.Params.ByName("id")
+	categoryId := ctx.Params.ByName("id")
 
 	// find category by id
-	product, err := cc.categoryService.FindCategorytByID(productId)
+	category, err := cc.categoryService.FindCategoryByID(categoryId)
 
 	// catch error
 	if err != nil {
@@ -113,11 +112,11 @@ func (cc *CategoryController) GetCategoryByID(ctx *gin.Context) {
 
 	// succes
 	ctx.JSON(http.StatusOK,
-		payload.GetProductSuccess{
+		payload.GetCategorySuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get category success",
-			Data:    product,
+			Data:    category,
 		})
 
 }
@@ -161,7 +160,7 @@ func (cc *CategoryController) GetCategoryByName(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.GetCategorySuccess{
+		payload.GetAllCategorySuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get category success",
@@ -199,7 +198,7 @@ func (cc *CategoryController) AddCategory(ctx *gin.Context) {
 	}
 
 	// call post service to create the post
-	category, err := cc.categoryService.CreateProduct(reqCategory)
+	category, err := cc.categoryService.CreateCategory(reqCategory)
 	if err != nil {
 		if strings.Contains(err.Error(), "title already exists") {
 			ctx.JSON(http.StatusConflict,
@@ -225,7 +224,7 @@ func (cc *CategoryController) AddCategory(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusCreated,
 			Message: "Create a new category success",
-			Data:    models.FilteredResponse(category),
+			Data:    category,
 		})
 
 }
@@ -286,7 +285,7 @@ func (cc *CategoryController) UpdateCategory(ctx *gin.Context) {
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Update a exist category success",
-			Data:    models.FilteredResponse(updatedCategory),
+			Data:    updatedCategory,
 		})
 }
 

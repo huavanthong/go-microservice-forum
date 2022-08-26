@@ -11,13 +11,13 @@ type Product struct {
 	ProductCode string             `bson:"pcode" json:"pcode" binding:"required" example:"p123456789"`
 	ProductType string             `bson:"ptype" json:"ptype" binding:"required" example:"phone"`
 	Name        string             `json:"name" bson:"name" binding:"required,gt=0,lt=255" example:"Iphone 14 Pro"`
-	Category    models.Category    `json:"category" bson:"category" binding:"required,gt=0,lt=255" example:"Phone"`
-	Inventory   models.Inventory   `json:"inventory" bson:"inventory" binding:"required" example:"10"`
-	Brand       models.Brand       `json:"brand" bson:"brand" binding:"required" example:"Apple"`
+	Category    models.Category    `json:"category" bson:"category" binding:"required,gt=0,lt=255"`
+	Inventory   models.Inventory   `json:"inventory" bson:"inventory" binding:"required"`
+	Brand       models.Brand       `json:"brand" bson:"brand" binding:"required"`
 	Summary     string             `json:"summary" bson:"summary" binding:"required,gt=0,lt=10000" example:"Iphone 14 Pro Gold"`
 	Description string             `json:"description" bson:"description" binding:"required,gt=0,lt=10000" example:"Iphone 14 Pro Gold 256GB"`
 	ImageFile   string             `json:"imageFile" bson:"imageFile" binding:"required" example:"default.png"`
-	Discount    models.Discount    `json:"discount" bson:"discount" binding:"required" example:"10"`
+	Discount    models.Discount    `json:"discount" bson:"discount" binding:"required"`
 	Price       float64            `json:"price" bson:"price" binding:"required,min=0.01" example:"1400"`
 	SKU         string             `json:"sku" bson:"sku" example:"ABC-XYZ-OXY"`
 	CreatedAt   string             `json:"created_at" bson:"created_at"`

@@ -12,10 +12,10 @@ type CreateCategorySuccess struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Create a new post success"`
-	Data    models.Category
+	Data    *models.Category
 }
 
-type GetAllCategorySuccess struct {
+type GetAllCategoriesSuccess struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Get all categories success"`
@@ -40,5 +40,5 @@ type UpdateCategorySuccess struct {
 	Status  string `json:"status" example:"success"`
 	Code    int    `json:"code" example:"201"`
 	Message string `json:"message" example:"Update a exist category success"`
-	Data    models.Category
+	Data    *models.Category
 }

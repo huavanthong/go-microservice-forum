@@ -1,21 +1,103 @@
 basePath: /api/v3
 definitions:
-  models.Product:
+  models.Brand:
     properties:
-      category:
-        example: Phone
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Category:
+    properties:
+      ccode:
+        example: c1000
         type: string
       created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        example: Ao khoac thoi trang cho nu
+        type: string
+      id:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
+      name:
+        example: ao-khoac-nu
+        type: string
+      subcategory:
+        items:
+          $ref: '#/definitions/models.SubCategory'
+        type: array
+      updated_at:
+        type: string
+    required:
+    - ccode
+    - name
+    type: object
+  models.Discount:
+    properties:
+      active:
+        type: boolean
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      discountpercent:
+        type: number
+      id:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Inventory:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      id:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
+      quantity:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      brand:
+        $ref: '#/definitions/models.Brand'
+      category:
+        $ref: '#/definitions/models.Category'
+      created_at:
+        type: string
+      deleted_at:
         type: string
       description:
         example: Iphone 14 Pro Gold 256GB
         type: string
+      discount:
+        $ref: '#/definitions/models.Discount'
       id:
         example: 5bbdadf782ebac06a695a8e7
         type: string
       imageFile:
         example: default.png
         type: string
+      inventory:
+        $ref: '#/definitions/models.Inventory'
       name:
         example: Iphone 14 Pro
         type: string
@@ -26,6 +108,9 @@ definitions:
         example: 1400
         minimum: 0.01
         type: number
+      ptype:
+        example: phone
+        type: string
       sku:
         example: ABC-XYZ-OXY
         type: string
@@ -35,13 +120,47 @@ definitions:
       updated_at:
         type: string
     required:
+    - brand
     - category
     - description
+    - discount
     - imageFile
+    - inventory
     - name
     - pcode
     - price
+    - ptype
     - summary
+    type: object
+  models.SubCategory:
+    properties:
+      categorytype:
+        example: 1
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  payload.GetCategorySuccess:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data:
+        $ref: '#/definitions/models.Category'
+      message:
+        example: Get category success
+        type: string
+      status:
+        example: success
+        type: string
     type: object
   payload.GetProductSuccess:
     properties:
@@ -57,11 +176,25 @@ definitions:
         example: success
         type: string
     type: object
+  payload.RequestCreateCategory:
+    properties:
+      category:
+        $ref: '#/definitions/models.SubCategory'
+      description:
+        example: products relalated to phone category
+        type: string
+      name:
+        example: phone
+        type: string
+    required:
+    - category
+    - description
+    - name
+    type: object
   payload.RequestCreateProduct:
     properties:
       category:
-        example: Phone
-        type: string
+        $ref: '#/definitions/models.Category'
       description:
         example: Iphone 14 Pro Gold 256GB
         type: string
@@ -89,8 +222,7 @@ definitions:
   payload.RequestUpdateProduct:
     properties:
       category:
-        example: Phone
-        type: string
+        $ref: '#/definitions/models.Category'
       description:
         example: Iphone 14 Pro Gold 256GB
         type: string
@@ -135,6 +267,196 @@ info:
   title: UserManagement Service API Document
   version: "1.0"
 paths:
+  /category:
+    get:
+      consumes:
+      - application/json
+      description: List all existing categories of store
+      parameters:
+      - description: Page
+        in: path
+        name: page
+        required: true
+        type: string
+      - description: Limit
+        in: path
+        name: limit
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/payload.Response'
+      summary: List all existing categories
+      tags:
+      - category
+  /category/:
+    post:
+      consumes:
+      - application/json
+      description: Admin create a new category to storage
+      parameters:
+      - description: New Category
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/payload.RequestCreateCategory'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.GetProductSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new category
+      tags:
+      - category
+  /category/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: User delete the category by category ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a category by ID
+      tags:
+      - category
+    get:
+      consumes:
+      - application/json
+      description: Get an category by ID
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.GetCategorySuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      summary: Get an category by ID
+      tags:
+      - category
+    patch:
+      consumes:
+      - application/json
+      description: User update category info
+      parameters:
+      - description: Update post
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/payload.RequestUpdateProduct'
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Update a category
+      tags:
+      - category
+  /category/name/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Get category by name
+      parameters:
+      - description: Name of Category
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.GetProductSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Get category by name
+      tags:
+      - category
   /products:
     get:
       consumes:
