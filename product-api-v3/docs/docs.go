@@ -968,11 +968,13 @@ const docTemplate = `{
                 "imageFile",
                 "name",
                 "price",
+                "producttype",
                 "summary"
             ],
             "properties": {
                 "category": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "dien thoai"
                 },
                 "description": {
                     "type": "string",
@@ -990,6 +992,10 @@ const docTemplate = `{
                     "type": "number",
                     "minimum": 0.01,
                     "example": 1400
+                },
+                "producttype": {
+                    "type": "string",
+                    "example": "phone"
                 },
                 "summary": {
                     "type": "string",

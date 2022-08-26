@@ -25,23 +25,24 @@ type Product struct {
 	DeleteAt    string             `json:"deleted_at" bson:"deleted_at"`
 }
 
+type ProductCategory struct {
+}
+
 /************************ Implement setter/getter method for Product ************************/
 func (product *Product) GetID() primitive.ObjectID {
 	return product.ID
 }
 
-func (product *Product) SetID(ID primitive.ObjectID) *Product {
+func (product *Product) SetID(ID primitive.ObjectID) {
 	product.ID = ID
-	return product
 }
 
 func (product *Product) GetProductCode() string {
 	return product.ProductCode
 }
 
-func (product *Product) SetProductCode(ProductCode string) *Product {
+func (product *Product) SetProductCode(ProductCode string) {
 	product.ProductCode = ProductCode
-	return product
 }
 
 func (product *Product) GetName() string {
@@ -56,8 +57,8 @@ func (product *Product) GetCategory() models.Category {
 	return product.Category
 }
 
-func (product *Product) SetCategories(Category models.Category) {
-	product.Category = Category
+func (product *Product) SetCategory(Category string) {
+	product.Category.Name = Category
 }
 
 func (product *Product) GetInventory() models.Inventory {
@@ -102,6 +103,7 @@ func (product *Product) SetImageFile(ImageFile string) {
 func (product *Product) GetDiscount() models.Discount {
 	return product.Discount
 }
+
 func (product *Product) SetDiscount(Discount models.Discount) {
 	product.Discount = Discount
 }

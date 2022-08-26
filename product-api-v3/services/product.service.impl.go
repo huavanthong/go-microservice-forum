@@ -30,7 +30,7 @@ func NewProductServiceImpl(log *zap.Logger, collection *mongo.Collection, ctx co
 func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*models.Product, error) {
 
 	// Use Factory Design Pattern to get product following product type
-	temp, _ := models.GetProductType(pr.ProductType)
+	temp, _ := models.GetProductType(models.ProductType(pr.ProductType))
 
 	// Initialize the basic info of product
 	temp.SetName(pr.Name)
@@ -42,10 +42,10 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 	temp.SetProductCode("p" + utils.RandCode(9))
 	temp.SetSKU("ABC-XXX-YYY")
 	temp.SetCreatedAt(time.Now().String())
-	temp.SetUpdatedAt(temp.CreatedAt)
+	temp.SetUpdatedAt(temp.GetCreatedAt())
 
 	/*** ObjectID: Bson generate object id ***/
-	temp.ID = primitive.NewObjectID()
+	temp.SetID(primitive.NewObjectID())
 
 	_, err := p.collection.InsertOne(p.ctx, temp)
 
@@ -67,7 +67,7 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 
 	var product *models.Product
 	// query := bson.M{"_id": res.InsertedID}
-	query := bson.M{"_id": temp.ID}
+	query := bson.M{"_id": temp.GetID()}
 
 	if err = p.collection.FindOne(p.ctx, query).Decode(&product); err != nil {
 		return nil, err

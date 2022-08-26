@@ -16,7 +16,7 @@ type iProduct interface {
 	SetName(Name string)
 
 	GetCategory() models.Category
-	SetCategory(Category models.Category)
+	SetCategory(Category string)
 
 	GetInventory() models.Inventory
 	SetInventory(Inventory models.Inventory)
