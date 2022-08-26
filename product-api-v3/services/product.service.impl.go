@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 
@@ -30,24 +31,42 @@ func NewProductServiceImpl(log *zap.Logger, collection *mongo.Collection, ctx co
 func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*models.Product, error) {
 
 	// Use Factory Design Pattern to get product following product type
-	temp, _ := models.GetProductType(models.ProductType(pr.ProductType))
+	productType, perr := models.GetProductType(models.ProductType(pr.ProductType))
+	if perr != nil {
+		return nil, perr
+	}
+
+	var product *models.Product
+
+	switch utils.TypeOfModel(productType) {
+	case "phone":
+		product, _ = productType.(*models.product_phone)
+		break
+	case "dien-tu":
+		product, _ = productType.(*models.product_dientu)
+		break
+	case "thoi-trang":
+		product, _ = productType.(*models.product_thoitrang)
+	default:
+		return nil, fmt.Errorf("Wrong product type passed")
+	}
 
 	// Initialize the basic info of product
-	temp.SetName(pr.Name)
-	temp.SetCategory(pr.Category)
-	temp.SetSummary(pr.Summary)
-	temp.SetDescription(pr.Description)
-	temp.SetImageFile(pr.ImageFile)
-	temp.SetPrice(pr.Price)
-	temp.SetProductCode("p" + utils.RandCode(9))
-	temp.SetSKU("ABC-XXX-YYY")
-	temp.SetCreatedAt(time.Now().String())
-	temp.SetUpdatedAt(temp.GetCreatedAt())
+	product.SetName(pr.Name)
+	product.SetCategory(pr.Category)
+	product.SetSummary(pr.Summary)
+	product.SetDescription(pr.Description)
+	product.SetImageFile(pr.ImageFile)
+	product.SetPrice(pr.Price)
+	product.SetProductCode("p" + utils.RandCode(9))
+	product.SetSKU("ABC-XXX-YYY")
+	product.SetCreatedAt(time.Now().String())
+	product.SetUpdatedAt(product.GetCreatedAt())
 
 	/*** ObjectID: Bson generate object id ***/
-	temp.SetID(primitive.NewObjectID())
+	product.SetID(primitive.NewObjectID())
 
-	_, err := p.collection.InsertOne(p.ctx, temp)
+	_, err := p.collection.InsertOne(p.ctx, product)
 
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
@@ -65,11 +84,12 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 		return nil, errors.New("could not create index for pcode")
 	}
 
-	var product *models.Product
+	var showProduct *models.Product
 	// query := bson.M{"_id": res.InsertedID}
-	query := bson.M{"_id": temp.GetID()}
 
-	if err = p.collection.FindOne(p.ctx, query).Decode(&product); err != nil {
+	query := bson.M{"_id": product.GetID()}
+
+	if err = p.collection.FindOne(p.ctx, query).Decode(&showProduct); err != nil {
 		return nil, err
 	}
 
