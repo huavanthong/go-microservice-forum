@@ -160,7 +160,7 @@ func (cc *CategoryController) GetCategoryByName(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.GetAllCategorySuccess{
+		payload.GetAllCategoriesSuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Get category success",
@@ -179,7 +179,7 @@ func (cc *CategoryController) GetCategoryByName(ctx *gin.Context) {
 // @Param product body payload.RequestCreateCategory true "New Category"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
-// @Success 200 {object} payload.GetProductSuccess
+// @Success 200 {object} payload.GetCategorySuccess
 // @Router /category/ [post]
 func (cc *CategoryController) AddCategory(ctx *gin.Context) {
 

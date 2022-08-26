@@ -9,11 +9,11 @@ type CategoryRouteController struct {
 	categoryController controllers.CategoryController
 }
 
-func NewRouteProductController(categoryController controllers.CategoryController) CategoryRouteController {
+func NewRouteCategoryController(categoryController controllers.CategoryController) CategoryRouteController {
 	return CategoryRouteController{categoryController}
 }
 
-func (cc *CategoryRouteController) ProductRoute(rg *gin.RouterGroup) {
+func (cc *CategoryRouteController) CategoryRoute(rg *gin.RouterGroup) {
 
 	router := rg.Group("category")
 	router.GET("/", cc.categoryController.GetAllCategories)

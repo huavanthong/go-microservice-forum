@@ -98,7 +98,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.GetProductSuccess"
+                            "$ref": "#/definitions/payload.GetCategorySuccess"
                         }
                     },
                     "404": {
