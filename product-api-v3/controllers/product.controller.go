@@ -10,7 +10,7 @@ import (
 
 	models "github.com/huavanthong/microservice-golang/product-api-v3/models/product"
 	"github.com/huavanthong/microservice-golang/product-api-v3/payload"
-	services "github.com/huavanthong/microservice-golang/product-api-v3/services/product"
+	"github.com/huavanthong/microservice-golang/product-api-v3/services"
 )
 
 type ProductController struct {
