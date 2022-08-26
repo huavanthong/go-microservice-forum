@@ -142,8 +142,10 @@ definitions:
       deleted_at:
         type: string
       description:
+        example: Ao khoac chong nang cho nu
         type: string
       name:
+        example: ao-khoac-chong-nang-nu
         type: string
       updated_at:
         type: string
@@ -178,18 +180,18 @@ definitions:
     type: object
   payload.RequestCreateCategory:
     properties:
-      category:
-        $ref: '#/definitions/models.SubCategory'
       description:
         example: products relalated to phone category
         type: string
       name:
         example: phone
         type: string
+      subcategory:
+        $ref: '#/definitions/models.SubCategory'
     required:
-    - category
     - description
     - name
+    - subcategory
     type: object
   payload.RequestCreateProduct:
     properties:
@@ -307,7 +309,7 @@ paths:
       parameters:
       - description: New Category
         in: body
-        name: product
+        name: category
         required: true
         schema:
           $ref: '#/definitions/payload.RequestCreateCategory'

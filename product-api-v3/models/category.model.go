@@ -18,8 +18,8 @@ type Category struct {
 
 type SubCategory struct {
 	CategoryType int    `bson:"categorytype" json:"categorytype" example:"001"`
-	Name         string `json:"name" bson:"name"`
-	Description  string `json:"description" bson:"description"`
+	Name         string `json:"name" bson:"name" example:"ao-khoac-chong-nang-nu"`
+	Description  string `json:"description" bson:"description" example:"Ao khoac chong nang cho nu"`
 	CreatedAt    string `json:"created_at" bson:"created_at"`
 	UpdatedAt    string `json:"updated_at" bson:"updated_at"`
 	DeleteAt     string `json:"deleted_at" bson:"deleted_at"`

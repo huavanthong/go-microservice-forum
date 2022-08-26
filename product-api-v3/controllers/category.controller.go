@@ -176,7 +176,7 @@ func (cc *CategoryController) GetCategoryByName(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param product body payload.RequestCreateCategory true "New Category"
+// @Param category body payload.RequestCreateCategory true "New Category"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetCategorySuccess

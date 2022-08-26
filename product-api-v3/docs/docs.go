@@ -86,7 +86,7 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "description": "New Category",
-                        "name": "product",
+                        "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -887,10 +887,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Ao khoac chong nang cho nu"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "ao-khoac-chong-nang-nu"
                 },
                 "updated_at": {
                     "type": "string"
@@ -940,14 +942,11 @@ const docTemplate = `{
         "payload.RequestCreateCategory": {
             "type": "object",
             "required": [
-                "category",
                 "description",
-                "name"
+                "name",
+                "subcategory"
             ],
             "properties": {
-                "category": {
-                    "$ref": "#/definitions/models.SubCategory"
-                },
                 "description": {
                     "type": "string",
                     "example": "products relalated to phone category"
@@ -955,6 +954,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string",
                     "example": "phone"
+                },
+                "subcategory": {
+                    "$ref": "#/definitions/models.SubCategory"
                 }
             }
         },
