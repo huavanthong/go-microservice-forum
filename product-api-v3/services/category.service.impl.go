@@ -27,30 +27,25 @@ func NewCategoryServiceImpl(log *zap.Logger, collection *mongo.Collection, ctx c
 	return &CategoryServiceImpl{log, collection, ctx}
 }
 
-func (c *CategoryServiceImpl) CreateCategory(pr *payload.RequestCreateCategory) (*models.Category, error) {
+func (c *CategoryServiceImpl) CreateCategory(rc *payload.RequestCreateCategory) (*models.Category, error) {
 
-	// Initialize the basic info of product
-	var temp models.Product
-	temp.Name = pr.Name
-	temp.ProductType = pr.Name
-	temp.Category = pr.Category
-	temp.Summary = pr.Summary
-	temp.Description = pr.Description
-	temp.ImageFile = pr.ImageFile
-	temp.Price = pr.Price
-	temp.ProductCode = "p" + utils.RandCode(9)
-	temp.SKU = "ABC-XXX-YYY"
+	// Initialize the basic info of category
+	var temp models.Category
+	temp.Name = rc.Name
+	temp.CategoryCode = "c" + utils.RandCode(4)
+	temp.SubCategories = nil
+	temp.Description = rc.Description
 	temp.CreatedAt = time.Now().String()
 	temp.UpdatedAt = temp.CreatedAt
 
 	/*** ObjectID: Bson generate object id ***/
 	temp.ID = primitive.NewObjectID()
 
-	_, err := p.collection.InsertOne(p.ctx, temp)
+	_, err := c.collection.InsertOne(c.ctx, temp)
 
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
-			return nil, errors.New("product with that pcode already exists")
+			return nil, errors.New("category with that ccode already exists")
 		}
 		return nil, err
 	}
@@ -58,21 +53,21 @@ func (c *CategoryServiceImpl) CreateCategory(pr *payload.RequestCreateCategory) 
 	opt := options.Index()
 	opt.SetUnique(true)
 
-	index := mongo.IndexModel{Keys: bson.M{"pcode": 1}, Options: opt}
+	index := mongo.IndexModel{Keys: bson.M{"ccode": 1}, Options: opt}
 
-	if _, err := p.collection.Indexes().CreateOne(p.ctx, index); err != nil {
-		return nil, errors.New("could not create index for pcode")
+	if _, err := c.collection.Indexes().CreateOne(c.ctx, index); err != nil {
+		return nil, errors.New("could not create index for ccode")
 	}
 
-	var product *models.Product
+	var category *models.Category
 	// query := bson.M{"_id": res.InsertedID}
 	query := bson.M{"_id": temp.ID}
 
-	if err = p.collection.FindOne(p.ctx, query).Decode(&product); err != nil {
+	if err = c.collection.FindOne(c.ctx, query).Decode(&category); err != nil {
 		return nil, err
 	}
 
-	return product, nil
+	return category, nil
 
 }
 
@@ -97,26 +92,26 @@ func (c *CategoryServiceImpl) FindAllCategories(page int, limit int) ([]*models.
 	// create a query command
 	query := bson.M{}
 
-	// find all products with optional data
-	cursor, err := p.collection.Find(p.ctx, query, &opt)
+	// find all categories with optional data
+	cursor, err := c.collection.Find(c.ctx, query, &opt)
 	if err != nil {
 		return nil, err
 	}
-	defer cursor.Close(p.ctx)
+	defer cursor.Close(c.ctx)
 
 	// create container for data
-	var products []*models.Product
+	var categories []*models.Category
 
 	// with data find out, we will decode them and append to array
-	for cursor.Next(p.ctx) {
-		product := &models.Product{}
-		err := cursor.Decode(product)
+	for cursor.Next(c.ctx) {
+		category := &models.Category{}
+		err := cursor.Decode(category)
 
 		if err != nil {
 			return nil, err
 		}
 
-		products = append(products, product)
+		categories = append(categories, category)
 	}
 
 	// if any item error, return err
@@ -125,11 +120,11 @@ func (c *CategoryServiceImpl) FindAllCategories(page int, limit int) ([]*models.
 	}
 
 	// if data is empty, return nil
-	if len(products) == 0 {
-		return []*models.Product{}, nil
+	if len(categories) == 0 {
+		return []*models.Category{}, nil
 	}
 
-	return products, nil
+	return categories, nil
 }
 
 func (c *CategoryServiceImpl) FindCategoryByID(id string) (*models.Category, error) {
@@ -140,10 +135,10 @@ func (c *CategoryServiceImpl) FindCategoryByID(id string) (*models.Category, err
 	query := bson.M{"_id": obId}
 
 	// create container
-	var product *models.Product
+	var category *models.Category
 
 	// find one post by query command
-	if err := p.collection.FindOne(p.ctx, query).Decode(&product); err != nil {
+	if err := c.collection.FindOne(c.ctx, query).Decode(&category); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, errors.New("no document with that Id exists")
 		}
@@ -151,7 +146,7 @@ func (c *CategoryServiceImpl) FindCategoryByID(id string) (*models.Category, err
 		return nil, err
 	}
 
-	return product, nil
+	return category, nil
 }
 
 func (c *CategoryServiceImpl) FindCategoryByName(name string) ([]*models.Category, error) {
@@ -162,26 +157,26 @@ func (c *CategoryServiceImpl) FindCategoryByName(name string) ([]*models.Categor
 	query := bson.M{"name": strings.ToLower(name)}
 
 	// find one user by query command
-	cursor, err := p.collection.Find(p.ctx, query, nil)
+	cursor, err := c.collection.Find(c.ctx, query, nil)
 
 	if err != nil {
 		return nil, err
 	}
-	defer cursor.Close(p.ctx)
+	defer cursor.Close(c.ctx)
 
 	// create container for data
-	var products []*models.Product
+	var categories []*models.Category
 
 	// with data find out, we will decode them and append to array
-	for cursor.Next(p.ctx) {
-		product := &models.Product{}
-		err := cursor.Decode(product)
+	for cursor.Next(c.ctx) {
+		category := &models.Category{}
+		err := cursor.Decode(category)
 
 		if err != nil {
 			return nil, err
 		}
 
-		products = append(products, product)
+		categories = append(categories, category)
 	}
 
 	// if any item error, return err
@@ -190,14 +185,14 @@ func (c *CategoryServiceImpl) FindCategoryByName(name string) ([]*models.Categor
 	}
 
 	// if data is empty, return nil
-	if len(products) == 0 {
-		return []*models.Product{}, nil
+	if len(categories) == 0 {
+		return []*models.Category{}, nil
 	}
 
-	return products, nil
+	return categories, nil
 }
 
-func (c *CategoryServiceImpl) UpdateCategory(id string, pr *payload.RequestUpdateProduct) (*models.Product, error) {
+func (c *CategoryServiceImpl) UpdateCategory(id string, pr *payload.RequestUpdateCategory) (*models.Category, error) {
 
 	doc, err := utils.ToDoc(pr)
 	if err != nil {
@@ -207,15 +202,15 @@ func (c *CategoryServiceImpl) UpdateCategory(id string, pr *payload.RequestUpdat
 	obId, _ := primitive.ObjectIDFromHex(id)
 	query := bson.D{{Key: "_id", Value: obId}}
 	update := bson.D{{Key: "$set", Value: doc}}
-	res := p.collection.FindOneAndUpdate(p.ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
+	res := c.collection.FindOneAndUpdate(c.ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
 
-	var updatedPost *models.Product
+	var updatedCategory *models.Category
 
-	if err := res.Decode(&updatedPost); err != nil {
+	if err := res.Decode(&updatedCategory); err != nil {
 		return nil, errors.New("no post with that Id exists")
 	}
 
-	return updatedPost, nil
+	return updatedCategory, nil
 }
 
 func (c *CategoryServiceImpl) DeleteCategory(id string) error {
@@ -223,7 +218,7 @@ func (c *CategoryServiceImpl) DeleteCategory(id string) error {
 	obId, _ := primitive.ObjectIDFromHex(id)
 	query := bson.M{"_id": obId}
 
-	res, err := p.collection.DeleteOne(p.ctx, query)
+	res, err := c.collection.DeleteOne(c.ctx, query)
 	if err != nil {
 		return err
 	}
