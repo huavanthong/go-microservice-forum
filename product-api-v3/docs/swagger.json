@@ -949,7 +949,7 @@
                     "example": "phone"
                 },
                 "subcategory": {
-                    "$ref": "#/definitions/models.SubCategory"
+                    "type": "string"
                 }
             }
         },
@@ -965,7 +965,7 @@
             ],
             "properties": {
                 "category": {
-                    "$ref": "#/definitions/models.Category"
+                    "type": "string"
                 },
                 "description": {
                     "type": "string",
@@ -1002,7 +1002,7 @@
             ],
             "properties": {
                 "category": {
-                    "$ref": "#/definitions/models.Category"
+                    "type": "string"
                 },
                 "description": {
                     "type": "string",

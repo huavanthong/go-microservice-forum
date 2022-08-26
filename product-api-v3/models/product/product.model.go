@@ -48,112 +48,99 @@ func (product *Product) GetName() string {
 	return product.Name
 }
 
-func (product *Product) SetName(Name string) *Product {
+func (product *Product) SetName(Name string) {
 	product.Name = Name
-	return product
 }
 
 func (product *Product) GetCategory() models.Category {
 	return product.Category
 }
 
-func (product *Product) SetCategories(Category models.Category) *Product {
+func (product *Product) SetCategories(Category models.Category) {
 	product.Category = Category
-	return product
 }
 
 func (product *Product) GetInventory() models.Inventory {
 	return product.Inventory
 }
 
-func (product *Product) SetInventory(Inventory models.Inventory) *Product {
+func (product *Product) SetInventory(Inventory models.Inventory) {
 	product.Inventory = Inventory
-	return product
 }
 
 func (product *Product) GetBrand() models.Brand {
 	return product.Brand
 }
-func (product *Product) SetBrand(Brand models.Brand) *Product {
+func (product *Product) SetBrand(Brand models.Brand) {
 	product.Brand = Brand
-	return product
 }
 
 func (product *Product) GetSummary() string {
 	return product.Summary
 }
 
-func (product *Product) SetSummary(Summary string) *Product {
+func (product *Product) SetSummary(Summary string) {
 	product.Summary = Summary
-	return product
 }
 
 func (product *Product) GetDescription() string {
 	return product.Description
 }
 
-func (product *Product) SetDescription(Description string) *Product {
+func (product *Product) SetDescription(Description string) {
 	product.Description = Description
-	return product
 }
 
 func (product *Product) GetImageFile() string {
 	return product.ImageFile
 }
 
-func (product *Product) SetImageFile(ImageFile string) *Product {
+func (product *Product) SetImageFile(ImageFile string) {
 	product.ImageFile = ImageFile
-	return product
 }
 
 func (product *Product) GetDiscount() models.Discount {
 	return product.Discount
 }
-func (product *Product) SetDiscount(Discount models.Discount) *Product {
+func (product *Product) SetDiscount(Discount models.Discount) {
 	product.Discount = Discount
-	return product
 }
 
 func (product *Product) GetPrice() float64 {
 	return product.Price
 }
-func (product *Product) SetPrice(Price float64) *Product {
+func (product *Product) SetPrice(Price float64) {
 	product.Price = Price
-	return product
 }
 
 func (product *Product) GetSKU() string {
 	return product.SKU
 }
-func (product *Product) SetSKU(SKU string) *Product {
+func (product *Product) SetSKU(SKU string) {
 	product.SKU = SKU
-	return product
 }
 
 func (product *Product) GetCreatedAt() string {
 	return product.CreatedAt
 }
 
-func (product *Product) SetCreatedAt(CreatedAt string) *Product {
+func (product *Product) SetCreatedAt(CreatedAt string) {
 	product.CreatedAt = CreatedAt
-	return product
 }
 func (product *Product) GetUpdatedAt() string {
 	return product.UpdatedAt
 }
 
-func (product *Product) SetUpdatedAt(UpdatedAt string) *Product {
+func (product *Product) SetUpdatedAt(UpdatedAt string) {
 	product.UpdatedAt = UpdatedAt
-	return product
 }
 
 func (product *Product) GetDeleteAt() string {
 	return product.DeleteAt
 }
 
-func (product *Product) SetDeleteAt(DeleteAt string) *Product {
+func (product *Product) SetDeleteAt(DeleteAt string) {
 	product.DeleteAt = DeleteAt
-	return product
 }
 
 /************************ Filter info ************************/

@@ -29,19 +29,20 @@ func NewProductServiceImpl(log *zap.Logger, collection *mongo.Collection, ctx co
 
 func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*models.Product, error) {
 
+	// Use Factory Design Pattern to get product following product type
+	temp, _ := models.GetProductType(pr.ProductType)
+
 	// Initialize the basic info of product
-	var temp models.Product
-	temp.Name = pr.Name
-	temp.ProductType = pr.Name
-	temp.Category = pr.Category
-	temp.Summary = pr.Summary
-	temp.Description = pr.Description
-	temp.ImageFile = pr.ImageFile
-	temp.Price = pr.Price
-	temp.ProductCode = "p" + utils.RandCode(9)
-	temp.SKU = "ABC-XXX-YYY"
-	temp.CreatedAt = time.Now().String()
-	temp.UpdatedAt = temp.CreatedAt
+	temp.SetName(pr.Name)
+	temp.SetCategory(pr.Category)
+	temp.SetSummary(pr.Summary)
+	temp.SetDescription(pr.Description)
+	temp.SetImageFile(pr.ImageFile)
+	temp.SetPrice(pr.Price)
+	temp.SetProductCode("p" + utils.RandCode(9))
+	temp.SetSKU("ABC-XXX-YYY")
+	temp.SetCreatedAt(time.Now().String())
+	temp.SetUpdatedAt(temp.CreatedAt)
 
 	/*** ObjectID: Bson generate object id ***/
 	temp.ID = primitive.NewObjectID()

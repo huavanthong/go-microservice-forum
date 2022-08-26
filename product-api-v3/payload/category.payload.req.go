@@ -5,18 +5,14 @@
  */
 package payload
 
-import (
-	"github.com/huavanthong/microservice-golang/product-api-v3/models"
-)
-
 type RequestCreateCategory struct {
-	Name        string             `json:"name" bson:"name" binding:"required,gt=0,lt=255" example:"phone"`
-	Description string             `json:"description" bson:"description" binding:"required,gt=0,lt=10000" example:"products relalated to phone category"`
-	SubCategory models.SubCategory `json:"subcategory" bson:"subcategory" binding:"required,gt=0,lt=255"`
+	Name        string `json:"name" bson:"name" binding:"required,gt=0,lt=255" example:"phone"`
+	Description string `json:"description" bson:"description" binding:"required,gt=0,lt=10000" example:"products relalated to phone category"`
+	SubCategory string `json:"subcategory" bson:"subcategory" binding:"required,gt=0,lt=255"`
 }
 
 type RequestUpdateCategory struct {
-	Name        string             `json:"name" bson:"name" binding:"required,gt=0,lt=255" example:"phone"`
-	SubCategory models.SubCategory `json:"subcategory" bson:"subcategory" binding:"required,gt=0,lt=255"`
-	Description string             `json:"description" bson:"description" binding:"required,gt=0,lt=10000" example:"products relalated to phone category"`
+	Name        string `json:"name" bson:"name" binding:"required,gt=0,lt=255" example:"phone"`
+	SubCategory string `json:"subcategory" bson:"subcategory" binding:"required,gt=0,lt=255"`
+	Description string `json:"description" bson:"description" binding:"required,gt=0,lt=10000" example:"products relalated to phone category"`
 }

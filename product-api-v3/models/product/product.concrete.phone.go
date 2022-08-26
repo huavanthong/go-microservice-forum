@@ -6,8 +6,6 @@ type product_phone struct {
 
 func NewProductPhone() iProduct {
 	return &product_phone{
-		Product: Product{
-			Name: "Phone",
-		},
+		Product: Product{},
 	}
 }

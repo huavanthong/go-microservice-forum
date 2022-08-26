@@ -956,7 +956,7 @@ const docTemplate = `{
                     "example": "phone"
                 },
                 "subcategory": {
-                    "$ref": "#/definitions/models.SubCategory"
+                    "type": "string"
                 }
             }
         },
@@ -972,7 +972,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "category": {
-                    "$ref": "#/definitions/models.Category"
+                    "type": "string"
                 },
                 "description": {
                     "type": "string",
@@ -1009,7 +1009,7 @@ const docTemplate = `{
             ],
             "properties": {
                 "category": {
-                    "$ref": "#/definitions/models.Category"
+                    "type": "string"
                 },
                 "description": {
                     "type": "string",

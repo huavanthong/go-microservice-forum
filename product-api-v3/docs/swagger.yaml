@@ -187,7 +187,7 @@ definitions:
         example: phone
         type: string
       subcategory:
-        $ref: '#/definitions/models.SubCategory'
+        type: string
     required:
     - description
     - name
@@ -196,7 +196,7 @@ definitions:
   payload.RequestCreateProduct:
     properties:
       category:
-        $ref: '#/definitions/models.Category'
+        type: string
       description:
         example: Iphone 14 Pro Gold 256GB
         type: string
@@ -224,7 +224,7 @@ definitions:
   payload.RequestUpdateProduct:
     properties:
       category:
-        $ref: '#/definitions/models.Category'
+        type: string
       description:
         example: Iphone 14 Pro Gold 256GB
         type: string

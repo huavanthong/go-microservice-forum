@@ -2,15 +2,26 @@ package models
 
 import "fmt"
 
-func getProductType(productType string) (iProduct, error) {
-	if productType == "phone" {
+// Define Product Type
+type ProductType string
+
+// Define constant value
+const (
+	Phone  ProductType = "phone"
+	DienTu             = "dien-tu"
+	Cloths             = "thoi-trang"
+)
+
+func GetProductType(ptype ProductType) (iProduct, error) {
+
+	switch ptype {
+	case Phone:
 		return NewProductPhone(), nil
-	}
-	if productType == "dien-tu" {
+	case DienTu:
 		return NewProductDienTu(), nil
-	}
-	if productType == "cloths" {
+	case Cloths:
 		return NewProductThoiTrang(), nil
+	default:
+		return nil, fmt.Errorf("Wrong product type passed")
 	}
-	return nil, fmt.Errorf("Wrong product type passed")
 }
