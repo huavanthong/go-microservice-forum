@@ -37,6 +37,12 @@ var (
 	ProductController      controllers.ProductController
 	productCollection      *mongo.Collection
 	ProductRouteController routes.ProductRouteController
+
+	// Category Controller setting
+	categoryService         services.CategoryService
+	CategoryController      controllers.CategoryController
+	categoryCollection      *mongo.Collection
+	CategoryRouteController routes.CategoryRouteController
 )
 
 func init() {
@@ -72,6 +78,12 @@ func init() {
 	productService = services.NewProductServiceImpl(logger, productCollection, ctx)
 	ProductController = controllers.NewProductController(logger, productService)
 	ProductRouteController = routes.NewRouteProductController(ProductController)
+
+	// Add the Category Service, Controllers and Routes
+	categoryCollection = mongoclient.Database("golang_mongodb").Collection("category")
+	categoryService = services.NewCategoryServiceImpl(logger, categoryCollection, ctx)
+	CategoryController = controllers.NewCategoryController(logger, categoryService)
+	CategoryRouteController = routes.NewRouteCategoryController(CategoryController)
 
 	// Default returns an Engine instance with the Logger and Recovery middleware already attached.
 	server = gin.Default()
@@ -119,6 +131,7 @@ func startGinServer(config config.Config) {
 
 	/************************ Controller  *************************/
 	ProductRouteController.ProductRoute(router)
+	CategoryRouteController.CategoryRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
