@@ -10,7 +10,7 @@ import (
 
 	"github.com/huavanthong/microservice-golang/product-api-v3/models"
 	"github.com/huavanthong/microservice-golang/product-api-v3/payload"
-	"github.com/huavanthong/microservice-golang/product-api-v3/services"
+	services "github.com/huavanthong/microservice-golang/product-api-v3/services/category"
 )
 
 type CategoryController struct {
