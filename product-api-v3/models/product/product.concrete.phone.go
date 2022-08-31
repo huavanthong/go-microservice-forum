@@ -1,12 +1,12 @@
 package models
 
-type product_phone struct {
+type Product_phone struct {
 	Product
 	Model string
 }
 
 func NewProductPhone() iProduct {
-	return &product_phone{
+	return &Product_phone{
 		Product: Product{},
 		Model:   "test",
 	}

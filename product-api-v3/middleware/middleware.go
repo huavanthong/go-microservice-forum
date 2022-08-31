@@ -42,3 +42,5 @@ package middleware
 // 		next.ServeHTTP(rw, r)
 // 	})
 // }
+
+func SelectProductType()

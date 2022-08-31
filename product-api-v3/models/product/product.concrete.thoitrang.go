@@ -1,12 +1,12 @@
 package models
 
-type product_thoitrang struct {
+type Product_thoitrang struct {
 	Product
 	origin string
 }
 
 func NewProductThoiTrang() iProduct {
-	return &product_thoitrang{
+	return &Product_thoitrang{
 		Product: Product{
 			Name: "Thoi trang gun",
 		},
