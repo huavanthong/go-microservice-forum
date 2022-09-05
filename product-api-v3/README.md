@@ -18,7 +18,10 @@ There are a lot of content you need to remember.
 		- Querystring parameters
 		- Multipart/Urlencoded Form
 		- Map asj
-
+	- create product programmatically. [Refer](https://www.mageplaza.com/devdocs/magento-2-create-product-programmatically.html)
+	- Design REST API experience. [Refer](https://developer.adobe.com/commerce/webapi/rest/tutorials/)
+* Important terms in e-commerce.
+	-  Understand about SKU. [Refer](https://xuatnhapkhauleanh.edu.vn/sku-la-gi-y-nghia-cua-sku-trong-quan-tri-kho-hang.html)
 ### Part 2: MonogDB
 * Indexes in Mongodb.
 	- [Measure time](#measure-time) Measure query time in Mongodb. [Refer](https://viblo.asia/p/tim-hieu-ve-index-trong-mongodb-924lJL4WKPM)
