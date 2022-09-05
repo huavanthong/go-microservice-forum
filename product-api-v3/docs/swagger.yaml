@@ -33,7 +33,7 @@ definitions:
         type: string
       subcategory:
         items:
-          $ref: '#/definitions/models.SubCategory'
+          type: string
         type: array
       updated_at:
         type: string
@@ -131,24 +131,6 @@ definitions:
     - price
     - ptype
     - summary
-    type: object
-  models.SubCategory:
-    properties:
-      categorytype:
-        example: 1
-        type: integer
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      description:
-        example: Ao khoac chong nang cho nu
-        type: string
-      name:
-        example: ao-khoac-chong-nang-nu
-        type: string
-      updated_at:
-        type: string
     type: object
   payload.GetCategorySuccess:
     properties:
@@ -501,38 +483,6 @@ paths:
       summary: List all existing products
       tags:
       - products
-  /products/:
-    post:
-      consumes:
-      - application/json
-      description: User create a product
-      parameters:
-      - description: New Product
-        in: body
-        name: product
-        required: true
-        schema:
-          $ref: '#/definitions/payload.RequestCreateProduct'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/payload.GetProductSuccess'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/payload.Response'
-        "502":
-          description: Bad Gateway
-          schema:
-            $ref: '#/definitions/payload.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: Create a product
-      tags:
-      - products
   /products/{id}:
     delete:
       consumes:
@@ -631,6 +581,38 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update a product
+      tags:
+      - products
+  /products/{productType}:
+    post:
+      consumes:
+      - application/json
+      description: User create a product
+      parameters:
+      - description: New Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/payload.RequestCreateProduct'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/payload.GetProductSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/payload.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/payload.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a product
       tags:
       - products
   /products/category/{category}:

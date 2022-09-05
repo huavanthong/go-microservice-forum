@@ -21,7 +21,8 @@ func (pc *ProductRouteController) ProductRoute(rg *gin.RouterGroup) {
 	router.GET("/:id", pc.productController.GetProductByID)
 	router.GET("/name/:name", pc.productController.GetProductByName)
 	router.GET("/category/:category", pc.productController.GetProductByCategory)
-	router.POST("/", pc.productController.AddProduct)
 	router.PATCH("/:id", pc.productController.UpdateProduct)
 	router.DELETE("/:id", pc.productController.DeleteProductByID)
+	router.POST("/", pc.productController.AddProduct)
+
 }

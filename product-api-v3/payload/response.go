@@ -26,3 +26,22 @@ type ErrorItem struct {
 	LocationType string `json:"locationtype" example:"region"`
 	Location     string `json:"location" example:"SOUTHAMERICA-EAST1"`
 }
+
+type ResponseSuccess struct {
+	Status  string      `json:"statusCode"`
+	Code    int         `json:"method"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+type Responses struct {
+	StatusCode int    `json:"statusCode"`
+	Method     string `json:"method"`
+	Message    string `json:"message"`
+}
+
+type ErrorResponse struct {
+	StatusCode int         `json:"statusCode"`
+	Method     string      `json:"method"`
+	Error      interface{} `json:"error"`
+}

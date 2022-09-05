@@ -1,5 +1,11 @@
 package middleware
 
+import (
+	"fmt"
+
+	"github.com/gin-gonic/gin"
+)
+
 // import (
 // 	"context"
 // 	"net/http"
@@ -43,4 +49,26 @@ package middleware
 // 	})
 // }
 
-func SelectProductType()
+func SelectProductType() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// Use Factory Design Pattern to get product following product type
+		productType, perr := models.GetProductType(models.ProductType(pr.ProductType))
+		if perr != nil {
+			return perr
+		}
+
+		switch utils.TypeOfModel(productType) {
+		case "phone":
+			productPhone, _ := productType.(*models.Product_phone)
+			break
+		case "dien-tu":
+			productDienTu, _ := productType.(*models.Product_dientu)
+			break
+		case "thoi-trang":
+			productThoiTrang, _ := productType.(*models.Product_thoitrang)
+		default:
+			return fmt.Errorf("Wrong product type passed")
+		}
+
+	}
+}

@@ -66,7 +66,7 @@ func (pc *ProductController) GetAllProducts(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.GetAllProductSuccess{
+		payload.ResponseSuccess{
 			Status:  "success",
 			Code:    http.StatusCreated,
 			Message: "Get all products success",
@@ -236,6 +236,14 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 
 }
 
+func HandlerProduct(h gin.HandlerFunc, decors ...func(gin.HandlerFunc) gin.HandlerFunc) gin.HandlerFunc {
+	for i := range decors {
+		d := decors[len(decors)-1-i] // iterate in reverse
+		h = d(h)
+	}
+	return h
+}
+
 // AddProduct godoc
 // @Summary Create a product
 // @Description User create a product
@@ -247,7 +255,7 @@ func (pc *ProductController) GetProductByCategory(ctx *gin.Context) {
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
 // @Success 200 {object} payload.GetProductSuccess
-// @Router /products/ [post]
+// @Router /products/{productType} [post]
 func (pc *ProductController) AddProduct(ctx *gin.Context) {
 
 	// prepare a post request from ctx
@@ -287,7 +295,7 @@ func (pc *ProductController) AddProduct(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated,
-		payload.CreateProductSuccess{
+		payload.ResponseSuccess{
 			Status:  "success",
 			Code:    http.StatusCreated,
 			Message: "Create a product success",
@@ -348,7 +356,7 @@ func (pc *ProductController) UpdateProduct(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK,
-		payload.UpdateProductSuccess{
+		payload.ResponseSuccess{
 			Status:  "success",
 			Code:    http.StatusOK,
 			Message: "Update a exist post success",

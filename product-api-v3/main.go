@@ -2,9 +2,13 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"go.uber.org/zap"
 
@@ -45,6 +49,79 @@ var (
 	CategoryRouteController routes.CategoryRouteController
 )
 
+func dropCollections(db *mongo.Database) error {
+
+	return nil
+}
+
+func initCollections(db *mongo.Database) error {
+
+	/* Initialize data for Category */
+	dataCategory, err := ioutil.ReadFile("common/data/categorydata.json")
+	if err != nil {
+		return err
+	}
+
+	var categories []interface{}
+	if err := json.Unmarshal(dataCategory, &categories); err != nil {
+		return err
+	}
+
+	categoriesResult, err := db.Collection("category").InsertMany(ctx, categories)
+	fmt.Printf("Inserted %v documents into category collection!\n", categoriesResult)
+
+	/* Initialize data for SubCategory */
+	dataSubCategory, err := ioutil.ReadFile("common/data/subcategory.json")
+	if err != nil {
+		return err
+	}
+
+	var subCategories []interface{}
+	if err := json.Unmarshal(dataSubCategory, &subCategories); err != nil {
+		return err
+	}
+
+	subCategoriesResult, err := db.Collection("subcategory").InsertMany(ctx, subCategories)
+	fmt.Printf("Inserted %v documents into sub category collection!\n", subCategoriesResult)
+
+	return err
+}
+
+func handleFlags(db *mongo.Database) {
+
+	enableDummyData := flag.Bool("enable-data", false, "Enable dummy data for testing")
+	initData := flag.Bool("init-data", false, "Set this flag if DB should be initialized with dummy data")
+	drop := flag.Bool("drop-table", false, "Set this flag if you wan't to drop all user data in your DB")
+	flag.Parse()
+
+	if *enableDummyData {
+		if *drop {
+			msg := ""
+			if err := dropCollections(db); err != nil {
+				msg = fmt.Sprintf("Error dropping table: %v", err)
+			} else {
+				msg = "Dropped all collections in DB"
+			}
+
+			fmt.Println(msg)
+			os.Exit(0)
+		}
+
+		if *initData {
+			msg := ""
+			if err := initCollections(db); err != nil {
+				msg = fmt.Sprintf("Error initializing data in DB: %v", err)
+			} else {
+				msg = "Initialized data in DB."
+			}
+
+			fmt.Println(msg)
+			os.Exit(0)
+		}
+	}
+
+}
+
 func init() {
 
 	// Loading config from variable environment
@@ -72,6 +149,9 @@ func init() {
 	}
 
 	fmt.Println("MongoDB successfully connected...")
+
+	/************************ import data for testing on MongoDB  ************************/
+	handleFlags(mongoclient.Database("golang_mongodb"))
 
 	// Add the Product Service, Controllers and Routes
 	productCollection = mongoclient.Database("golang_mongodb").Collection("products")

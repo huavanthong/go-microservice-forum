@@ -367,57 +367,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "User create a product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "products"
-                ],
-                "summary": "Create a product",
-                "parameters": [
-                    {
-                        "description": "New Product",
-                        "name": "product",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/payload.RequestCreateProduct"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.GetProductSuccess"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/products/category/{category}": {
             "get": {
                 "security": [
@@ -683,6 +632,57 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/products/{productType}": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "User create a product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Create a product",
+                "parameters": [
+                    {
+                        "description": "New Product",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/payload.RequestCreateProduct"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/payload.GetProductSuccess"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
+                        "schema": {
+                            "$ref": "#/definitions/payload.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -738,7 +738,7 @@ const docTemplate = `{
                 "subcategory": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/models.SubCategory"
+                        "type": "string"
                     }
                 },
                 "updated_at": {
@@ -867,32 +867,6 @@ const docTemplate = `{
                 "summary": {
                     "type": "string",
                     "example": "Iphone 14 Pro Gold"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.SubCategory": {
-            "type": "object",
-            "properties": {
-                "categorytype": {
-                    "type": "integer",
-                    "example": 1
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string",
-                    "example": "Ao khoac chong nang cho nu"
-                },
-                "name": {
-                    "type": "string",
-                    "example": "ao-khoac-chong-nang-nu"
                 },
                 "updated_at": {
                     "type": "string"

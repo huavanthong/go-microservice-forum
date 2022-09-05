@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strings"
 	"time"
 
@@ -28,47 +27,27 @@ func NewProductServiceImpl(log *zap.Logger, collection *mongo.Collection, ctx co
 	return &ProductServiceImpl{log, collection, ctx}
 }
 
-var productPhone models.Product_phone
-var productDienTu models.Product_dientu
-var productThoiTrang models.Product_thoitrang
-
 func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*models.Product, error) {
 
 	// Use Factory Design Pattern to get product following product type
-	productType, perr := models.GetProductType(models.ProductType(pr.ProductType))
-	if perr != nil {
-		return nil, perr
-	}
-
-	switch utils.TypeOfModel(productType) {
-	case "phone":
-		productPhone, _ := productType.(*models.Product_phone)
-		break
-	case "dien-tu":
-		productDienTu, _ := productType.(*models.Product_dientu)
-		break
-	case "thoi-trang":
-		productThoiTrang, _ := productType.(*models.Product_thoitrang)
-	default:
-		return nil, fmt.Errorf("Wrong product type passed")
-	}
+	temp, _ := models.GetProductType(models.ProductType(pr.ProductType))
 
 	// Initialize the basic info of product
-	productPhone.SetName(pr.Name)
-	productPhone.SetCategory(pr.Category)
-	productPhone.SetSummary(pr.Summary)
-	productPhone.SetDescription(pr.Description)
-	productPhone.SetImageFile(pr.ImageFile)
-	productPhone.SetPrice(pr.Price)
-	productPhone.SetProductCode("p" + utils.RandCode(9))
-	productPhone.SetSKU("ABC-XXX-YYY")
-	productPhone.SetCreatedAt(time.Now().String())
-	productPhone.SetUpdatedAt(productPhone.GetCreatedAt())
+	temp.SetName(pr.Name)
+	temp.SetCategory(pr.Category)
+	temp.SetSummary(pr.Summary)
+	temp.SetDescription(pr.Description)
+	temp.SetImageFile(pr.ImageFile)
+	temp.SetPrice(pr.Price)
+	temp.SetProductCode("p" + utils.RandCode(9))
+	temp.SetSKU("ABC-XXX-YYY")
+	temp.SetCreatedAt(time.Now().String())
+	temp.SetUpdatedAt(temp.GetCreatedAt())
 
 	/*** ObjectID: Bson generate object id ***/
-	productPhone.SetID(primitive.NewObjectID())
+	temp.SetID(primitive.NewObjectID())
 
-	_, err := p.collection.InsertOne(p.ctx, productPhone)
+	_, err := p.collection.InsertOne(p.ctx, temp)
 
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
@@ -86,12 +65,11 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 		return nil, errors.New("could not create index for pcode")
 	}
 
-	var showProduct *models.Product
+	var product *models.Product
 	// query := bson.M{"_id": res.InsertedID}
+	query := bson.M{"_id": temp.GetID()}
 
-	query := bson.M{"_id": productPhone.GetID()}
-
-	if err = p.collection.FindOne(p.ctx, query).Decode(&showProduct); err != nil {
+	if err = p.collection.FindOne(p.ctx, query).Decode(&product); err != nil {
 		return nil, err
 	}
 
@@ -99,74 +77,73 @@ func (p *ProductServiceImpl) CreateProduct(pr *payload.RequestCreateProduct) (*m
 
 }
 
-func (p *ProductServiceImpl) CreateProductPhone(pr *payload.RequestCreateProduct) (*models.Product_phone, error) {
+// func (p *ProductServiceImpl) CreateProductPhone(pr *payload.RequestCreateProduct) (*models.Product_phone, error) {
 
-	// Use Factory Design Pattern to get product following product type
-	productType, perr := models.GetProductType(models.ProductType(pr.ProductType))
-	if perr != nil {
-		return nil, perr
-	}
+// 	// Use Factory Design Pattern to get product following product type
+// 	productType, perr := models.GetProductType(models.ProductType(pr.ProductType))
+// 	if perr != nil {
+// 		return nil, perr
+// 	}
 
-	switch utils.TypeOfModel(productType) {
-	case "phone":
-		productPhone, _ := productType.(*models.Product_phone)
-		break
-	case "dien-tu":
-		productDienTu, _ := productType.(*models.Product_dientu)
-		break
-	case "thoi-trang":
-		productThoiTrang, _ := productType.(*models.Product_thoitrang)
-	default:
-		return nil, fmt.Errorf("Wrong product type passed")
-	}
+// 	switch utils.TypeOfModel(productType) {
+// 	case "phone":
+// 		productPhone, _ := productType.(*models.Product_phone)
+// 		break
+// 	case "dien-tu":
+// 		productDienTu, _ := productType.(*models.Product_dientu)
+// 		break
+// 	case "thoi-trang":
+// 		productThoiTrang, _ := productType.(*models.Product_thoitrang)
+// 	default:
+// 		return nil, fmt.Errorf("Wrong product type passed")
+// 	}
 
-	// Initialize the basic info of product
-	productPhone.SetName(pr.Name)
-	productPhone.SetCategory(pr.Category)
-	productPhone.SetSummary(pr.Summary)
-	productPhone.SetDescription(pr.Description)
-	productPhone.SetImageFile(pr.ImageFile)
-	productPhone.SetPrice(pr.Price)
-	productPhone.SetProductCode("p" + utils.RandCode(9))
-	productPhone.SetSKU("ABC-XXX-YYY")
-	productPhone.SetCreatedAt(time.Now().String())
-	productPhone.SetUpdatedAt(productPhone.GetCreatedAt())
+// 	// Initialize the basic info of product
+// 	productPhone.SetName(pr.Name)
+// 	productPhone.SetCategory(pr.Category)
+// 	productPhone.SetSummary(pr.Summary)
+// 	productPhone.SetDescription(pr.Description)
+// 	productPhone.SetImageFile(pr.ImageFile)
+// 	productPhone.SetPrice(pr.Price)
+// 	productPhone.SetProductCode("p" + utils.RandCode(9))
+// 	productPhone.SetSKU("ABC-XXX-YYY")
+// 	productPhone.SetCreatedAt(time.Now().String())
+// 	productPhone.SetUpdatedAt(productPhone.GetCreatedAt())
 
-	/*** ObjectID: Bson generate object id ***/
-	productPhone.SetID(primitive.NewObjectID())
+// 	/*** ObjectID: Bson generate object id ***/
+// 	productPhone.SetID(primitive.NewObjectID())
 
-	_, err := p.collection.InsertOne(p.ctx, productPhone)
+// 	_, err := p.collection.InsertOne(p.ctx, productPhone)
 
-	if err != nil {
-		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
-			return nil, errors.New("product with that pcode already exists")
-		}
-		return nil, err
-	}
-	// Create Indexesfor pcode, it help you easy to find product by pcode
-	opt := options.Index()
-	opt.SetUnique(true)
+// 	if err != nil {
+// 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
+// 			return nil, errors.New("product with that pcode already exists")
+// 		}
+// 		return nil, err
+// 	}
+// 	// Create Indexesfor pcode, it help you easy to find product by pcode
+// 	opt := options.Index()
+// 	opt.SetUnique(true)
 
-	index := mongo.IndexModel{Keys: bson.M{"pcode": 1}, Options: opt}
+// 	index := mongo.IndexModel{Keys: bson.M{"pcode": 1}, Options: opt}
 
-	if _, err := p.collection.Indexes().CreateOne(p.ctx, index); err != nil {
-		return nil, errors.New("could not create index for pcode")
-	}
+// 	if _, err := p.collection.Indexes().CreateOne(p.ctx, index); err != nil {
+// 		return nil, errors.New("could not create index for pcode")
+// 	}
 
-	var showProduct *models.Product
-	// query := bson.M{"_id": res.InsertedID}
+// 	var showProduct *models.Product
+// 	// query := bson.M{"_id": res.InsertedID}
 
-	query := bson.M{"_id": productPhone.GetID()}
+// 	query := bson.M{"_id": productPhone.GetID()}
 
-	if err = p.collection.FindOne(p.ctx, query).Decode(&showProduct); err != nil {
-		return nil, err
-	}
+// 	if err = p.collection.FindOne(p.ctx, query).Decode(&showProduct); err != nil {
+// 		return nil, err
+// 	}
 
-	return product, nil
+// 	return product, nil
+// }
 
-}
-
-func (p *ProductServiceImpl) FindAllProducts(page int, limit int, currency string) ([]*models.Product, error) {
+func (p *ProductServiceImpl) FindAllProducts(page int, limit int, currency string) (interface{}, error) {
 
 	// page return product
 	if page == 0 {
