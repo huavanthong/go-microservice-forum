@@ -51,7 +51,13 @@ var (
 
 func dropCollections(db *mongo.Database) error {
 
-	return nil
+	err := db.Collection("products").Drop()
+
+	err = db.Collection("category").Drop()
+
+	err = db.Collection("subcategory").Drop()
+
+	return err
 }
 
 func initCollections(db *mongo.Database) error {
