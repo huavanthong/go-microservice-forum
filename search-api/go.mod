@@ -3,9 +3,7 @@ module github.com/huavanthong/microservice-golang/search-api
 go 1.16
 
 require (
-	github.com/blend/go-sdk v1.20220212.5 // indirect
-	github.com/cucumber/godog v0.12.4
-	github.com/nicholasjackson/bench v1.0.2
-	github.com/stretchr/testify v1.7.0
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/mgo.v2 v2.0.0-20190816093944-a6b53ec6cb22
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
