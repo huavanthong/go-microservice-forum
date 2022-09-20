@@ -1,4 +1,4 @@
-module docker-compose
+module github.com/huavanthong/microservice-golang/search-api
 
 go 1.16
 

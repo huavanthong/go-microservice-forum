@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"docker-compose/data"
-	"docker-compose/handlers"
+	"github.com/huavanthong/microservice-golang/search-api/data"
+	"github.com/huavanthong/microservice-golang/search-api/handlers"
 )
 
 func main() {
