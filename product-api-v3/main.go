@@ -51,13 +51,13 @@ var (
 
 func dropCollections(db *mongo.Database) error {
 
-	err := db.Collection("products").Drop()
+	// err := db.Collection("products").Drop()
 
-	err = db.Collection("category").Drop()
+	// err = db.Collection("category").Drop()
 
-	err = db.Collection("subcategory").Drop()
+	// err = db.Collection("subcategory").Drop()
 
-	return err
+	return nil
 }
 
 func initCollections(db *mongo.Database) error {

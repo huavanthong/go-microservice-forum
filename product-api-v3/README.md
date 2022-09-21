@@ -11,6 +11,22 @@ There are a lot of content you need to remember.
 2. [Part 2: MongoDB](#part-2-monogdb)
 3. [Part 3: Design Pattern](#part-3-design-pattern)
 
+# Getting Started 
+To build and run this service
+```
+> go build
+>./product-api-v3.exe
+```
+
+To enable and init a dummy data for the collections for testing
+```
+>./product-api-v3.exe --enable-data --init-data
+```
+
+To delete all collections
+```
+>./product-api-v3.exe --enable-data --drop-table
+```
 ### Part 1: CRUD API
 * CRUD REST Api on product service.
 	- Understand the difference between... [Refer](https://pkg.go.dev/github.com/gin-gonic/gin#readme-parameters-in-path)
