@@ -131,7 +131,7 @@ func (cc *CategoryController) GetCategoryByID(ctx *gin.Context) {
 // @Param name path string true "Name of Category"
 // @Failure 404 {object} payload.Response
 // @Failure 502 {object} payload.Response
-// @Success 200 {object} payload.GetProductSuccess
+// @Success 200 {object} payload.GetCategorySuccess
 // @Router /category/name/{name} [get]
 func (cc *CategoryController) GetCategoryByName(ctx *gin.Context) {
 
