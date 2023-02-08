@@ -7,3 +7,5 @@ dev-down:
 go:
 	go run main.go
 
+swagger: 
+	swagger init

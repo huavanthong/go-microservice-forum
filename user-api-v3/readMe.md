@@ -1,3 +1,18 @@
+# Getting Started
+1. Run swagger to generate swagger documents.
+```
+swag init
+```
+Refer: [here](https://github.com/swaggo/gin-swagger)
+2. Build source 
+```
+go build
+```
+3. Open swagger.
+```
+
+```
+
 # Reference
 CRUD RESTful API with Golang + MongoDB + Redis + Gin Gonic
 #### Part 1
