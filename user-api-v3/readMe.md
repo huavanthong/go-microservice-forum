@@ -41,6 +41,7 @@ CRUD RESTful API with Golang + MongoDB + Redis + Gin Gonic
 	- [Middleware](#middleware-for-authorization) Design middleware for authorizing access token. [Refer]
 	- [Refresh Token](#work-flow-for-implementation-of-refresh-token) Understand how to implement refresh token. 
     - [Login Attempt](#solution-for-login-attempt) Design feature login attempt in Golang. [Refer](https://www.stackhawk.com/blog/golang-broken-authentication-guide-examples-and-prevention/)
+	- Feature to remember username & password. [Refer](https://www.codejava.net/coding/how-to-implement-remember-password-remember-me-for-java-web-application)
 #### Part 3
 * API with Golang + MongoDB: Send HTML Emails with Gomail
     - API with Golang + MongoDB: Send HTML Emails with Gomail. [Refer](https://codevoweb.com/api-golang-mongodb-send-html-emails-gomail)
