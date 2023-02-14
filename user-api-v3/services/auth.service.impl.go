@@ -42,6 +42,8 @@ func (uc *AuthServiceImpl) SignUpUser(userInfo *models.SignUpInput) (*models.DBR
 	// security: hash password using bcrypt
 	hashedPassword, _ := utils.HashPassword(userInfo.Password)
 	user.Password = hashedPassword
+
+	// Insert the id for the user after finishing the above steps.
 	_, err := uc.collection.InsertOne(uc.ctx, &user)
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
@@ -56,7 +58,6 @@ func (uc *AuthServiceImpl) SignUpUser(userInfo *models.SignUpInput) (*models.DBR
 	opt := options.Index()
 	opt.SetUnique(true)
 
-	// IndexModel represents a new index to be created.
 	index := mongo.IndexModel{Keys: bson.M{"email": 1}, Options: opt}
 
 	if _, err := uc.collection.Indexes().CreateOne(uc.ctx, index); err != nil {
@@ -78,6 +79,7 @@ func (uc *AuthServiceImpl) SignUpUser(userInfo *models.SignUpInput) (*models.DBR
 	return newUser, nil
 }
 
+// Process for SignInUser don't take any action at DB, so we will don't handle code for it
 func (uc *AuthServiceImpl) SignInUser(*models.SignInInput) (*models.DBResponse, error) {
 	return nil, nil
 }
