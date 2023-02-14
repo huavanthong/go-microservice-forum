@@ -1,16 +1,30 @@
 # Getting Started
-1. Run swagger to generate swagger documents.
+There are a lot of useful tips to
+## Swagger 
+Run swagger to generate swagger documents. Refer: [here](https://github.com/swaggo/gin-swagger)
 ```
 swag init
 ```
-Refer: [here](https://github.com/swaggo/gin-swagger)
-2. Build source 
+Open swagger.
+```
+http://localhost:8000/api/v3/swagger/index.html#/
+```
+## Build source
 ```
 go build
 ```
-3. Open swagger.
+## Database
+Connect MongoDB by using Database on VSCode.
 ```
+MONGO_INITDB_ROOT_USERNAME=root
+MONGO_INITDB_ROOT_PASSWORD=password123
 
+MONGODB_LOCAL_URI=mongodb://root:password123@localhost:6000
+```
+## Open Mail Trap
+To verify account after registration
+```
+https://mailtrap.io/inboxes/1807616/messages/3289327490
 ```
 
 # Reference
