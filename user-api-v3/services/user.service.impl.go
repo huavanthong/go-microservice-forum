@@ -91,7 +91,7 @@ func (uc *UserServiceImpl) UpsertUser(email string, data *models.UpdateDBUser) (
 	return updatedPost, nil
 }
 
-func (uc *UserServiceImpl) UpdateUserById(id string, field string, value string) (*models.DBResponse, error) {
+func (uc *UserServiceImpl) UpdateUserById(id string, field string, value interface{}) (*models.DBResponse, error) {
 
 	// convert string id to object id
 	objUserId, _ := primitive.ObjectIDFromHex(id)
