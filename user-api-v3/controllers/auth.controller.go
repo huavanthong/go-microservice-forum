@@ -172,6 +172,7 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	}
 
 	// Find user by email
+	fmt.Println("[Controller][Auth] Check result user: ", credentials.Email)
 	user, err := ac.userService.FindUserByEmail(credentials.Email)
 	fmt.Println("[Controller][Auth] Check result user: ", user)
 	if err != nil {
