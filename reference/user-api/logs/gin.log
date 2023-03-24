@@ -1,0 +1,54 @@
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /css/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (7 handlers)
+[GIN-debug] HEAD   /css/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (7 handlers)
+[GIN-debug] GET    /img/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (7 handlers)
+[GIN-debug] HEAD   /img/*filepath            --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (7 handlers)
+[GIN-debug] Loaded HTML Templates (8): 
+	- success.html
+	- 
+	- auth.tmpl
+	- battle.tmpl
+	- error.tmpl
+	- field.tmpl
+	- index.html
+	- index.tmpl
+
+[GIN-debug] GET    /                         --> github.com/huavanthong/microservice-golang/user-api/controllers.(*GoogleUser).IndexHandler-fm (7 handlers)
+[GIN-debug] GET    /login                    --> github.com/huavanthong/microservice-golang/user-api/controllers.(*GoogleUser).LoginGoogle-fm (7 handlers)
+[GIN-debug] GET    /auth                     --> github.com/huavanthong/microservice-golang/user-api/controllers.(*GoogleUser).AuthGoogleAccount-fm (7 handlers)
+[GIN-debug] POST   /api/v1/admin/auth/signin --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).Authenticate-fm (7 handlers)
+[GIN-debug] GET    /api/v1/admin/auth/social --> github.com/huavanthong/microservice-golang/user-api/controllers.(*GoogleUser).LoginGoogle-fm (7 handlers)
+[GIN-debug] GET    /api/v1/admin/auth        --> github.com/huavanthong/microservice-golang/user-api/controllers.(*GoogleUser).AuthGoogleAccount-fm (7 handlers)
+[GIN-debug] GET    /api/v1/admin/logout      --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).Logout-fm (7 handlers)
+[GIN-debug] POST   /api/v1/users             --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).AddUser-fm (8 handlers)
+[GIN-debug] GET    /api/v1/users/list        --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).ListUsers-fm (8 handlers)
+[GIN-debug] GET    /api/v1/users/detail/:id  --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).GetUserByID-fm (8 handlers)
+[GIN-debug] GET    /api/v1/users/            --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).GetUserByParams-fm (8 handlers)
+[GIN-debug] DELETE /api/v1/users/:id         --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).DeleteUserByID-fm (8 handlers)
+[GIN-debug] PATCH  /api/v1/users             --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).UpdateUser-fm (8 handlers)
+[GIN-debug] PATCH  /api/v1/users/:id/changepassword/ --> github.com/huavanthong/microservice-golang/user-api/controllers.(*User).ChangePasswordByID-fm (8 handlers)
+[GIN-debug] POST   /api/v1/profile/:userid   --> github.com/huavanthong/microservice-golang/user-api/controllers.(*Profile).AddProfile-fm (8 handlers)
+[GIN-debug] GET    /api/v1/profile/list      --> github.com/huavanthong/microservice-golang/user-api/controllers.(*Profile).ListProfiles-fm (8 handlers)
+[GIN-debug] GET    /api/v1/profile/:userid   --> github.com/huavanthong/microservice-golang/user-api/controllers.(*Profile).GetProfileByUserId-fm (8 handlers)
+[GIN-debug] PATCH  /api/v1/profile           --> github.com/huavanthong/microservice-golang/user-api/controllers.(*Profile).UpdateProfileByUserId-fm (8 handlers)
+[GIN-debug] DELETE /api/v1/profile/:userid   --> github.com/huavanthong/microservice-golang/user-api/controllers.(*Profile).DeteleProfileByUserId-fm (8 handlers)
+[GIN-debug] GET    /testserver               --> main.main.func1 (7 handlers)
+[GIN-debug] GET    /swagger/*any             --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (7 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8808
+[GIN] 2022/07/06 - 21:32:22 | 200 |            0s |       127.0.0.1 | GET      "/swagger/index.html"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      1.9674ms |       127.0.0.1 | GET      "/swagger/index.html"
+[GIN] 2022/07/06 - 21:32:22 | 200 |            0s |       127.0.0.1 | GET      "/swagger/swagger-ui.css"
+[GIN] 2022/07/06 - 21:32:22 | 200 |            0s |       127.0.0.1 | GET      "/swagger/swagger-ui.css"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      1.9922ms |       127.0.0.1 | GET      "/swagger/swagger-ui-bundle.js"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      1.9922ms |       127.0.0.1 | GET      "/swagger/swagger-ui-bundle.js"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      2.0001ms |       127.0.0.1 | GET      "/swagger/swagger-ui-standalone-preset.js"
+[GIN] 2022/07/06 - 21:32:22 | 200 |      4.0016ms |       127.0.0.1 | GET      "/swagger/swagger-ui-standalone-preset.js"
+[GIN] 2022/07/06 - 21:32:23 | 200 |       995.7µs |       127.0.0.1 | GET      "/swagger/doc.json"
+[GIN] 2022/07/06 - 21:32:23 | 200 |       995.7µs |       127.0.0.1 | GET      "/swagger/doc.json"

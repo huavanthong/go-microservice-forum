@@ -1,5 +1,0 @@
-p, admin, /*, *
-p, admin, /dataset1/resource1, POST
-p, anonymous, /login, *
-p, member, /logout, *
-p, member, /member/*, *
