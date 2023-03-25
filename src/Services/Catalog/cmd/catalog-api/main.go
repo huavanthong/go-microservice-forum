@@ -16,6 +16,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/handlers"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/middleware"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/routers"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/services"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/config"
@@ -174,26 +176,22 @@ func init() {
 	categoryRepo = database.NewCategoryRepository(logger, categoryCollection, ctx)
 
 	// Initialize services
-	productService := services.NewProductService(productRepo, categoryRepo)
-	categoryService := services.NewCategoryService(categoryRepo)
+	productService := services.NewProductService(logger, productRepo, ctx)
+	categoryService := services.NewCategoryService(logger, categoryRepo, ctx)
 
 	// Initialize handlers
-	categoryHandler := handlers.NewCategoryHandler(categoryService)
-	productHandler := handlers.NewProductHandler(productService)
+	productHandler = handlers.NewProductHandler(logger, productService)
+	categoryHandler = handlers.NewCategoryHandler(logger, categoryService)
 
 	// Initialize middleware
-	authMiddleware := middlewares.NewAuthMiddleware(cfg.SecretKey)
+	authMiddleware := middleware.NewAuthMiddleware()
 
 	// Initialize router
 	router := gin.Default()
 
-	// Add the Product Service, Controllers and Routes
-	productCollection = mongoclient.Database("golang_mongodb").Collection("products")
-	productService = services.NewProductServiceImpl(logger, productCollection, ctx)
-
-	// Add the Category Service, Controllers and Routes
-	categoryCollection = mongoclient.Database("golang_mongodb").Collection("category")
-	categoryService = services.NewCategoryServiceImpl(logger, categoryCollection, ctx)
+	// Setup routes
+	routers.SetupCategoryRouter(router, categoryHandler, authMiddleware)
+	routers.SetupProductRouter(router, productHandler, authMiddleware)
 
 	// Default returns an Engine instance with the Logger and Recovery middleware already attached.
 	server = gin.Default()
@@ -238,10 +236,6 @@ func startGinServer(config config.Config) {
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Hello World"})
 	})
-
-	/************************ Controller  *************************/
-	ProductRouteController.ProductRoute(router)
-	CategoryRouteController.CategoryRoute(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
