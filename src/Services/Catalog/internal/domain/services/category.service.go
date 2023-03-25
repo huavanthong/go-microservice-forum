@@ -1,15 +1,15 @@
 package services
 
 import (
-	"github.com/huavanthong/microservice-golang/product-api-v3/models"
-	"github.com/huavanthong/microservice-golang/product-api-v3/payload"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/models"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
 )
 
 type CategoryService interface {
-	CreateCategory(pr *payload.RequestCreateCategory) (*models.Category, error)
-	FindAllCategories(page int, limit int) ([]*models.Category, error)
-	FindCategoryByID(id string) (*models.Category, error)
-	FindCategoryByName(name string) ([]*models.Category, error)
-	UpdateCategory(id string, pr *payload.RequestUpdateCategory) (*models.Category, error)
+	CreateCategory(pr *models.RequestCreateCategory) (*entities.Category, error)
+	FindAllCategories(page int, limit int) ([]*entities.Category, error)
+	FindCategoryByID(id string) (*entities.Category, error)
+	FindCategoryByName(name string) ([]*entities.Category, error)
+	UpdateCategory(id string, pr *models.RequestUpdateCategory) (*entities.Category, error)
 	DeleteCategory(id string) error
 }

@@ -11,15 +11,15 @@ import (
 	"os"
 
 	"go.uber.org/zap"
+	"google.golang.org/genproto/googleapis/spanner/admin/database/v1"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/huavanthong/microservice-golang/product-api-v3/controllers"
-	"github.com/huavanthong/microservice-golang/product-api-v3/routes"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/handlers"
-	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/routers"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/services"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/config"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/database"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -38,17 +38,21 @@ var (
 	mongoclient *mongo.Client   // MongoDB
 	logger      *zap.Logger
 
-	// Product Controller setting
-	productService    services.ProductService
-	productHandler    handlers.ProductController
-	productCollection *mongo.Collection
-	ProductRouter     routers.ProductRouteController
-
-	// Category Controller setting
-	categoryService    services.CategoryService
-	categoryHandler    handlers.CategoryController
+	// MongoDB setting
+	productCollection  *mongo.Collection
 	categoryCollection *mongo.Collection
-	CategoryRouter     routers.CategoryRouteController
+
+	// Repositories setting
+	productRepo  repositories.ProductRepository
+	categoryRepo repositories.CategoryRepository
+
+	// Services setting
+	productService  services.ProductService
+	categoryService services.CategoryService
+
+	// Handler setting
+	productHandler  handlers.ProductController
+	categoryHandler handlers.CategoryController
 )
 
 func dropCollections(db *mongo.Database) error {
@@ -161,17 +165,35 @@ func init() {
 	/************************ import data for testing on MongoDB  ************************/
 	handleFlags(mongoclient.Database("golang_mongodb"))
 
+	// Initialize MongoDB
+	productCollection = mongoclient.Database("golang_mongodb").Collection("products")
+	categoryCollection = mongoclient.Database("golang_mongodb").Collection("category")
+
+	// Initialize Repository
+	productRepo = database.NewProductRepository(logger, productCollection, ctx)
+	categoryRepo = database.NewCategoryRepository(logger, categoryCollection, ctx)
+
+	// Initialize services
+	productService := services.NewProductService(productRepo, categoryRepo)
+	categoryService := services.NewCategoryService(categoryRepo)
+
+	// Initialize handlers
+	categoryHandler := handlers.NewCategoryHandler(categoryService)
+	productHandler := handlers.NewProductHandler(productService)
+
+	// Initialize middleware
+	authMiddleware := middlewares.NewAuthMiddleware(cfg.SecretKey)
+
+	// Initialize router
+	router := gin.Default()
+
 	// Add the Product Service, Controllers and Routes
 	productCollection = mongoclient.Database("golang_mongodb").Collection("products")
 	productService = services.NewProductServiceImpl(logger, productCollection, ctx)
-	ProductController = controllers.NewProductController(logger, productService)
-	ProductRouteController = routes.NewRouteProductController(ProductController)
 
 	// Add the Category Service, Controllers and Routes
 	categoryCollection = mongoclient.Database("golang_mongodb").Collection("category")
 	categoryService = services.NewCategoryServiceImpl(logger, categoryCollection, ctx)
-	CategoryController = controllers.NewCategoryController(logger, categoryService)
-	CategoryRouteController = routes.NewRouteCategoryController(CategoryController)
 
 	// Default returns an Engine instance with the Logger and Recovery middleware already attached.
 	server = gin.Default()
