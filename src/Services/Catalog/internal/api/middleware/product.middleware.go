@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	models "github.com/huavanthong/microservice-golang/product-api-v3/models/product"
-	"github.com/huavanthong/microservice-golang/product-api-v3/utils"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/utils"
 )
 
 // import (
@@ -54,20 +54,20 @@ import (
 func SelectProductType() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// Use Factory Design Pattern to get product following product type
-		productType, perr := models.GetProductType(models.ProductType(pr.ProductType))
+		productType, perr := entities.GetProductType(entities.ProductType(pr.ProductType))
 		if perr != nil {
 			return perr
 		}
 
 		switch utils.TypeOfModel(productType) {
 		case "phone":
-			productPhone, _ := productType.(*models.Product_phone)
+			productPhone, _ := productType.(*entities.Product_phone)
 			break
 		case "dien-tu":
-			productDienTu, _ := productType.(*models.Product_dientu)
+			productDienTu, _ := productType.(*entities.Product_dientu)
 			break
 		case "thoi-trang":
-			productThoiTrang, _ := productType.(*models.Product_thoitrang)
+			productThoiTrang, _ := productType.(*entities.Product_thoitrang)
 		default:
 			return fmt.Errorf("Wrong product type passed")
 		}

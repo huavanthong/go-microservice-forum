@@ -8,9 +8,9 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/huavanthong/microservice-golang/product-api-v3/utils"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
