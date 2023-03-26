@@ -27,7 +27,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
-	docs "github.com/huavanthong/microservice-golang/product-api-v3/docs"
+	docs "github.com/huavanthong/microservice-golang/src/Services/Catalog/docs"
 
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"

@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	models "github.com/huavanthong/microservice-golang/product-api-v3/models/product"
+	"github.com/huavanthong/microservice-golang/product-api-v3/utils"
 )
 
 // import (

@@ -9,3 +9,7 @@ docker-run:
 
 generate_client:
 	cd sdk && swagger.bat generate client -f ../swagger.yaml -A product-api
+
+# Clear and update module Go
+clean-mod:
+	go clean -modclean && go mod tidy
