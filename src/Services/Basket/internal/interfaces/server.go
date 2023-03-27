@@ -19,7 +19,7 @@ type Server struct {
 	basketController controllers.BasketHandler
 }
 
-func NewServer(cfg *config.Config, logger *logrus.Logger, redisClient infrastructures.RedisClient, basketHandler BasketHandler) *Server {
+func NewServer(cfg *config.Config, logger *logrus.Logger, redisClient infrastructures.RedisClient, basketHandler controllers.BasketHandler) *Server {
 	return &Server{
 		config:           cfg,
 		logger:           logger,
