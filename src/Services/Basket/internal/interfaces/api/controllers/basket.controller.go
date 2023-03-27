@@ -2,8 +2,9 @@ package controllers
 
 import (
 	"net/http"
-	"shopping-cart-service/internal/domain/entities"
-	"shopping-cart-service/internal/domain/repositories"
+
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/repositories"
 
 	"github.com/gin-gonic/gin"
 )

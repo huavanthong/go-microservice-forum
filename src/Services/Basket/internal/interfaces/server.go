@@ -5,26 +5,25 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	redis "github.com/go-redis/redis/v8"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/config"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/api/controllers"
 	"github.com/sirupsen/logrus"
-
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructures"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructures/config"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interface/controllers"
 )
 
 type Server struct {
 	config           *config.Config
 	logger           *logrus.Logger
-	redisClient      infrastructures.RedisClient
-	basketController controllers.BasketHandler
+	redisClient      *redis.Client
+	basketController controllers.BasketController
 }
 
-func NewServer(cfg *config.Config, logger *logrus.Logger, redisClient infrastructures.RedisClient, basketHandler controllers.BasketHandler) *Server {
+func NewServer(cfg *config.Config, logger *logrus.Logger, redisClient *redis.Client, basketController controllers.BasketController) *Server {
 	return &Server{
 		config:           cfg,
 		logger:           logger,
 		redisClient:      redisClient,
-		basketController: basketHandler,
+		basketController: basketController,
 	}
 }
 
