@@ -6,6 +6,6 @@ import (
 
 type BasketRepository interface {
 	GetBasket(userName string) (*entities.ShoppingCart, error)
-	UpdateBasket(basket *entities.ShoppingCart) error
+	UpdateBasket(basket *entities.ShoppingCart) (*entities.ShoppingCart, error)
 	DeleteBasket(userName string) error
 }
