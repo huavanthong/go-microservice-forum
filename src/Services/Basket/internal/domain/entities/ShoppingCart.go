@@ -5,7 +5,7 @@ type ShoppingCart struct {
 	Items    []ShoppingCartItem
 }
 
-func (cart *ShoppingCart) NewShoppingCart(userName string) *ShoppingCart {
+func NewShoppingCart(userName string) *ShoppingCart {
 	return &ShoppingCart{
 		UserName: userName,
 		Items:    []ShoppingCartItem{},

@@ -6,8 +6,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	redis "github.com/go-redis/redis/v8"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/api/controllers"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/api/routes"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -31,8 +34,11 @@ func (s *Server) Start() error {
 	// Khởi tạo router engine bằng Gin
 	router := gin.Default()
 
+	// Khởi tạo repositories
+	basketRepo := repositories.BasketRepository{}
+
 	// Đăng ký các route từ package router
-	router.RegisterRoutes(router)
+	routes.RegisterRoutes(router, basketRepo)
 
 	port := fmt.Sprintf(":%d", router.config.Server.Port)
 	s.logger.Infof("Starting server on port %d", router.config.Server.Port)

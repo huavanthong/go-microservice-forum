@@ -10,6 +10,11 @@ type AppConfig struct {
 	Environment string `mapstructure:"environment"`
 }
 
+type ServerConfig struct {
+	Name string `mapstructure:"name"`
+	Port int    `mapstructure:"port"`
+}
+
 type DatabaseConfig struct {
 	Host     string `mapstructure:"host"`
 	Port     int    `mapstructure:"port"`
@@ -28,6 +33,7 @@ type RedisConfig struct {
 
 type Config struct {
 	App      AppConfig      `mapstructure:"app"`
+	Server   ServerConfig   `mapstructure:"serverconfig"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Redis    RedisConfig    `mapstructure:"redis"`
 }
