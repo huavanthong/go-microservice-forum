@@ -35,7 +35,7 @@ func (s *Server) Start() error {
 	router := gin.Default()
 
 	// Khởi tạo repositories
-	basketRepo := repositories.BasketRepository{}
+	redisBasketRepo := repositories.BasketRepository{}
 
 	// Đăng ký các route từ package router
 	routes.RegisterRoutes(router, basketRepo)
