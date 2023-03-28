@@ -1,11 +1,45 @@
 version: '3.4'
 
 services:
-  basketdb:
-    image: redis:alpine
+  basket:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_CONNECTION_STRING=mongodb://mongodb:27017
+      - REDIS_CONNECTION_STRING=redis://redis:6379
+    depends_on:
+      - mongodb
+      - redis
 
-  basket.api:
-    image: ${DOCKER_REGISTRY-}basketapi
-    build:
-      context: .
-      dockerfile: Services/Basket/Basket.API/Dockerfile
+  catalog:
+    build: .
+    ports:
+      - "8081:8080"
+    environment:
+      - MONGODB_CONNECTION_STRING=mongodb://mongodb-catalog:27017
+    depends_on:
+      - mongodb-catalog
+
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  mongodb-catalog:
+    image: mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data-catalog:/data/db
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo-data:
+  mongo-data-catalog:

@@ -5,19 +5,39 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/go-redis/redis/v8"
+	redis "github.com/go-redis/redis/v8"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/services"
+
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/mongodb"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/redis"
+	redisdb "github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/redis"
 )
 
 func main() {
+
+	// Init an context running in background
+	ctx := context.TODO()
+
 	// Connect to Redis
-	redisClient := redis.NewRedisClient()
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
+	})
 	defer redisClient.Close()
+
+	if _, err := redisClient.Ping(ctx).Result(); err != nil {
+		panic(err)
+	}
+
+	err := redisClient.Set(ctx, "test", "Welcome to Golang with Redis and MongoDB", 0).Err()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Redis client connected successfully...")
 
 	// Connect to MongoDB
 	mongoClient, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
@@ -30,8 +50,14 @@ func main() {
 	}
 	defer mongoClient.Disconnect(context.Background())
 
+	if err := mongoClient.Ping(ctx, readpref.Primary()); err != nil {
+		panic(err)
+	}
+
+	fmt.Println("MongoDB successfully connected...")
+	/*****************************************************************/
 	// Create Redis and MongoDB repositories
-	redisRepo := redis.NewRedisBasketRepository(redisClient, context.Background())
+	redisRepo := redisdb.NewRedisBasketRepository(redisClient, context.Background())
 	mongoRepo := mongodb.NewMongoDBBasketRepository(mongoClient, "basket", "carts")
 
 	// Create BasketService with Redis and MongoDB repositories
@@ -47,7 +73,10 @@ func main() {
 	fmt.Printf("Initial basket for user %s: %+v\n", userName, basket)
 
 	// Add item to basket
-	item := services.BasketItem{Name: "iPhone", Price: 1000}
+	item := entities.ShoppingCartItem{
+		ProductName: "iPhone",
+		Price:       1000,
+	}
 	basket.Items = append(basket.Items, item)
 	basket, err = basketService.UpdateBasket(userName, basket)
 	if err != nil {

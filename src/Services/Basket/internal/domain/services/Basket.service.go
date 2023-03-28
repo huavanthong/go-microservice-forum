@@ -7,26 +7,26 @@ import (
 )
 
 type BasketService struct {
-	redisRepo redis.RedisBasketRepository
-	mongoRepo mongodb.MongoDBBasketRepository
+	redisRepo *redis.RedisBasketRepository
+	mongoRepo *mongodb.MongoDBBasketRepository
 }
 
-func NewBasketService(redisRepo redis.RedisBasketRepository, mongoRepo mongodb.MongoDBBasketRepository) *BasketService {
+func NewBasketService(redisRepo *redis.RedisBasketRepository, mongoRepo *mongodb.MongoDBBasketRepository) *BasketService {
 	return &BasketService{redisRepo, mongoRepo}
 }
 
 func (s *BasketService) CreateBasket(userName string) (*entities.ShoppingCart, error) {
 	// Create basket in Redis
-	basket, err := s.redisRepo.CreateBasket(userName)
+	basket, err := s.redisRepo.Create(userName)
 	if err != nil {
 		return nil, err
 	}
 
 	// Create basket in MongoDB
-	_, err = s.mongoRepo.CreateBasket(userName)
+	_, err = s.mongoRepo.Create(userName)
 	if err != nil {
 		// Rollback Redis basket creation on error
-		s.redisRepo.DeleteBasket(userName)
+		s.redisRepo.Delete(userName)
 		return nil, err
 	}
 
@@ -35,16 +35,17 @@ func (s *BasketService) CreateBasket(userName string) (*entities.ShoppingCart, e
 
 func (s *BasketService) GetBasket(userName string) (*entities.ShoppingCart, error) {
 	// Try to get basket from Redis
-	basket, err := s.redisRepo.GetBasket(userName)
+	basket, err := s.redisRepo.GetByUserName(userName)
 	if err != nil {
 		// Try to get basket from MongoDB
-		basket, err = s.mongoRepo.GetBasket(userName)
+		basket, err = s.mongoRepo.GetByUserName(userName)
 		if err != nil {
 			return nil, err
 		}
 
 		// Cache basket in Redis
-		if err := s.redisRepo.UpdateBasket(basket); err != nil {
+		basket, err = s.redisRepo.Update(basket)
+		if err != nil {
 			return nil, err
 		}
 	}
@@ -54,18 +55,18 @@ func (s *BasketService) GetBasket(userName string) (*entities.ShoppingCart, erro
 
 func (s *BasketService) UpdateBasket(userName string, cart *entities.ShoppingCart) (*entities.ShoppingCart, error) {
 	// Update basket in Redis
-	if _, err := s.redisRepo.UpdateBasket(cart); err != nil {
+	if _, err := s.redisRepo.Update(cart); err != nil {
 		return nil, err
 	}
 
 	// Update basket in MongoDB
-	if _, err := s.mongoRepo.UpdateBasket(cart); err != nil {
+	if _, err := s.mongoRepo.Update(cart); err != nil {
 		// Rollback Redis basket update on error
-		oldCart, err := s.redisRepo.GetBasket(userName)
+		oldCart, err := s.redisRepo.GetByUserName(userName)
 		if err != nil {
 			return nil, err
 		}
-		if _, err := s.redisRepo.UpdateBasket(oldCart); err != nil {
+		if _, err := s.redisRepo.Update(oldCart); err != nil {
 			return nil, err
 		}
 
@@ -77,18 +78,18 @@ func (s *BasketService) UpdateBasket(userName string, cart *entities.ShoppingCar
 
 func (s *BasketService) DeleteBasket(userName string) error {
 	// Delete basket from Redis
-	if err := s.redisRepo.DeleteBasket(userName); err != nil {
+	if err := s.redisRepo.Delete(userName); err != nil {
 		return err
 	}
 
 	// Delete basket from MongoDB
-	if err := s.mongoRepo.DeleteBasket(userName); err != nil {
+	if err := s.mongoRepo.Delete(userName); err != nil {
 		// Rollback Redis basket deletion on error
-		oldCart, err := s.redisRepo.CreateBasket(userName)
+		oldCart, err := s.redisRepo.Create(userName)
 		if err != nil {
 			return err
 		}
-		if _, err := s.redisRepo.UpdateBasket(oldCart); err != nil {
+		if _, err := s.redisRepo.Update(oldCart); err != nil {
 			return err
 		}
 
