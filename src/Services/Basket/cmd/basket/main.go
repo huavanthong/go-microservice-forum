@@ -6,10 +6,12 @@ import (
 	"log"
 
 	"github.com/go-redis/redis/v8"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/services"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/mongodb"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/redis"
-	"github.com/your-username/your-project/domain"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/redis"
 )
 
 func main() {
@@ -18,20 +20,22 @@ func main() {
 	defer redisClient.Close()
 
 	// Connect to MongoDB
-	connectionString := "mongodb://localhost:27017"
-	database := "basket"
-	mongoClientCustomer, err := mongodb.NewNewMongoDBClient(connectionString, database)
+	mongoClient, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer mongoClientCustomer.Disconnect()
+	err = mongoClient.Connect(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer mongoClient.Disconnect(context.Background())
 
 	// Create Redis and MongoDB repositories
 	redisRepo := redis.NewRedisBasketRepository(redisClient, context.Background())
 	mongoRepo := mongodb.NewMongoDBBasketRepository(mongoClient, "basket", "carts")
 
 	// Create BasketService with Redis and MongoDB repositories
-	basketService := domain.NewBasketService(redisRepo, mongoRepo)
+	basketService := services.NewBasketService(redisRepo, mongoRepo)
 
 	// Test BasketService
 	userName := "john.doe"
@@ -43,7 +47,7 @@ func main() {
 	fmt.Printf("Initial basket for user %s: %+v\n", userName, basket)
 
 	// Add item to basket
-	item := domain.BasketItem{Name: "iPhone", Price: 1000}
+	item := services.BasketItem{Name: "iPhone", Price: 1000}
 	basket.Items = append(basket.Items, item)
 	basket, err = basketService.UpdateBasket(userName, basket)
 	if err != nil {

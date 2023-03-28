@@ -1,42 +1,51 @@
 package mongodb
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/mongodb/mongo-go-driver/bson"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/example/shoppingcart/entities"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
 )
 
 type MongoDBBasketRepository struct {
-	session    *mgo.Session
+	client     *mongo.Client
 	database   string
 	collection string
 }
 
-func NewMongoDBBasketRepository(session *mgo.Session, database string, collection string) *MongoDBBasketRepository {
+func NewMongoDBBasketRepository(client *mongo.Client, database string, collection string) (*MongoDBBasketRepository, error) {
+
 	return &MongoDBBasketRepository{
-		session:    session,
+		client:     client,
 		database:   database,
 		collection: collection,
-	}
+	}, nil
 }
 
-func (r *MongoDBBasketRepository) Session() *mgo.Session {
-	return r.session.Copy()
+func (r *MongoDBBasketRepository) Session() *mongo.Session {
+	return r.client.StartSession()
 }
 
 func (r *MongoDBBasketRepository) GetBasket(userName string) (*entities.ShoppingCart, error) {
-	session := r.Session()
-	defer session.Close()
 
-	c := session.DB(r.database).C(r.collection)
+	// Get collection
+	coll := r.client.Database(r.database).Collection(r.collection)
+
+	filter := map[string]interface{}{
+		"user_name": userName,
+	}
+
+	result := coll.FindOne(context.Background(), filter)
+	if err := result.Err(); err != nil {
+		return nil, fmt.Errorf("failed to get basket for user %s: %v", userName, err)
+	}
 
 	basket := &entities.ShoppingCart{}
-	err := c.Find(bson.M{"username": userName}).One(basket)
-
-	if err != nil {
-		return nil, fmt.Errorf("could not get basket for user %s: %v", userName, err)
+	if err := result.Decode(basket); err != nil {
+		return nil, fmt.Errorf("failed to decode basket for user %s: %v", userName, err)
 	}
 
 	return basket, nil

@@ -34,9 +34,10 @@
 │   │   │   ├── mongodb
 │   │   │   │   ├── mongodb_client.go
 │   │   │   │   └── mongodb_repository.go
-│   │   │   └── repository.go
-│   │   └── redis
-│   │       └── redis_repository.go
+│   │   │   │  
+│   │       └── redis
+│   │           └── redis_repository.go
+│   │      
 │   └── interfaces
 │       ├── api
 │       │   ├── controllers
