@@ -31,17 +31,43 @@ type RedisConfig struct {
 	DBName   string `mapstructure:"dbname"`
 }
 
-type Config struct {
+type ConfigYaml struct {
 	App      AppConfig      `mapstructure:"app"`
 	Server   ServerConfig   `mapstructure:"serverconfig"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Redis    RedisConfig    `mapstructure:"redis"`
 }
 
-func LoadConfig() (*Config, error) {
+func LoadConfigYaml() (*ConfigYaml, error) {
 	viper.AddConfigPath("./config")
-	viper.SetConfigName("config")
+	viper.SetConfigName("config_yaml")
 	viper.SetConfigType("yaml")
+
+	err := viper.ReadInConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	var configYaml ConfigYaml
+	err = viper.Unmarshal(&configYaml)
+	if err != nil {
+		return nil, err
+	}
+
+	return &configYaml, nil
+}
+
+type Config struct {
+	DBUri    string `mapstructure:"MONGODB_LOCAL_URI"`
+	RedisUri string `mapstructure:"REDIS_URL"`
+	Port     string `mapstructure:"PORT"`
+}
+
+func LoadConfig(path string) (*Config, error) {
+
+	viper.AddConfigPath(path)
+	viper.SetConfigName("app")
+	viper.SetConfigType("env")
 
 	err := viper.ReadInConfig()
 	if err != nil {

@@ -3,16 +3,16 @@ FROM golang:1.17-alpine
 
 ## Create an directory within our image
 ## that will hold our application source files
-RUN mkdir /basket-api
+RUN mkdir /basket-service
 
 ## Copy everything in the root directory into our directory
-ADD . /basket-api
+ADD . /basket-service
 
 ## Specify directory for execution
-WORKDIR /basket-api
+WORKDIR /basket-service/cmd/basket-api
 
 # Build binary file
-RUN go build -o basket-api cmd/basket-api/main.go
+RUN go build -o basket-api main.go
 
 # chạy container
 CMD ["./basket-api"]

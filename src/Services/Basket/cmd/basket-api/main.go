@@ -13,18 +13,25 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/services"
 
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/mongodb"
 	redisdb "github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/redis"
 )
 
 func main() {
 
+	// Loading config from variable environment
+	config, err := config.LoadConfig("./internal/infrastructure/config")
+	if err != nil {
+		log.Fatal("Could not load environment variables", err)
+	}
+
 	// Init an context running in background
 	ctx := context.TODO()
 
 	// Connect to Redis
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: "localhost:6379",
+		Addr: config.RedisUri,
 	})
 	defer redisClient.Close()
 
@@ -32,7 +39,7 @@ func main() {
 		panic(err)
 	}
 
-	err := redisClient.Set(ctx, "test", "Welcome to Golang with Redis and MongoDB", 0).Err()
+	err = redisClient.Set(ctx, "test", "Welcome to Golang with Redis and MongoDB", 0).Err()
 	if err != nil {
 		panic(err)
 	}
@@ -40,7 +47,7 @@ func main() {
 	fmt.Println("Redis client connected successfully...")
 
 	// Connect to MongoDB
-	mongoClient, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	mongoClient, err := mongo.NewClient(options.Client().ApplyURI(config.DBUri))
 	if err != nil {
 		log.Fatal(err)
 	}

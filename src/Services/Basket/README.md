@@ -82,3 +82,15 @@ Makefile: File Makefile chứa các target để dễ dàng build và triển kh
 README.md: Tài liệu hướng dẫn sử dụng cho ứng dụng.
 
 docker-compose.yml: File cấu hình docker-compose để khởi động ứng
+
+
+# Getting Started
+Build basket microservice image:
+```
+docker build -t basket-service .
+```
+
+After build successully, we can run container by command:
+```
+docker run -p 8080:8080 --env MONGODB_CONNECTION_STRING=mongodb://mongodb:27017/catalogdb REDIS_URL=localhost:6379 basket-service
+```
