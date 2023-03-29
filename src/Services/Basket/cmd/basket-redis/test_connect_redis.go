@@ -41,19 +41,6 @@ func main() {
 
 	fmt.Println("Redis client connected successfully...")
 
-	// // Create a new instance of the server
-	// srv, err := interfaces.NewServer(cfg)
-	// if err != nil {
-	// 	log.Fatalf("failed to create server instance: %v", err)
-	// }
-
-	// // Start the server
-	// go func() {
-	// 	if err := srv.Start(); err != nil && err != http.ErrServerClosed {
-	// 		log.Fatalf("failed to start server: %v", err)
-	// 	}
-	// }()
-
 	// Handle graceful shutdown
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
@@ -63,10 +50,6 @@ func main() {
 	// Wait for pending requests to complete before shutting down
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-
-	// if err := srv.Shutdown(ctx); err != nil {
-	// 	log.Fatalf("failed to gracefully shutdown server: %v", err)
-	// }
 
 	log.Println("server stopped")
 }

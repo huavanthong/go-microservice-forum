@@ -85,6 +85,7 @@ docker-compose.yml: File cấu hình docker-compose để khởi động ứng
 
 
 # Getting Started
+## Basket service
 Build basket microservice image:
 ```
 docker build -t basket-service .
@@ -92,5 +93,7 @@ docker build -t basket-service .
 
 After build successully, we can run container by command:
 ```
-docker run -p 8080:8080 --env MONGODB_CONNECTION_STRING=mongodb://mongodb:27017/catalogdb REDIS_URL=localhost:6379 basket-service
+docker run -p 8080:8080 --env MONGODB_LOCAL_URI=mongodb://mongodb:27017/basketdb REDIS_URL=localhost:6379 basket-service
 ```
+
+## Redis 
