@@ -4,36 +4,99 @@ import (
 	"net/http"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/repositories"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/services"
 
 	"github.com/gin-gonic/gin"
 )
 
 type BasketController struct {
-	repo repositories.BasketRepository
-	/* Mở rộng sau:
-	discountGrpc    DiscountGrpcService
-	*/
+	basketService *services.BasketService
 }
 
-func NewBasketController(repo repositories.BasketRepository) *BasketController {
-	return &BasketController{repo: repo}
+func NewBasketController(basketService *services.BasketService) *BasketController {
+	return &BasketController{
+		basketService: basketService,
+	}
 }
 
-func (c *BasketController) GetBasket(ctx *gin.Context) {
+// CreateBasket godoc
+// @Summary Create basket by user name
+// @Description Create basket by user name
+// @Tags basket
+// @Accept  json
+// @Produce  json
+// @Param userName path string true "userName"
+// @Failure 400 {object} http.StatusBadRequest
+// @Failure 500 {object} http.StatusInternalServerError
+// @Success 200 {array} entities.shoppingCart
+// @Router /Basket [post]
+// CreateBasket create basket by user name
+func (bc *BasketController) CreateBasket(ctx *gin.Context) {
+
 	userName := ctx.Param("userName")
-	basket, err := c.repo.GetBasket(userName)
+	// if err != nil {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+	// 	return
+	// }
+
+	shoppingCart, err := bc.basketService.CreateBasket(userName)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create basket"})
 		return
 	}
-	if basket == nil {
-		basket = entities.NewShoppingCart(userName)
+
+	ctx.JSON(http.StatusCreated, shoppingCart)
+}
+
+// GetBasket godoc
+// @Summary Get basket by user name
+// @Description Get basket by user name
+// @Tags basket
+// @Accept  json
+// @Produce  json
+// @Param userName path string true "userName"
+// @Failure 400 {object} http.StatusBadRequest
+// @Failure 500 {object} http.StatusInternalServerError
+// @Success 200 {array} entities.shoppingCart
+// @Router /Basket [get]
+// GetBasket get basket by user name
+func (bc *BasketController) GetBasket(ctx *gin.Context) {
+
+	userName := ctx.Param("userName")
+	// if err != nil {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User Name"})
+	// 	return
+	// }
+
+	basket, err := bc.basketService.GetBasket(userName)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get basket"})
+		return
 	}
+
 	ctx.JSON(http.StatusOK, basket)
 }
 
-func (c *BasketController) UpdateBasket(ctx *gin.Context) {
+// UpdateBasket godoc
+// @Summary Update basket by user name
+// @Description Update basket by user name
+// @Tags basket
+// @Accept  json
+// @Produce  json
+// @Param userName path string true "userName"
+// @Failure 400 {object} http.StatusBadRequest
+// @Failure 500 {object} http.StatusInternalServerError
+// @Success 200 {array} entities.shoppingCart
+// @Router /Basket [patch]
+// UpdateBasket update basket by user name
+func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
+
+	userName := ctx.Param("userName")
+	// if err != nil {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User Name"})
+	// 	return
+	// }
+
 	var basket entities.ShoppingCart
 	if err := ctx.ShouldBindJSON(&basket); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -48,7 +111,7 @@ func (c *BasketController) UpdateBasket(ctx *gin.Context) {
 	// 	}
 	// }
 
-	if updatedBasket, err := c.repo.UpdateBasket(&basket); err != nil {
+	if updatedBasket, err := bc.basketService.UpdateBasket(userName, &basket); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		ctx.JSON(http.StatusOK, updatedBasket)
@@ -56,16 +119,46 @@ func (c *BasketController) UpdateBasket(ctx *gin.Context) {
 
 }
 
-func (c *BasketController) DeleteBasket(ctx *gin.Context) {
+// DeleteBasket godoc
+// @Summary Delete basket by user name
+// @Description Delete basket by user name
+// @Tags basket
+// @Accept  json
+// @Produce  json
+// @Param userName path string true "userName"
+// @Failure 400 {object} http.StatusBadRequest
+// @Failure 500 {object} http.StatusInternalServerError
+// @Success 200 {array} entities.shoppingCart
+// @Router /Basket/{userName} [delete]
+// UpdateBasket update basket by user name
+func (bc *BasketController) DeleteBasket(ctx *gin.Context) {
+
 	userName := ctx.Param("userName")
-	if err := c.repo.DeleteBasket(userName); err != nil {
+	// if err != nil {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User Name"})
+	// 	return
+	// }
+
+	if err := bc.basketService.DeleteBasket(userName); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{})
 	}
 }
 
-func (c *BasketController) Checkout(ctx *gin.Context) {
+// Checkout godoc
+// @Summary Checkout basket after completed items in shopping cart
+// @Description Checkout basket
+// @Tags basket
+// @Accept  json
+// @Produce  json
+// @Param basketCheckout body entites.BasketCheckout true "Basket Checkout"
+// @Failure 400 {object} http.StatusBadRequest
+// @Failure 500 {object} http.StatusInternalServerError
+// @Success 200 {array} entities.shoppingCart
+// @Router /Basket/{userName} [delete]
+// Checkout checkout basket
+func (bc *BasketController) Checkout(ctx *gin.Context) {
 	var basketCheckout entities.BasketCheckout
 	if err := ctx.ShouldBindJSON(&basketCheckout); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -73,14 +166,14 @@ func (c *BasketController) Checkout(ctx *gin.Context) {
 	}
 
 	// get existing basket with total price
-	basket, err := c.repo.GetBasket(basketCheckout.UserName)
+	basket, err := bc.basketService.GetBasket(basketCheckout.UserName)
 	if err != nil || basket == nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "basket not found"})
 		return
 	}
 
 	// remove the basket
-	if err := c.repo.DeleteBasket(basket.UserName); err != nil {
+	if err := bc.basketService.DeleteBasket(basket.UserName); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

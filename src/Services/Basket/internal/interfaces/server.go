@@ -5,45 +5,38 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	redis "github.com/go-redis/redis/v8"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/repositories"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/services"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/config"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/api/controllers"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/api/routes"
 
 	"github.com/sirupsen/logrus"
 )
 
 type Server struct {
-	config           *config.Config
-	logger           *logrus.Logger
-	redisClient      *redis.Client
-	basketController controllers.BasketController
+	config        *config.Config
+	logger        *logrus.Logger
+	basketService *services.BasketService
 }
 
-func NewServer(cfg *config.Config, logger *logrus.Logger, redisClient *redis.Client, basketController controllers.BasketController) *Server {
+func NewServer(cfg *config.Config, logger *logrus.Logger, basketService *services.BasketService) (*Server, error) {
 	return &Server{
-		config:           cfg,
-		logger:           logger,
-		redisClient:      redisClient,
-		basketController: basketController,
-	}
+		config:        cfg,
+		logger:        logger,
+		basketService: basketService,
+	}, nil
 }
 
 func (s *Server) Start() error {
-	// Khởi tạo router engine bằng Gin
+	// Initialize router engine by Gin
 	router := gin.Default()
 
-	// Khởi tạo repositories
-	redisBasketRepo := repositories.BasketRepository{}
+	// Register routes from package routes
+	routes.RegisterRoutes(router, s.basketService)
 
-	// Đăng ký các route từ package router
-	routes.RegisterRoutes(router, basketRepo)
-
-	port := fmt.Sprintf(":%d", router.config.Server.Port)
-	s.logger.Infof("Starting server on port %d", router.config.Server.Port)
+	port := fmt.Sprintf(":%d", s.config.Port)
+	s.logger.Infof("Starting server on port %d", s.config.Port)
 	if err := http.ListenAndServe(port, router); err != nil {
-		return fmt.Errorf("failed to listen and serve on port %d: %w", s.config.Server.Port, err)
+		return fmt.Errorf("failed to listen and serve on port %d: %w", s.config.Port, err)
 	}
 
 	return nil

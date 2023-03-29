@@ -4,18 +4,22 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
+
+	"github.com/sirupsen/logrus"
 
 	redis "github.com/go-redis/redis/v8"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/services"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/mongodb"
 	redisdb "github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/redis"
+
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces"
 )
 
 func main() {
@@ -70,31 +74,19 @@ func main() {
 	// Create BasketService with Redis and MongoDB repositories
 	basketService := services.NewBasketService(redisRepo, mongoRepo)
 
-	// Test BasketService
-	userName := "john.doe"
-	// Create initial basket
-	basket, err := basketService.CreateBasket(userName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Initial basket for user %s: %+v\n", userName, basket)
+	// Create a new instance of the logger.
+	log := logrus.New()
 
-	// Add item to basket
-	item := entities.ShoppingCartItem{
-		ProductName: "iPhone",
-		Price:       1000,
-	}
-	basket.Items = append(basket.Items, item)
-	basket, err = basketService.UpdateBasket(userName, basket)
+	// Create a new instance of the server
+	srv, err := interfaces.NewServer(config, log, basketService)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("failed to create server instance: %v", err)
 	}
-	fmt.Printf("Updated basket for user %s: %+v\n", userName, basket)
 
-	// Delete basket
-	err = basketService.DeleteBasket(userName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("Deleted basket for user %s\n", userName)
+	// Start the server
+	go func() {
+		if err := srv.Start(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("failed to start server: %v", err)
+		}
+	}()
 }

@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/repositories"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/services"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/api/controllers"
 )
 
@@ -24,9 +24,9 @@ import (
 // }
 
 /* Design new: Thiết kế như vậy thì router sẽ bị phụ thuộc vào controller ở trong*/
-func RegisterRoutes(router *gin.Engine, basketRepo repositories.BasketRepository) {
+func RegisterRoutes(router *gin.Engine, basketService *services.BasketService) {
 
-	basketController := controllers.NewBasketController(basketRepo)
+	basketController := controllers.NewBasketController(basketService)
 
 	basketRoutes := router.Group("/basket")
 	{
