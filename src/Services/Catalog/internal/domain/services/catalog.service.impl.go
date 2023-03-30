@@ -7,7 +7,7 @@ import (
 
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
-	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastruture/storage/mongodb"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/storage/mongodb"
 )
 
 type CatalogServiceImpl struct {

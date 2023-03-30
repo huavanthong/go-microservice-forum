@@ -16,7 +16,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/handlers"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/routers"
-	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/services"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/configs"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/storage/mongodb"
@@ -43,8 +42,8 @@ var (
 	categoryCollection *mongo.Collection
 
 	// Repositories setting
-	productRepo  repositories.ProductRepository
-	categoryRepo repositories.CategoryRepository
+	productRepo  *mongodb.ProductRepository
+	categoryRepo *mongodb.CategoryRepository
 
 	// Services setting
 	productService  services.CatalogServiceImpl
@@ -137,7 +136,7 @@ func handleFlags(db *mongo.Database) {
 func init() {
 
 	// Loading config from variable environment
-	config, err := configs.LoadConfig("./")
+	config, err := configs.LoadConfig("./internal/infrastructure/configs")
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}
