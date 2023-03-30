@@ -24,124 +24,19 @@ type Product struct {
 	DeleteAt    string             `json:"deleted_at" bson:"deleted_at"`
 }
 
-type ProductCategory struct {
+type ProductFilter struct {
+	Category    string
+	ProductType string
+	Brand       string
 }
 
-/************************ Implement method for Product ************************/
-func (product *Product) GetID() primitive.ObjectID {
-	return product.ID
+type Pagination struct {
+	Page  int
+	Limit int
 }
 
-func (product *Product) SetID(ID primitive.ObjectID) {
-	product.ID = ID
-}
-
-func (product *Product) GetProductCode() string {
-	return product.ProductCode
-}
-
-func (product *Product) SetProductCode(ProductCode string) {
-	product.ProductCode = ProductCode
-}
-
-func (product *Product) GetName() string {
-	return product.Name
-}
-
-func (product *Product) SetName(Name string) {
-	product.Name = Name
-}
-
-func (product *Product) GetCategory() Category {
-	return product.Category
-}
-
-func (product *Product) SetCategory(Category string) {
-	product.Category.Name = Category
-}
-
-func (product *Product) GetInventory() Inventory {
-	return product.Inventory
-}
-
-func (product *Product) SetInventory(Inventory Inventory) {
-	product.Inventory = Inventory
-}
-
-func (product *Product) GetBrand() Brand {
-	return product.Brand
-}
-func (product *Product) SetBrand(Brand Brand) {
-	product.Brand = Brand
-}
-
-func (product *Product) GetSummary() string {
-	return product.Summary
-}
-
-func (product *Product) SetSummary(Summary string) {
-	product.Summary = Summary
-}
-
-func (product *Product) GetDescription() string {
-	return product.Description
-}
-
-func (product *Product) SetDescription(Description string) {
-	product.Description = Description
-}
-
-func (product *Product) GetImageFile() string {
-	return product.ImageFile
-}
-
-func (product *Product) SetImageFile(ImageFile string) {
-	product.ImageFile = ImageFile
-}
-
-func (product *Product) GetDiscount() Discount {
-	return product.Discount
-}
-
-func (product *Product) SetDiscount(Discount Discount) {
-	product.Discount = Discount
-}
-
-func (product *Product) GetPrice() float64 {
-	return product.Price
-}
-func (product *Product) SetPrice(Price float64) {
-	product.Price = Price
-}
-
-func (product *Product) GetSKU() string {
-	return product.SKU
-}
-func (product *Product) SetSKU(SKU string) {
-	product.SKU = SKU
-}
-
-func (product *Product) GetCreatedAt() string {
-	return product.CreatedAt
-}
-
-func (product *Product) SetCreatedAt(CreatedAt string) {
-	product.CreatedAt = CreatedAt
-}
-func (product *Product) GetUpdatedAt() string {
-	return product.UpdatedAt
-}
-
-func (product *Product) SetUpdatedAt(UpdatedAt string) {
-	product.UpdatedAt = UpdatedAt
-}
-
-func (product *Product) GetDeleteAt() string {
-	return product.DeleteAt
-}
-
-func (product *Product) SetDeleteAt(DeleteAt string) {
-	product.DeleteAt = DeleteAt
+func (p *Pagination) Offset() int {
+	return (p.Page - 1) * p.Limit
 }
 
 /************************ Filter info ************************/

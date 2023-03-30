@@ -8,7 +8,6 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/utils"
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,51 +16,39 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type ProductRepository struct {
+type ProductStorage struct {
 	log        *zap.Logger
 	collection *mongo.Collection
 	ctx        context.Context
 }
 
-func NewProductRepository(log *zap.Logger, collection *mongo.Collection, ctx context.Context) *ProductRepository {
-	return &ProductRepository{
+func NewProductStorage(log *zap.Logger, collection *mongo.Collection, ctx context.Context) *ProductStorage {
+	return &ProductStorage{
 		log,
 		collection,
 		ctx,
 	}
 }
 
-func (p *ProductRepository) CreateProduct(pr *models.RequestCreateProduct) (*entities.Product, error) {
+func (ps *ProductStorage) Create(p *entities.Product) (*entities.Product, error) {
 
-	// Use Factory Design Pattern to get product following product type
-	// Implement later
-	// temp, _ := entities.GetProductType(entities.ProductType(pr.ProductType))
+	// Create date
+	p.CreatedAt = time.Now().Format(time.RFC3339)
+	p.UpdatedAt = p.CreatedAt
 
-	temp := entities.Product{}
-	// Initialize the basic info of product
-	temp.SetName(pr.Name)
-	temp.SetCategory(pr.Category)
-	temp.SetSummary(pr.Summary)
-	temp.SetDescription(pr.Description)
-	temp.SetImageFile(pr.ImageFile)
-	temp.SetPrice(pr.Price)
-	temp.SetProductCode("p" + utils.RandCode(9))
-	temp.SetSKU("ABC-XXX-YYY")
-	temp.SetCreatedAt(time.Now().String())
-	temp.SetUpdatedAt(temp.GetCreatedAt())
+	// Bson generate object id
+	p.ID = primitive.NewObjectID()
 
-	/*** ObjectID: Bson generate object id ***/
-	temp.SetID(primitive.NewObjectID())
-
-	_, err := p.collection.InsertOne(p.ctx, temp)
-
+	// Insert product to mongodb
+	_, err := p.collection.InsertOne(ps.ctx, p)
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
 			return nil, errors.New("product with that pcode already exists")
 		}
 		return nil, err
 	}
-	// Create Indexesfor pcode, it help you easy to find product by pcode
+
+	// Create Indexes for pcode, it help you easy to find product by pcode
 	opt := options.Index()
 	opt.SetUnique(true)
 
@@ -73,163 +60,17 @@ func (p *ProductRepository) CreateProduct(pr *models.RequestCreateProduct) (*ent
 
 	var product *entities.Product
 	// query := bson.M{"_id": res.InsertedID}
-	query := bson.M{"_id": temp.GetID()}
+	query := bson.M{"_id": p.ID}
 
 	if err = p.collection.FindOne(p.ctx, query).Decode(&product); err != nil {
 		return nil, err
 	}
 
 	return product, nil
-
 }
 
-// func (p *ProductRepository) CreateProductPhone(pr *models.RequestCreateProduct) (*entities.Product_phone, error) {
+func (ps *ProductStorage) GetByID(id string) (*entities.Product, error) {
 
-// 	// Use Factory Design Pattern to get product following product type
-// 	productType, perr := entities.GetProductType(entities.ProductType(pr.ProductType))
-// 	if perr != nil {
-// 		return nil, perr
-// 	}
-
-// 	switch utils.TypeOfModel(productType) {
-// 	case "phone":
-// 		productPhone, _ := productType.(*entities.Product_phone)
-// 		break
-// 	case "dien-tu":
-// 		productDienTu, _ := productType.(*entities.Product_dientu)
-// 		break
-// 	case "thoi-trang":
-// 		productThoiTrang, _ := productType.(*entities.Product_thoitrang)
-// 	default:
-// 		return nil, fmt.Errorf("Wrong product type passed")
-// 	}
-
-// 	// Initialize the basic info of product
-// 	productPhone.SetName(pr.Name)
-// 	productPhone.SetCategory(pr.Category)
-// 	productPhone.SetSummary(pr.Summary)
-// 	productPhone.SetDescription(pr.Description)
-// 	productPhone.SetImageFile(pr.ImageFile)
-// 	productPhone.SetPrice(pr.Price)
-// 	productPhone.SetProductCode("p" + utils.RandCode(9))
-// 	productPhone.SetSKU("ABC-XXX-YYY")
-// 	productPhone.SetCreatedAt(time.Now().String())
-// 	productPhone.SetUpdatedAt(productPhone.GetCreatedAt())
-
-// 	/*** ObjectID: Bson generate object id ***/
-// 	productPhone.SetID(primitive.NewObjectID())
-
-// 	_, err := p.collection.InsertOne(p.ctx, productPhone)
-
-// 	if err != nil {
-// 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
-// 			return nil, errors.New("product with that pcode already exists")
-// 		}
-// 		return nil, err
-// 	}
-// 	// Create Indexesfor pcode, it help you easy to find product by pcode
-// 	opt := options.Index()
-// 	opt.SetUnique(true)
-
-// 	index := mongo.IndexModel{Keys: bson.M{"pcode": 1}, Options: opt}
-
-// 	if _, err := p.collection.Indexes().CreateOne(p.ctx, index); err != nil {
-// 		return nil, errors.New("could not create index for pcode")
-// 	}
-
-// 	var showProduct *entities.Product
-// 	// query := bson.M{"_id": res.InsertedID}
-
-// 	query := bson.M{"_id": productPhone.GetID()}
-
-// 	if err = p.collection.FindOne(p.ctx, query).Decode(&showProduct); err != nil {
-// 		return nil, err
-// 	}
-
-// 	return product, nil
-// }
-
-func (p *ProductRepository) FindAllProducts(page int, limit int, currency string) (interface{}, error) {
-
-	// page return product
-	if page == 0 {
-		page = 1
-	}
-
-	// limit data return
-	if limit == 0 {
-		limit = 20
-	}
-
-	skip := (page - 1) * limit
-
-	opt := options.FindOptions{}
-	opt.SetLimit(int64(limit))
-	opt.SetSkip(int64(skip))
-
-	// create a query command
-	query := bson.M{}
-
-	// find all products with optional data
-	cursor, err := p.collection.Find(p.ctx, query, &opt)
-	if err != nil {
-		return nil, err
-	}
-	defer cursor.Close(p.ctx)
-
-	// create container for data
-	var products []*entities.Product
-
-	// with data find out, we will decode them and append to array
-	for cursor.Next(p.ctx) {
-		product := &entities.Product{}
-		err := cursor.Decode(product)
-
-		if err != nil {
-			return nil, err
-		}
-
-		products = append(products, product)
-	}
-
-	// if any item error, return err
-	if err := cursor.Err(); err != nil {
-		return nil, err
-	}
-
-	// if data is empty, return nil
-	if len(products) == 0 {
-		return []*entities.Product{}, nil
-	}
-
-	// if currency is empty, it return productList with the default of
-	// base currency
-	if currency == "" {
-		return products, nil
-	}
-
-	// calculate exchange rate between base: Euro and dest: currency
-	// rate, err := p.getRate(currency)
-	// if err != nil {
-	// 	p.log.Error("Unable to get rate", "currency", currency, "error", err)
-	// }
-
-	// // create a array to contain the rate products
-	// pr := entities.Product{}
-	// // loop in productList to update to the product with rate
-	// for _, p := range products {
-	// 	// get a product
-	// 	np := *p
-	// 	// update it's currency with rate
-	// 	np.Price = np.Price * rate
-	// 	// push to a temp storage of product
-	// 	pr = append(pr, &np)
-	// }
-
-	return products, nil
-}
-
-func (p *ProductRepository) FindProductByID(id string, currency string) (*entities.Product, error) {
 	// convert string id to objectID
 	obId, _ := primitive.ObjectIDFromHex(id)
 
@@ -240,7 +81,7 @@ func (p *ProductRepository) FindProductByID(id string, currency string) (*entiti
 	var product *entities.Product
 
 	// find one post by query command
-	if err := p.collection.FindOne(p.ctx, query).Decode(&product); err != nil {
+	if err := ps.collection.FindOne(ps.ctx, query).Decode(&product); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, errors.New("no document with that Id exists")
 		}
@@ -248,15 +89,125 @@ func (p *ProductRepository) FindProductByID(id string, currency string) (*entiti
 		return nil, err
 	}
 
-	// if currency is empty, it return productList with the default of
-	// base currency
-	if currency == "" {
-		return product, nil
-	}
-
 	return product, nil
 }
-func (p *ProductRepository) FindProductByName(name string, currency string) ([]*entities.Product, error) {
+
+func (ps *ProductStorage) Update(p *entities.Product) (*entities.Product, error) {
+
+	doc, err := utils.ToDoc(p)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get object ID
+	obId, _ := primitive.ObjectIDFromHex(p.ID)
+
+	query := bson.D{{Key: "_id", Value: obId}}
+	update := bson.D{{Key: "$set", Value: doc}}
+	res := p.collection.FindOneAndUpdate(p.ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
+
+	var updatedPost *entities.Product
+
+	if err := res.Decode(&updatedPost); err != nil {
+		return nil, errors.New("no post with that Id exists")
+	}
+
+	return updatedPost, nil
+}
+
+func (ps *ProductStorage) Delete(id string) error {
+
+	// convert string id to objectID
+	obId, _ := primitive.ObjectIDFromHex(id)
+
+	query := bson.M{"_id": obId}
+
+	res, err := ps.collection.DeleteOne(ps.ctx, query)
+	if err != nil {
+		return err
+	}
+
+	if res.DeletedCount == 0 {
+		return errors.New("no document with that Id exists")
+	}
+
+	return nil
+}
+
+func (ps *ProductStorage) GetProducts(filter *entities.ProductFilter, pagination *entities.Pagination) ([]*entities.Product, int64, error) {
+
+	query := bson.M{}
+	// Check filter condition
+	if filter != nil {
+		if filter.Category != "" {
+			query["category.name"] = filter.Category
+		}
+		if filter.ProductType != "" {
+			query["ptype"] = filter.ProductType
+		}
+		if filter.Brand != "" {
+			query["brand.name"] = filter.Brand
+		}
+		if filter.PriceMin > 0 {
+			query["price"] = bson.M{"$gte": filter.PriceMin}
+		}
+		if filter.PriceMax > 0 {
+			if query["price"] != nil {
+				query["price"].(bson.M)["$lte"] = filter.PriceMax
+			} else {
+				query["price"] = bson.M{"$lte": filter.PriceMax}
+			}
+		}
+	}
+
+	// Count product by query
+	var count int64
+	count, err := ps.collection.CountDocuments(ps.ctx, query)
+	if err != nil {
+		return nil, errors.New(err, "failed to count products in DB")
+	}
+
+	// Check condition
+	opts := options.Find()
+	if pagination != nil {
+		opts.SetSkip(pagination.Offset())
+		opts.SetLimit(pagination.Limit)
+	}
+	cursor, err := ps.collection.Find(ps.ctx, query, opts)
+	if err != nil {
+		return nil, errors.New(err, "failed to find products in DB")
+	}
+	defer cursor.Close(ps.ctx)
+
+	// Create container for data
+	var products []*entities.Product
+
+	// Found data, then decode them and append to array
+	for cursor.Next(ps.ctx) {
+
+		var product entities.Product
+
+		if err := cursor.Decode(&product); err != nil {
+			return nil, errors.New(err, "failed to decode product")
+		}
+
+		products = append(products, &product)
+	}
+
+	// if any item error, return err
+	if err := cursor.Err(); err != nil {
+		return nil, errors.New(err, "failed to iterate products")
+	}
+
+	// Warning: if data is empty, return nil
+	if len(products) == 0 {
+		return []*entities.Product{}, nil
+	}
+
+	return products, nil
+}
+
+func (p *ProductStorage) FindProductByName(name string, currency string) ([]*entities.Product, error) {
 
 	// we should create query option
 
@@ -305,7 +256,7 @@ func (p *ProductRepository) FindProductByName(name string, currency string) ([]*
 	return products, nil
 }
 
-func (p *ProductRepository) FindProductByCategory(category string, currency string) ([]*entities.Product, error) {
+func (p *ProductStorage) FindProductByCategory(category string, currency string) ([]*entities.Product, error) {
 
 	// we should create query option
 
@@ -361,41 +312,4 @@ func (p *ProductRepository) FindProductByCategory(category string, currency stri
 	}
 
 	return products, nil
-}
-
-func (p *ProductRepository) UpdateProduct(id string, pr *models.RequestUpdateProduct) (*entities.Product, error) {
-
-	doc, err := utils.ToDoc(pr)
-	if err != nil {
-		return nil, err
-	}
-
-	obId, _ := primitive.ObjectIDFromHex(id)
-	query := bson.D{{Key: "_id", Value: obId}}
-	update := bson.D{{Key: "$set", Value: doc}}
-	res := p.collection.FindOneAndUpdate(p.ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
-
-	var updatedPost *entities.Product
-
-	if err := res.Decode(&updatedPost); err != nil {
-		return nil, errors.New("no post with that Id exists")
-	}
-
-	return updatedPost, nil
-}
-func (p *ProductRepository) DeleteProduct(id string) error {
-
-	obId, _ := primitive.ObjectIDFromHex(id)
-	query := bson.M{"_id": obId}
-
-	res, err := p.collection.DeleteOne(p.ctx, query)
-	if err != nil {
-		return err
-	}
-
-	if res.DeletedCount == 0 {
-		return errors.New("no document with that Id exists")
-	}
-
-	return nil
 }
