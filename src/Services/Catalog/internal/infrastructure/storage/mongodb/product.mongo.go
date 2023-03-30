@@ -17,17 +17,21 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type ProductRepositoryImpl struct {
+type ProductRepository struct {
 	log        *zap.Logger
 	collection *mongo.Collection
 	ctx        context.Context
 }
 
-func NewProductRepositoryImpl(log *zap.Logger, collection *mongo.Collection, ctx context.Context) ProductRepository {
-	return &ProductRepositoryImpl{log, collection, ctx}
+func NewProductRepository(log *zap.Logger, collection *mongo.Collection, ctx context.Context) *ProductRepository {
+	return &ProductRepository{
+		log,
+		collection,
+		ctx,
+	}
 }
 
-func (p *ProductRepositoryImpl) CreateProduct(pr *models.RequestCreateProduct) (*entities.Product, error) {
+func (p *ProductRepository) CreateProduct(pr *models.RequestCreateProduct) (*entities.Product, error) {
 
 	// Use Factory Design Pattern to get product following product type
 	temp, _ := entities.GetProductType(entities.ProductType(pr.ProductType))
@@ -77,7 +81,7 @@ func (p *ProductRepositoryImpl) CreateProduct(pr *models.RequestCreateProduct) (
 
 }
 
-// func (p *ProductRepositoryImpl) CreateProductPhone(pr *models.RequestCreateProduct) (*entities.Product_phone, error) {
+// func (p *ProductRepository) CreateProductPhone(pr *models.RequestCreateProduct) (*entities.Product_phone, error) {
 
 // 	// Use Factory Design Pattern to get product following product type
 // 	productType, perr := entities.GetProductType(entities.ProductType(pr.ProductType))
@@ -143,7 +147,7 @@ func (p *ProductRepositoryImpl) CreateProduct(pr *models.RequestCreateProduct) (
 // 	return product, nil
 // }
 
-func (p *ProductRepositoryImpl) FindAllProducts(page int, limit int, currency string) (interface{}, error) {
+func (p *ProductRepository) FindAllProducts(page int, limit int, currency string) (interface{}, error) {
 
 	// page return product
 	if page == 0 {
@@ -223,7 +227,7 @@ func (p *ProductRepositoryImpl) FindAllProducts(page int, limit int, currency st
 	return products, nil
 }
 
-func (p *ProductRepositoryImpl) FindProductByID(id string, currency string) (*entities.Product, error) {
+func (p *ProductRepository) FindProductByID(id string, currency string) (*entities.Product, error) {
 	// convert string id to objectID
 	obId, _ := primitive.ObjectIDFromHex(id)
 
@@ -250,7 +254,7 @@ func (p *ProductRepositoryImpl) FindProductByID(id string, currency string) (*en
 
 	return product, nil
 }
-func (p *ProductRepositoryImpl) FindProductByName(name string, currency string) ([]*entities.Product, error) {
+func (p *ProductRepository) FindProductByName(name string, currency string) ([]*entities.Product, error) {
 
 	// we should create query option
 
@@ -299,7 +303,7 @@ func (p *ProductRepositoryImpl) FindProductByName(name string, currency string) 
 	return products, nil
 }
 
-func (p *ProductRepositoryImpl) FindProductByCategory(category string, currency string) ([]*entities.Product, error) {
+func (p *ProductRepository) FindProductByCategory(category string, currency string) ([]*entities.Product, error) {
 
 	// we should create query option
 
@@ -357,7 +361,7 @@ func (p *ProductRepositoryImpl) FindProductByCategory(category string, currency 
 	return products, nil
 }
 
-func (p *ProductRepositoryImpl) UpdateProduct(id string, pr *models.RequestUpdateProduct) (*entities.Product, error) {
+func (p *ProductRepository) UpdateProduct(id string, pr *models.RequestUpdateProduct) (*entities.Product, error) {
 
 	doc, err := utils.ToDoc(pr)
 	if err != nil {
@@ -377,7 +381,7 @@ func (p *ProductRepositoryImpl) UpdateProduct(id string, pr *models.RequestUpdat
 
 	return updatedPost, nil
 }
-func (p *ProductRepositoryImpl) DeleteProduct(id string) error {
+func (p *ProductRepository) DeleteProduct(id string) error {
 
 	obId, _ := primitive.ObjectIDFromHex(id)
 	query := bson.M{"_id": obId}

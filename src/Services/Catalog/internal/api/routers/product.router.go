@@ -7,17 +7,17 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/handlers"
 )
 
-func SetupProductRouter(router *gin.Engine, productHandler handlers.ProductHandler) {
+func SetupProductRouter(router *gin.Engine, catalogHandler handlers.CatalogHandler) {
 	productRouter := router.Group("/products")
 	{
 		// productRouter.Use(middleware.MiddlewareValidateProduct())
-		productRouter.GET("/", productHandler.GetAllProducts)
-		productRouter.GET("/:id", productHandler.GetProductByID)
-		productRouter.GET("/name/:name", productHandler.GetProductByName)
-		productRouter.GET("/category/:category", productHandler.GetProductByCategory)
-		productRouter.PATCH("/:id", productHandler.UpdateProduct)
-		productRouter.DELETE("/:id", productHandler.DeleteProductByID)
-		productRouter.POST("/", productHandler.AddProduct)
+		productRouter.GET("/", catalogHandler.GetAllProducts)
+		productRouter.GET("/:id", catalogHandler.GetProductByID)
+		productRouter.GET("/name/:name", catalogHandler.GetProductByName)
+		productRouter.GET("/category/:category", catalogHandler.GetProductByCategory)
+		productRouter.PATCH("/:id", catalogHandler.UpdateProduct)
+		productRouter.DELETE("/:id", catalogHandler.DeleteProductByID)
+		productRouter.POST("/", catalogHandler.AddProduct)
 
 		// Health check
 		productRouter.GET("/health", func(c *gin.Context) {

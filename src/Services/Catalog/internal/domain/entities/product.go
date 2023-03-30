@@ -1,8 +1,6 @@
 package entities
 
 import (
-	"github.com/huavanthong/microservice-golang/product-api-v3/models"
-	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -12,13 +10,13 @@ type Product struct {
 	ProductCode string             `bson:"pcode" json:"pcode" binding:"required" example:"p123456789"`
 	ProductType string             `bson:"ptype" json:"ptype" binding:"required" example:"phone"`
 	Name        string             `json:"name" bson:"name" binding:"required,gt=0,lt=255" example:"Iphone 14 Pro"`
-	Category    entities.Category  `json:"category" bson:"category" binding:"required,gt=0,lt=255"`
-	Inventory   entities.Inventory `json:"inventory" bson:"inventory" binding:"required"`
-	Brand       entities.Brand     `json:"brand" bson:"brand" binding:"required"`
+	Category    Category           `json:"category" bson:"category" binding:"required,gt=0,lt=255"`
+	Inventory   Inventory          `json:"inventory" bson:"inventory" binding:"required"`
+	Brand       Brand              `json:"brand" bson:"brand" binding:"required"`
 	Summary     string             `json:"summary" bson:"summary" binding:"required,gt=0,lt=10000" example:"Iphone 14 Pro Gold"`
 	Description string             `json:"description" bson:"description" binding:"required,gt=0,lt=10000" example:"Iphone 14 Pro Gold 256GB"`
 	ImageFile   string             `json:"imageFile" bson:"imageFile" binding:"required" example:"default.png"`
-	Discount    entities.Discount  `json:"discount" bson:"discount" binding:"required"`
+	Discount    Discount           `json:"discount" bson:"discount" binding:"required"`
 	Price       float64            `json:"price" bson:"price" binding:"required,min=0.01" example:"1400"`
 	SKU         string             `json:"sku" bson:"sku" example:"ABC-XYZ-OXY"`
 	CreatedAt   string             `json:"created_at" bson:"created_at"`
@@ -54,7 +52,7 @@ func (product *Product) SetName(Name string) {
 	product.Name = Name
 }
 
-func (product *Product) GetCategory() models.Category {
+func (product *Product) GetCategory() Category {
 	return product.Category
 }
 
@@ -62,18 +60,18 @@ func (product *Product) SetCategory(Category string) {
 	product.Category.Name = Category
 }
 
-func (product *Product) GetInventory() models.Inventory {
+func (product *Product) GetInventory() Inventory {
 	return product.Inventory
 }
 
-func (product *Product) SetInventory(Inventory models.Inventory) {
+func (product *Product) SetInventory(Inventory Inventory) {
 	product.Inventory = Inventory
 }
 
-func (product *Product) GetBrand() models.Brand {
+func (product *Product) GetBrand() Brand {
 	return product.Brand
 }
-func (product *Product) SetBrand(Brand models.Brand) {
+func (product *Product) SetBrand(Brand Brand) {
 	product.Brand = Brand
 }
 
@@ -101,11 +99,11 @@ func (product *Product) SetImageFile(ImageFile string) {
 	product.ImageFile = ImageFile
 }
 
-func (product *Product) GetDiscount() models.Discount {
+func (product *Product) GetDiscount() Discount {
 	return product.Discount
 }
 
-func (product *Product) SetDiscount(Discount models.Discount) {
+func (product *Product) SetDiscount(Discount Discount) {
 	product.Discount = Discount
 }
 

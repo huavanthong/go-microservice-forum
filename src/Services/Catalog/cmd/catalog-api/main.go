@@ -11,7 +11,6 @@ import (
 	"os"
 
 	"go.uber.org/zap"
-	"google.golang.org/genproto/googleapis/spanner/admin/database/v1"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -20,8 +19,8 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/routers"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/services"
-	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/config"
-	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/database"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/configs"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/storage/mongodb"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -53,8 +52,8 @@ var (
 	categoryService services.CategoryService
 
 	// Handler setting
-	productHandler  handlers.ProductController
-	categoryHandler handlers.CategoryController
+	productHandler  handlers.ProductHandler
+	categoryHandler handlers.CategoryHandler
 )
 
 func dropCollections(db *mongo.Database) error {
@@ -139,7 +138,7 @@ func handleFlags(db *mongo.Database) {
 func init() {
 
 	// Loading config from variable environment
-	config, err := config.LoadConfig("./")
+	config, err := configs.LoadConfig("./")
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}
@@ -172,8 +171,8 @@ func init() {
 	categoryCollection = mongoclient.Database("golang_mongodb").Collection("category")
 
 	// Initialize Repository
-	productRepo = database.NewProductRepository(logger, productCollection, ctx)
-	categoryRepo = database.NewCategoryRepository(logger, categoryCollection, ctx)
+	productRepo = mongodb.NewProductRepository(logger, productCollection, ctx)
+	categoryRepo = mongodb.NewCategoryRepository(logger, categoryCollection, ctx)
 
 	// Initialize services
 	productService := services.NewProductService(logger, productRepo, ctx)

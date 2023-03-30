@@ -1,4 +1,4 @@
-package storage
+package mongodb
 
 import (
 	"context"
@@ -17,17 +17,21 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type CategoryRepositoryImpl struct {
+type CategoryRepository struct {
 	log        *zap.Logger
 	collection *mongo.Collection
 	ctx        context.Context
 }
 
-func NewCategoryRepositoryImpl(log *zap.Logger, collection *mongo.Collection, ctx context.Context) CategoryRepository {
-	return &CategoryRepositoryImpl{log, collection, ctx}
+func NewCategoryRepository(log *zap.Logger, collection *mongo.Collection, ctx context.Context) *CategoryRepository {
+	return &CategoryRepository{
+		log,
+		collection,
+		ctx,
+	}
 }
 
-func (c *CategoryRepositoryImpl) CreateCategory(rc *models.RequestCreateCategory) (*entities.Category, error) {
+func (c *CategoryRepository) CreateCategory(rc *models.RequestCreateCategory) (*entities.Category, error) {
 
 	// Initialize the basic info of category
 	var temp entities.Category
@@ -71,7 +75,7 @@ func (c *CategoryRepositoryImpl) CreateCategory(rc *models.RequestCreateCategory
 
 }
 
-func (c *CategoryRepositoryImpl) FindAllCategories(page int, limit int) ([]*entities.Category, error) {
+func (c *CategoryRepository) FindAllCategories(page int, limit int) ([]*entities.Category, error) {
 
 	// page return product
 	if page == 0 {
@@ -127,7 +131,7 @@ func (c *CategoryRepositoryImpl) FindAllCategories(page int, limit int) ([]*enti
 	return categories, nil
 }
 
-func (c *CategoryRepositoryImpl) FindCategoryByID(id string) (*entities.Category, error) {
+func (c *CategoryRepository) FindCategoryByID(id string) (*entities.Category, error) {
 	// convert string id to objectID
 	obId, _ := primitive.ObjectIDFromHex(id)
 
@@ -149,7 +153,7 @@ func (c *CategoryRepositoryImpl) FindCategoryByID(id string) (*entities.Category
 	return category, nil
 }
 
-func (c *CategoryRepositoryImpl) FindCategoryByName(name string) ([]*entities.Category, error) {
+func (c *CategoryRepository) FindCategoryByName(name string) ([]*entities.Category, error) {
 
 	// we should create query option
 
@@ -192,7 +196,7 @@ func (c *CategoryRepositoryImpl) FindCategoryByName(name string) ([]*entities.Ca
 	return categories, nil
 }
 
-func (c *CategoryRepositoryImpl) UpdateCategory(id string, pr *models.RequestUpdateCategory) (*entities.Category, error) {
+func (c *CategoryRepository) UpdateCategory(id string, pr *models.RequestUpdateCategory) (*entities.Category, error) {
 
 	doc, err := utils.ToDoc(pr)
 	if err != nil {
@@ -213,7 +217,7 @@ func (c *CategoryRepositoryImpl) UpdateCategory(id string, pr *models.RequestUpd
 	return updatedCategory, nil
 }
 
-func (c *CategoryRepositoryImpl) DeleteCategory(id string) error {
+func (c *CategoryRepository) DeleteCategory(id string) error {
 
 	obId, _ := primitive.ObjectIDFromHex(id)
 	query := bson.M{"_id": obId}
