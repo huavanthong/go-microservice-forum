@@ -16,6 +16,7 @@ func NewProductRepositoryImpl(productStorage *storage.ProductStorage) ProductRep
 func (pr *ProductRepositoryImpl) CreateProduct(p *entities.Product) (*entities.Product, error) {
 	return p.repository.Create(p)
 }
+
 func (pr *ProductRepositoryImpl) GetProductByID(id string) (*entities.Product, error) {
 	return pr.productStorage.GetByID(id)
 }
@@ -26,4 +27,8 @@ func (pr *ProductRepositoryImpl) UpdateProduct(p *entities.Product) error {
 
 func (pr *ProductRepositoryImpl) DeleteProduct(id string) error {
 	return pr.productStorage.Delete(id)
+}
+
+func (pr *ProductRepositoryImpl) GetProducts(filter *entities.ProductFilter, pagination *entities.Pagination) ([]*entities.Product, int64, error) {
+	return pr.productStorage.GetByID(filter, pagination)
 }

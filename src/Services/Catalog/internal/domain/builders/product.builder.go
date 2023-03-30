@@ -22,6 +22,11 @@ func NewProductBuilder() *ProductBuilder {
 	return &ProductBuilder{}
 }
 
+func (pb *ProductBuilder) SetID(id string) *ProductBuilder {
+	pb.id = id
+	return pb
+}
+
 func (pb *ProductBuilder) SetName(name string) *ProductBuilder {
 	pb.name = name
 	return pb
@@ -69,11 +74,6 @@ func (pb *ProductBuilder) SetCreatedAt(createdAt string) *ProductBuilder {
 
 func (pb *ProductBuilder) SetUpdatedAt(updatedAt string) *ProductBuilder {
 	pb.updatedAt = updatedAt
-	return pb
-}
-
-func (pb *ProductBuilder) SetID(id string) *ProductBuilder {
-	pb.id = id
 	return pb
 }
 
