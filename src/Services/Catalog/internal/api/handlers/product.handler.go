@@ -15,11 +15,11 @@ import (
 
 type CatalogHandler struct {
 	log            *zap.Logger
-	productService services.ProductService
+	catalogService services.CatalogService
 }
 
-func NewCatalogHandler(log *zap.Logger, productService services.ProductService) CatalogHandler {
-	return CatalogHandler{log, productService}
+func NewCatalogHandler(log *zap.Logger, catalogService services.CatalogService) CatalogHandler {
+	return CatalogHandler{log, catalogService}
 }
 
 // GetAllProducts godoc
@@ -54,7 +54,7 @@ func (pc *CatalogHandler) GetAllProducts(ctx *gin.Context) {
 	}
 
 	// call product service to get all the exist product in store
-	products, err := pc.productService.FindAllProducts(intPage, intLimit, currency)
+	products, err := pc.catalogService.FindAllProducts(intPage, intLimit, currency)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError,
 			models.Response{
@@ -95,7 +95,7 @@ func (pc *CatalogHandler) GetProductByID(ctx *gin.Context) {
 	var currency = ctx.DefaultQuery("currency", "USD")
 
 	// find user by id
-	product, err := pc.productService.FindProductByID(productId, currency)
+	product, err := pc.catalogService.FindProductByID(productId, currency)
 
 	// catch error
 	if err != nil {
@@ -152,7 +152,7 @@ func (pc *CatalogHandler) GetProductByName(ctx *gin.Context) {
 	var currency = ctx.DefaultQuery("currency", "USD")
 
 	// call admin service to get user by email
-	products, err := pc.productService.FindProductByName(name, currency)
+	products, err := pc.catalogService.FindProductByName(name, currency)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -206,7 +206,7 @@ func (pc *CatalogHandler) GetProductByCategory(ctx *gin.Context) {
 	var currency = ctx.DefaultQuery("currency", "USD")
 
 	// call admin service to get user by email
-	products, err := pc.productService.FindProductByCategory(category, currency)
+	products, err := pc.catalogService.FindProductByCategory(category, currency)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -273,7 +273,7 @@ func (pc *CatalogHandler) AddProduct(ctx *gin.Context) {
 	}
 
 	// call post service to create the post
-	product, err := pc.productService.CreateProduct(reqProduct)
+	product, err := pc.catalogService.CreateProduct(reqProduct)
 	if err != nil {
 		if strings.Contains(err.Error(), "title already exists") {
 			ctx.JSON(http.StatusConflict,
@@ -335,7 +335,7 @@ func (pc *CatalogHandler) UpdateProduct(ctx *gin.Context) {
 	}
 
 	// call product service to update info
-	updatedProduct, err := pc.productService.UpdateProduct(id, reqUpdateProduct)
+	updatedProduct, err := pc.catalogService.UpdateProduct(id, reqUpdateProduct)
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
@@ -381,7 +381,7 @@ func (pc *CatalogHandler) DeleteProductByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	// call product service to delete product by ID
-	err := pc.productService.DeleteProduct(id)
+	err := pc.catalogService.DeleteProduct(id)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "Id exists") {

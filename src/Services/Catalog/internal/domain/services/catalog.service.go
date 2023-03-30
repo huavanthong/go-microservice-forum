@@ -5,7 +5,7 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
 )
 
-type ProductService interface {
+type CatalogService interface {
 	CreateProduct(pr *models.RequestCreateProduct) (*entities.Product, error)
 	FindAllProducts(page int, limit int, currency string) (interface{}, error)
 	FindProductByID(id string, currency string) (*entities.Product, error)

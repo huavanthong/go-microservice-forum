@@ -34,8 +34,10 @@ func NewProductRepository(log *zap.Logger, collection *mongo.Collection, ctx con
 func (p *ProductRepository) CreateProduct(pr *models.RequestCreateProduct) (*entities.Product, error) {
 
 	// Use Factory Design Pattern to get product following product type
-	temp, _ := entities.GetProductType(entities.ProductType(pr.ProductType))
+	// Implement later
+	// temp, _ := entities.GetProductType(entities.ProductType(pr.ProductType))
 
+	temp := entities.Product{}
 	// Initialize the basic info of product
 	temp.SetName(pr.Name)
 	temp.SetCategory(pr.Category)

@@ -15,7 +15,6 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/handlers"
-	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/middleware"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/routers"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/services"
@@ -48,11 +47,11 @@ var (
 	categoryRepo repositories.CategoryRepository
 
 	// Services setting
-	productService  services.ProductService
-	categoryService services.CategoryService
+	productService  services.CatalogServiceImpl
+	categoryService services.CategoryServiceImpl
 
 	// Handler setting
-	productHandler  handlers.ProductHandler
+	catalogHandler  handlers.CatalogHandler
 	categoryHandler handlers.CategoryHandler
 )
 
@@ -175,22 +174,22 @@ func init() {
 	categoryRepo = mongodb.NewCategoryRepository(logger, categoryCollection, ctx)
 
 	// Initialize services
-	productService := services.NewProductService(logger, productRepo, ctx)
-	categoryService := services.NewCategoryService(logger, categoryRepo, ctx)
+	productService := services.NewCatalogServiceImpl(logger, productRepo, ctx)
+	categoryService := services.NewCategoryServiceImpl(logger, categoryRepo, ctx)
 
 	// Initialize handlers
-	productHandler = handlers.NewProductHandler(logger, productService)
+	catalogHandler = handlers.NewCatalogHandler(logger, productService)
 	categoryHandler = handlers.NewCategoryHandler(logger, categoryService)
 
 	// Initialize middleware
-	authMiddleware := middleware.NewAuthMiddleware()
+	//authMiddleware := middleware.NewAuthMiddleware()
 
 	// Initialize router
 	router := gin.Default()
 
 	// Setup routes
-	routers.SetupCategoryRouter(router, categoryHandler, authMiddleware)
-	routers.SetupProductRouter(router, productHandler, authMiddleware)
+	routers.SetupCategoryRouter(router, categoryHandler)
+	routers.SetupProductRouter(router, catalogHandler)
 
 	// Default returns an Engine instance with the Logger and Recovery middleware already attached.
 	server = gin.Default()
@@ -206,7 +205,7 @@ func init() {
 func main() {
 
 	/************************ Init MongoDB *************************/
-	config, err := config.LoadConfig(".")
+	config, err := configs.LoadConfig(".")
 
 	if err != nil {
 		log.Fatal("Could not load config", err)
@@ -219,7 +218,7 @@ func main() {
 
 }
 
-func startGinServer(config config.Config) {
+func startGinServer(config configs.Config) {
 
 	/************************ Allow Cross Orgin Resource Sharing  *************************/
 	corsConfig := cors.DefaultConfig()
