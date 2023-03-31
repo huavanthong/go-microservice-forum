@@ -17,10 +17,15 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/utils"
 )
 
+// Declare global variable
+var (
+	configPath string = "./internal/config/config.yml"
+)
+
 func main() {
 
 	// Load configuration from file
-	cfg, err := config.LoadConfig("config.yml")
+	cfg, err := config.LoadConfig(configPath)
 	if err != nil {
 		log.Fatalf("Failed to load configuration: %v", err)
 	}
