@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package discount;
+
+option go_package = "github.com/example/discount-service/internal/proto/discount;discount";
+
+message DiscountRequest {
+  string product_name = 1;
+}
+
+message DiscountResponse {
+  string product_name = 1;
+  float32 amount = 2;
+  string description = 3;
+}
+
+service DiscountService {
+  rpc GetDiscount(DiscountRequest) returns (DiscountResponse);
+  rpc CreateDiscount(DiscountResponse) returns (google.protobuf.BoolValue);
+  rpc UpdateDiscount(DiscountResponse) returns (google.protobuf.BoolValue);
+  rpc DeleteDiscount(DiscountRequest) returns (google.protobuf.BoolValue);
+}
