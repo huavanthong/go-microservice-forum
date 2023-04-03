@@ -1,37 +1,42 @@
-package discount
+package services
 
 import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 
-	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/repositories"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
+// DiscountService represents the discount service
 type DiscountService struct {
-	repo   repositories.DiscountRepository
-	config *config.Configuration
+	logger       *log.Logger
+	discountRepo repositories.DiscountRepository
 }
 
-func NewDiscountService(repo repositories.DiscountRepository, config *config.Configuration) *DiscountService {
+func NewDiscountService(logger *log.Logger, discountRepo repositories.DiscountRepository) *DiscountService {
 	return &DiscountService{
-		repo:   repo,
-		config: config,
+		logger:       logger,
+		discountRepo: discountRepo,
 	}
 }
 
-func (s *DiscountService) GetDiscount(ctx context.Context, req *models.DiscountRequest) (*models.DiscountResponse, error) {
-	coupon, err := s.repo.GetDiscount(req.ProductName)
+// GetDiscount gets the discount based on the input parameters
+func (s *DiscountService) GetDiscountByID(ctx context.Context, req *models.GetDiscountRequest) (*models.GetDiscountResponse, error) {
+
+	// Get discount from repository
+	discount, err := s.discountRepo.GetDiscount(req.ProductName)
 	if err != nil {
 		fmt.Printf("Error while getting discount: %v\n", err)
 		return nil, status.Error(codes.Internal, "Internal error")
 	}
 
-	if coupon == nil {
+	if discount == nil {
 		return nil, status.Error(codes.NotFound, "Coupon not found")
 	}
 
@@ -47,15 +52,15 @@ func (s *DiscountService) GetDiscount(ctx context.Context, req *models.DiscountR
 
 	return res, nil
 }
+func (s *DiscountService) CreateDiscount(ctx context.Context, req *models.DiscountRequest) (*models.DiscountResponse, error) {
 
-func (s *DiscountService) CreateDiscount(ctx context.Context, req *models.Discount) (*models.DiscountResponse, error) {
 	coupon := &models.Coupon{
 		ProductName: req.ProductName,
 		Description: req.Description,
 		Amount:      req.Amount,
 	}
 
-	if err := s.repo.CreateDiscount(coupon); err != nil {
+	if err := s.discountRepo.CreateDiscount(coupon); err != nil {
 		fmt.Printf("Error while creating discount: %v\n", err)
 		return nil, status.Error(codes.Internal, "Internal error")
 	}
@@ -81,7 +86,7 @@ func (s *DiscountService) UpdateDiscount(ctx context.Context, req *models.Discou
 		Amount:      req.Amount,
 	}
 
-	if err := s.repo.UpdateDiscount(coupon); err != nil {
+	if err := s.discountRepo.UpdateDiscount(coupon); err != nil {
 		fmt.Printf("Error while updating discount: %v\n", err)
 		return nil, status.Error(codes.Internal, "Internal error")
 	}
@@ -100,7 +105,8 @@ func (s *DiscountService) UpdateDiscount(ctx context.Context, req *models.Discou
 }
 
 func (s *DiscountService) DeleteDiscount(ctx context.Context, req *models.DiscountRequest) (*models.DeleteDiscountResponse, error) {
-	if err := s.repo.DeleteDiscount(req.ProductName); err != nil {
+
+	if err := s.discountRepo.DeleteDiscount(req.ProductName); err != nil {
 		fmt.Printf("Error while deleting discount: %v\n", err)
 		if errors.Is(err, repositories.ErrCouponNotFound) {
 			return nil, status.Error(codes.NotFound, "Coupon not found")

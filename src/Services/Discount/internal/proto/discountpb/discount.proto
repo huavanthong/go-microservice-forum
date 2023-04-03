@@ -23,3 +23,10 @@ message DiscountResponse {
   float amount = 2;
   string description = 3;
 }
+
+// DiscountResponse is the response from a DiscountRequest call
+message DiscountResponse {
+  string product_name = 1;
+  float amount = 2;
+  string description = 3;
+}
