@@ -16,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/handlers"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/routers"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/services"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/configs"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/storage/mongodb"
@@ -41,13 +42,18 @@ var (
 	productCollection  *mongo.Collection
 	categoryCollection *mongo.Collection
 
+	// Storage setting
+	productStorage  *mongodb.ProductStorage
+	categoryStorage *mongodb.CategoryStorage
+
 	// Repositories setting
-	productRepo  *mongodb.ProductRepository
-	categoryRepo *mongodb.CategoryRepository
+	productRepo       *repositories.ProductRepositoryImpl
+	productSearchRepo *repositories.ProductSearchRepositoryImpl
+	categoryRepo      *repositories.CategoryRepositoryImpl
 
 	// Services setting
-	productService  services.CatalogServiceImpl
-	categoryService services.CategoryServiceImpl
+	catalogtService *services.CatalogServiceImpl
+	categoryService *services.CategoryServiceImpl
 
 	// Handler setting
 	catalogHandler  handlers.CatalogHandler
@@ -168,16 +174,21 @@ func init() {
 	productCollection = mongoclient.Database("golang_mongodb").Collection("products")
 	categoryCollection = mongoclient.Database("golang_mongodb").Collection("category")
 
+	// Initialize Storage
+	productStorage = mongodb.NewProductStorage(logger, productCollection, ctx)
+	categoryStorage = mongodb.NewCategoryStorage(logger, categoryCollection, ctx)
+
 	// Initialize Repository
-	productRepo = mongodb.NewProductRepository(logger, productCollection, ctx)
-	categoryRepo = mongodb.NewCategoryRepository(logger, categoryCollection, ctx)
+	productRepo = repositories.NewProductRepositoryImpl(productStorage)
+	productSearchRepo = repositories.NewProductSearchRepositoryImpl(productStorage)
+	categoryRepo = repositories.NewCategoryRepositoryImpl(categoryStorage)
 
 	// Initialize services
-	productService := services.NewCatalogServiceImpl(logger, productRepo, ctx)
+	catalogtService := services.NewCatalogServiceImpl(logger, productRepo, productSearchRepo, ctx)
 	categoryService := services.NewCategoryServiceImpl(logger, categoryRepo, ctx)
 
 	// Initialize handlers
-	catalogHandler = handlers.NewCatalogHandler(logger, productService)
+	catalogHandler = handlers.NewCatalogHandler(logger, catalogtService)
 	categoryHandler = handlers.NewCategoryHandler(logger, categoryService)
 
 	// Initialize middleware
@@ -238,6 +249,4 @@ func startGinServer(config configs.Config) {
 
 	log.Println("Starting server on port 9090")
 	log.Fatal(server.Run(":" + config.Port))
-	// 		go func() {
-	// 	}()
 }

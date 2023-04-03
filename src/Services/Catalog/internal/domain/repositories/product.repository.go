@@ -7,9 +7,9 @@ import (
 type ProductRepository interface {
 	CreateProduct(p *entities.Product) (*entities.Product, error)
 	GetProductByID(id string) (*entities.Product, error)
-	UpdateProduct(p *entities.Product) error
+	UpdateProduct(p *entities.Product) (*entities.Product, error)
 	DeleteProduct(id string) error
-	GetProducts(filter *entities.ProductFilter, pagination *entities.Pagination) ([]*entities.Product, int64, error)
+	GetProducts(filter *entities.ProductFilter, pagination *entities.Pagination) ([]*entities.Product, error)
 }
 
 type ProductSearchRepository interface {

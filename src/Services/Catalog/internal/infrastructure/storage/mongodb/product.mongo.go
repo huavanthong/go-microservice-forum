@@ -40,7 +40,7 @@ func (ps *ProductStorage) Create(p *entities.Product) (*entities.Product, error)
 	p.ID = primitive.NewObjectID()
 
 	// Insert product to mongodb
-	_, err := p.collection.InsertOne(ps.ctx, p)
+	_, err := ps.collection.InsertOne(ps.ctx, p)
 	if err != nil {
 		if er, ok := err.(mongo.WriteException); ok && er.WriteErrors[0].Code == 11000 {
 			return nil, errors.New("product with that pcode already exists")
@@ -54,7 +54,7 @@ func (ps *ProductStorage) Create(p *entities.Product) (*entities.Product, error)
 
 	index := mongo.IndexModel{Keys: bson.M{"pcode": 1}, Options: opt}
 
-	if _, err := p.collection.Indexes().CreateOne(p.ctx, index); err != nil {
+	if _, err := ps.collection.Indexes().CreateOne(ps.ctx, index); err != nil {
 		return nil, errors.New("could not create index for pcode")
 	}
 
@@ -62,7 +62,7 @@ func (ps *ProductStorage) Create(p *entities.Product) (*entities.Product, error)
 	// query := bson.M{"_id": res.InsertedID}
 	query := bson.M{"_id": p.ID}
 
-	if err = p.collection.FindOne(p.ctx, query).Decode(&product); err != nil {
+	if err = ps.collection.FindOne(ps.ctx, query).Decode(&product); err != nil {
 		return nil, err
 	}
 
@@ -99,12 +99,10 @@ func (ps *ProductStorage) Update(p *entities.Product) (*entities.Product, error)
 		return nil, err
 	}
 
-	// Get object ID
-	obId, _ := primitive.ObjectIDFromHex(p.ID)
-
-	query := bson.D{{Key: "_id", Value: obId}}
+	// Set query
+	query := bson.D{{Key: "_id", Value: p.ID}}
 	update := bson.D{{Key: "$set", Value: doc}}
-	res := p.collection.FindOneAndUpdate(p.ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
+	res := ps.collection.FindOneAndUpdate(ps.ctx, query, update, options.FindOneAndUpdate().SetReturnDocument(1))
 
 	var updatedPost *entities.Product
 
@@ -134,7 +132,7 @@ func (ps *ProductStorage) Delete(id string) error {
 	return nil
 }
 
-func (ps *ProductStorage) GetProducts(filter *entities.ProductFilter, pagination *entities.Pagination) ([]*entities.Product, int64, error) {
+func (ps *ProductStorage) GetProducts(filter *entities.ProductFilter, pagination *entities.Pagination) ([]*entities.Product, error) {
 
 	query := bson.M{}
 	// Check filter condition
@@ -161,11 +159,11 @@ func (ps *ProductStorage) GetProducts(filter *entities.ProductFilter, pagination
 	}
 
 	// Count product by query
-	var count int64
-	count, err := ps.collection.CountDocuments(ps.ctx, query)
-	if err != nil {
-		return nil, errors.New(err, "failed to count products in DB")
-	}
+	// var count int64
+	// count, err := ps.collection.CountDocuments(ps.ctx, query)
+	// if err != nil {
+	// 	return nil, errors.New("failed to count products in DB")
+	// }
 
 	// Check condition
 	opts := options.Find()
@@ -175,7 +173,7 @@ func (ps *ProductStorage) GetProducts(filter *entities.ProductFilter, pagination
 	}
 	cursor, err := ps.collection.Find(ps.ctx, query, opts)
 	if err != nil {
-		return nil, errors.New(err, "failed to find products in DB")
+		return nil, errors.New("failed to find products in DB")
 	}
 	defer cursor.Close(ps.ctx)
 
@@ -188,7 +186,7 @@ func (ps *ProductStorage) GetProducts(filter *entities.ProductFilter, pagination
 		var product entities.Product
 
 		if err := cursor.Decode(&product); err != nil {
-			return nil, errors.New(err, "failed to decode product")
+			return nil, errors.New("failed to decode product")
 		}
 
 		products = append(products, &product)
@@ -196,7 +194,7 @@ func (ps *ProductStorage) GetProducts(filter *entities.ProductFilter, pagination
 
 	// if any item error, return err
 	if err := cursor.Err(); err != nil {
-		return nil, errors.New(err, "failed to iterate products")
+		return nil, errors.New("failed to iterate products")
 	}
 
 	// Warning: if data is empty, return nil

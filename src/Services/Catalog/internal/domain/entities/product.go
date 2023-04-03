@@ -25,18 +25,25 @@ type Product struct {
 	DeleteAt  string `json:"deleted_at" bson:"deleted_at"`
 }
 
+type CategoryFilter struct {
+	Category string
+	Brand    string
+}
+
 type ProductFilter struct {
 	Category    string
 	ProductType string
 	Brand       string
+	PriceMin    float64
+	PriceMax    float64
 }
 
 type Pagination struct {
-	Page  int
-	Limit int
+	Page  int64
+	Limit int64
 }
 
-func (p *Pagination) Offset() int {
+func (p *Pagination) Offset() int64 {
 	return (p.Page - 1) * p.Limit
 }
 

@@ -8,7 +8,7 @@ import (
 type ProductStorage interface {
 	Create(p *entities.Product) (*entities.Product, error)
 	GetByID(id string) (*entities.Product, error)
-	Update(p *entities.Product) error
+	Update(p *entities.Product) (*entities.Product, error)
 	Delete(id string) error
-	GetProducts(filter *entities.ProductFilter, pagination *entities.Pagination) ([]*entities.Product, int64, error)
+	GetProducts(filter *entities.ProductFilter, pagination *entities.Pagination) ([]*entities.Product, error)
 }

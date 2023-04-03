@@ -7,6 +7,7 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/go-playground/validator v9.31.0+incompatible
+	github.com/google/uuid v1.1.2
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/sirupsen/logrus v1.6.0

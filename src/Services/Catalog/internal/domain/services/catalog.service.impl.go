@@ -9,17 +9,19 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/builders"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
-	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/repository"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/repositories"
 )
 
 type CatalogServiceImpl struct {
-	log         *zap.Logger
-	catalogRepo *repository.ProductRepository
-	ctx         context.Context
+	log               *zap.Logger
+	catalogRepo       *repositories.ProductRepositoryImpl
+	catalogSearchRepo *repositories.ProductSearchRepositoryImpl
+
+	ctx context.Context
 }
 
-func NewCatalogServiceImpl(log *zap.Logger, productRepo *repository.ProductRepository, ctx context.Context) CatalogService {
-	return &CatalogServiceImpl{log, productRepo, ctx}
+func NewCatalogServiceImpl(log *zap.Logger, productRepo *repositories.ProductRepositoryImpl, catalogSearchRepo *repositories.ProductSearchRepositoryImpl, ctx context.Context) *CatalogServiceImpl {
+	return &CatalogServiceImpl{log, productRepo, catalogSearchRepo, ctx}
 }
 
 func (cs *CatalogServiceImpl) CreateProduct(pr *models.CreateProductRequest) (*entities.Product, error) {
@@ -45,17 +47,12 @@ func (cs *CatalogServiceImpl) CreateProduct(pr *models.CreateProductRequest) (*e
 	return productRes, nil
 }
 
-func (p *CatalogServiceImpl) GetProducts(page int, limit int, currency string) (interface{}, error) {
-
-	panic(nil)
-}
-
 func (cs *CatalogServiceImpl) GetProductByID(id string, currency string) (*entities.Product, error) {
 
 	return cs.catalogRepo.GetProductByID(id)
 }
 
-func (cs *CatalogServiceImpl) UpdateProduct(id string, pr *models.RequestUpdateProduct) (*entities.Product, error) {
+func (cs *CatalogServiceImpl) UpdateProduct(id string, pr *models.UpdateProductRequest) (*entities.Product, error) {
 
 	// Initialize product builder
 	productBuilder := builders.NewProductBuilder()
@@ -80,5 +77,20 @@ func (cs *CatalogServiceImpl) UpdateProduct(id string, pr *models.RequestUpdateP
 
 func (cs *CatalogServiceImpl) DeleteProduct(id string) error {
 
-	return cs.catalogRepo.GetProductByID(id)
+	return cs.catalogRepo.DeleteProduct(id)
+}
+
+func (cs *CatalogServiceImpl) GetProducts(page int, limit int, currency string) (interface{}, error) {
+
+	panic(nil)
+}
+
+func (cs *CatalogServiceImpl) FindProductByName(name string, currency string) ([]*entities.Product, error) {
+
+	return cs.catalogSearchRepo.FindProductByName(name, currency)
+}
+
+func (cs *CatalogServiceImpl) FindProductByCategory(category string, currency string) ([]*entities.Product, error) {
+
+	return cs.catalogSearchRepo.FindProductByCategory(category, currency)
 }

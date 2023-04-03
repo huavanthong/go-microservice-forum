@@ -15,10 +15,10 @@ import (
 
 type CatalogHandler struct {
 	log            *zap.Logger
-	catalogService services.CatalogService
+	catalogService *services.CatalogServiceImpl
 }
 
-func NewCatalogHandler(log *zap.Logger, catalogService services.CatalogService) CatalogHandler {
+func NewCatalogHandler(log *zap.Logger, catalogService *services.CatalogServiceImpl) CatalogHandler {
 	return CatalogHandler{log, catalogService}
 }
 
@@ -54,7 +54,7 @@ func (pc *CatalogHandler) GetAllProducts(ctx *gin.Context) {
 	}
 
 	// call product service to get all the exist product in store
-	products, err := pc.catalogService.FindAllProducts(intPage, intLimit, currency)
+	products, err := pc.catalogService.GetProducts(intPage, intLimit, currency)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError,
 			models.Response{
@@ -95,7 +95,7 @@ func (pc *CatalogHandler) GetProductByID(ctx *gin.Context) {
 	var currency = ctx.DefaultQuery("currency", "USD")
 
 	// find user by id
-	product, err := pc.catalogService.FindProductByID(productId, currency)
+	product, err := pc.catalogService.GetProductByID(productId, currency)
 
 	// catch error
 	if err != nil {
@@ -259,7 +259,7 @@ func HandlerProduct(h gin.HandlerFunc, decors ...func(gin.HandlerFunc) gin.Handl
 func (pc *CatalogHandler) AddProduct(ctx *gin.Context) {
 
 	// prepare a post request from ctx
-	var reqProduct *models.RequestCreateProduct
+	var reqProduct *models.CreateProductRequest
 
 	// from context, bind a new post info to json
 	if err := ctx.ShouldBindJSON(&reqProduct); err != nil {
@@ -323,7 +323,7 @@ func (pc *CatalogHandler) UpdateProduct(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	// from context, bind a new post info to json
-	var reqUpdateProduct *models.RequestUpdateProduct
+	var reqUpdateProduct *models.UpdateProductRequest
 	if err := ctx.ShouldBindJSON(&reqUpdateProduct); err != nil {
 		ctx.JSON(http.StatusBadGateway,
 			models.Response{

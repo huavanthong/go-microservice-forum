@@ -2,12 +2,14 @@ package builders
 
 import (
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type ProductBuilder struct {
-	id          string
+	id          primitive.ObjectID
 	name        string
 	category    string
+	brand       string
 	summary     string
 	description string
 	imageFile   string
@@ -22,7 +24,7 @@ func NewProductBuilder() *ProductBuilder {
 	return &ProductBuilder{}
 }
 
-func (pb *ProductBuilder) SetID(id string) *ProductBuilder {
+func (pb *ProductBuilder) SetID(id primitive.ObjectID) *ProductBuilder {
 	pb.id = id
 	return pb
 }
@@ -34,6 +36,11 @@ func (pb *ProductBuilder) SetName(name string) *ProductBuilder {
 
 func (pb *ProductBuilder) SetCategory(category string) *ProductBuilder {
 	pb.category = category
+	return pb
+}
+
+func (pb *ProductBuilder) SetBrand(brand string) *ProductBuilder {
+	pb.brand = brand
 	return pb
 }
 
@@ -57,15 +64,15 @@ func (pb *ProductBuilder) SetPrice(price float64) *ProductBuilder {
 	return pb
 }
 
-func (pb *ProductBuilder) SetProductCode(productCode string) *ProductBuilder {
-	pb.productCode = productCode
-	return pb
-}
+// func (pb *ProductBuilder) SetProductCode(productCode string) *ProductBuilder {
+// 	pb.productCode = productCode
+// 	return pb
+// }
 
-func (pb *ProductBuilder) SetSKU(sku string) *ProductBuilder {
-	pb.sku = sku
-	return pb
-}
+// func (pb *ProductBuilder) SetSKU(sku string) *ProductBuilder {
+// 	pb.sku = sku
+// 	return pb
+// }
 
 func (pb *ProductBuilder) SetCreatedAt(createdAt string) *ProductBuilder {
 	pb.createdAt = createdAt
@@ -86,9 +93,9 @@ func (pb *ProductBuilder) Build() *entities.Product {
 		Description: pb.description,
 		ImageFile:   pb.imageFile,
 		Price:       pb.price,
-		ProductCode: pb.productCode,
-		SKU:         pb.sku,
-		CreateAt:    pb.createdAt,
-		UpdateAt:    pb.updatedAt,
+		CreatedAt:   pb.createdAt,
+		UpdatedAt:   pb.updatedAt,
+		// ProductCode: pb.productCode,
+		// SKU:         pb.sku,
 	}
 }
