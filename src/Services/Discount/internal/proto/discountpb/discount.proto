@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package discount;
+package discountpb;
 
-option go_package = "internal/proto/discount";
+option go_package = "internal/proto/discountpb";
 
 // DiscountSerrvice defines services
 service DiscountService {

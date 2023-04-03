@@ -4,7 +4,7 @@
 // - protoc             v4.22.2
 // source: discount.proto
 
-package discount
+package discountpb
 
 import (
 	context "context"
@@ -38,7 +38,7 @@ func NewDiscountServiceClient(cc grpc.ClientConnInterface) DiscountServiceClient
 
 func (c *discountServiceClient) GetDiscount(ctx context.Context, in *DiscountRequest, opts ...grpc.CallOption) (*DiscountResponse, error) {
 	out := new(DiscountResponse)
-	err := c.cc.Invoke(ctx, "/discount.DiscountService/GetDiscount", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/discountpb.DiscountService/GetDiscount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (c *discountServiceClient) GetDiscount(ctx context.Context, in *DiscountReq
 
 func (c *discountServiceClient) CreateDiscount(ctx context.Context, in *DiscountResponse, opts ...grpc.CallOption) (*DiscountResponse, error) {
 	out := new(DiscountResponse)
-	err := c.cc.Invoke(ctx, "/discount.DiscountService/CreateDiscount", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/discountpb.DiscountService/CreateDiscount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (c *discountServiceClient) CreateDiscount(ctx context.Context, in *Discount
 
 func (c *discountServiceClient) UpdateDiscount(ctx context.Context, in *DiscountResponse, opts ...grpc.CallOption) (*DiscountResponse, error) {
 	out := new(DiscountResponse)
-	err := c.cc.Invoke(ctx, "/discount.DiscountService/UpdateDiscount", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/discountpb.DiscountService/UpdateDiscount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -65,7 +65,7 @@ func (c *discountServiceClient) UpdateDiscount(ctx context.Context, in *Discount
 
 func (c *discountServiceClient) DeleteDiscount(ctx context.Context, in *DiscountRequest, opts ...grpc.CallOption) (*DiscountResponse, error) {
 	out := new(DiscountResponse)
-	err := c.cc.Invoke(ctx, "/discount.DiscountService/DeleteDiscount", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/discountpb.DiscountService/DeleteDiscount", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,7 @@ func _DiscountService_GetDiscount_Handler(srv interface{}, ctx context.Context, 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/discount.DiscountService/GetDiscount",
+		FullMethod: "/discountpb.DiscountService/GetDiscount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DiscountServiceServer).GetDiscount(ctx, req.(*DiscountRequest))
@@ -140,7 +140,7 @@ func _DiscountService_CreateDiscount_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/discount.DiscountService/CreateDiscount",
+		FullMethod: "/discountpb.DiscountService/CreateDiscount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DiscountServiceServer).CreateDiscount(ctx, req.(*DiscountResponse))
@@ -158,7 +158,7 @@ func _DiscountService_UpdateDiscount_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/discount.DiscountService/UpdateDiscount",
+		FullMethod: "/discountpb.DiscountService/UpdateDiscount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DiscountServiceServer).UpdateDiscount(ctx, req.(*DiscountResponse))
@@ -176,7 +176,7 @@ func _DiscountService_DeleteDiscount_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/discount.DiscountService/DeleteDiscount",
+		FullMethod: "/discountpb.DiscountService/DeleteDiscount",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DiscountServiceServer).DeleteDiscount(ctx, req.(*DiscountRequest))
@@ -188,7 +188,7 @@ func _DiscountService_DeleteDiscount_Handler(srv interface{}, ctx context.Contex
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var DiscountService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "discount.DiscountService",
+	ServiceName: "discountpb.DiscountService",
 	HandlerType: (*DiscountServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
