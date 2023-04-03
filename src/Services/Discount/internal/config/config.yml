@@ -4,3 +4,6 @@ database:
   user: postgres
   password: mysecretpassword
   dbname: discount_service
+
+logger:
+  log_level: info

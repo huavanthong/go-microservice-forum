@@ -13,8 +13,13 @@ type DatabaseConfig struct {
 	Password string `mapstructure:"password"`
 	DBName   string `mapstructure:"dbname"`
 }
+
+type LoggerConfig struct {
+	LogLevel string `mapstructure:"log_level"`
+}
 type Config struct {
 	Database DatabaseConfig `mapstructure:"database"`
+	Logger   LoggerConfig   `mapstructure:"logger"`
 }
 
 func LoadConfig(path string) (*Config, error) {
@@ -24,6 +29,8 @@ func LoadConfig(path string) (*Config, error) {
 	viper.SetDefault("database.user", "postgres")
 	viper.SetDefault("database.password", "")
 	viper.SetDefault("database.dbname", "discount_service")
+
+	viper.SetDefault("logger.loglevel", "info")
 
 	// set config file name and path
 	//viper.AddConfigPath(path)

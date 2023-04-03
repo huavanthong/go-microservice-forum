@@ -20,6 +20,17 @@ func NewDiscountController(discountService services.DiscountService) *DiscountCo
 	}
 }
 
+// GetDiscount godoc
+// @Summary Get discount for product name
+// @Description Get discount for product name
+// @Tags discount
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} payload.UserRegisterSuccess
+// @Failure 400 {object} http.StatusBadRequest
+// @Failure 404 {object} http.StatusNotFound
+// @Success 500 {object} http.StatusInternalServerError
+// @Router /discount/:productName [get]
 func (c *DiscountController) GetDiscount(cxt *gin.Context) {
 	productName := cxt.Query("productName")
 	if productName == "" {
@@ -27,7 +38,7 @@ func (c *DiscountController) GetDiscount(cxt *gin.Context) {
 		return
 	}
 
-	coupon, err := c.discountService.GetDiscount(productName)
+	discount, err := c.discountService.GetDiscount(productName)
 	if err != nil {
 		if errors.Is(err, models.ErrNotFound) {
 			cxt.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -37,9 +48,19 @@ func (c *DiscountController) GetDiscount(cxt *gin.Context) {
 		return
 	}
 
-	cxt.JSON(http.StatusOK, coupon)
+	cxt.JSON(http.StatusOK, discount)
 }
 
+// CreateDiscount godoc
+// @Summary Create coupon
+// @Description Create coupon
+// @Tags discount
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} http.StatusOK
+// @Failure 400 {object} http.StatusBadRequest
+// @Success 500 {object} http.StatusInternalServerError
+// @Router /discount [post]
 func (c *DiscountController) CreateDiscount(cxt *gin.Context) {
 	var coupon models.Coupon
 	if err := cxt.ShouldBindJSON(&coupon); err != nil {
@@ -61,6 +82,17 @@ func (c *DiscountController) CreateDiscount(cxt *gin.Context) {
 	cxt.JSON(http.StatusOK, gin.H{"message": "discount created successfully"})
 }
 
+// UpdateDiscount godoc
+// @Summary Update coupon
+// @Description Update coupon
+// @Tags discount
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} http.StatusOK
+// @Failure 400 {object} http.StatusBadRequest
+// @Failure 404 {object} http.StatusNotFound
+// @Success 500 {object} http.StatusInternalServerError
+// @Router /discount [put]
 func (c *DiscountController) UpdateDiscount(cxt *gin.Context) {
 	var coupon models.Coupon
 	if err := cxt.ShouldBindJSON(&coupon); err != nil {
@@ -82,6 +114,17 @@ func (c *DiscountController) UpdateDiscount(cxt *gin.Context) {
 	cxt.JSON(http.StatusOK, gin.H{"message": "discount updated successfully"})
 }
 
+// DeleteDiscount godoc
+// @Summary Delete coupon by product name
+// @Description Delete coupon by product name
+// @Tags discount
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} http.StatusOK
+// @Failure 400 {object} http.StatusBadRequest
+// @Failure 404 {object} http.StatusNotFound
+// @Success 500 {object} http.StatusInternalServerError
+// @Router /discount [put]
 func (c *DiscountController) DeleteDiscount(cxt *gin.Context) {
 	productName := cxt.Query("productName")
 	if productName == "" {

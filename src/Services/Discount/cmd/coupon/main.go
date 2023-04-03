@@ -31,7 +31,7 @@ func main() {
 	}
 
 	// Set up database connection
-	db, err := repositories.NewPostgresDB(cfg.Database)
+	db, err := repositories.NewPostgresDBDiscountRepository(cfg.Database)
 	if err != nil {
 		log.Fatalf("Failed to set up database: %v", err)
 	}

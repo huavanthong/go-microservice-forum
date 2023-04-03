@@ -6,25 +6,25 @@ import (
 	"fmt"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/config"
-	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/model"
-	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/repository"
+	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/models"
+	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/repositories"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type DiscountService struct {
-	repo   repository.DiscountRepository
+	repo   repositories.DiscountRepository
 	config *config.Configuration
 }
 
-func NewDiscountService(repo repository.DiscountRepository, config *config.Configuration) *DiscountService {
+func NewDiscountService(repo repositories.DiscountRepository, config *config.Configuration) *DiscountService {
 	return &DiscountService{
 		repo:   repo,
 		config: config,
 	}
 }
 
-func (s *DiscountService) GetDiscount(ctx context.Context, req *model.DiscountRequest) (*model.DiscountResponse, error) {
+func (s *DiscountService) GetDiscount(ctx context.Context, req *models.DiscountRequest) (*models.DiscountResponse, error) {
 	coupon, err := s.repo.GetDiscount(req.ProductName)
 	if err != nil {
 		fmt.Printf("Error while getting discount: %v\n", err)
@@ -35,21 +35,21 @@ func (s *DiscountService) GetDiscount(ctx context.Context, req *model.DiscountRe
 		return nil, status.Error(codes.NotFound, "Coupon not found")
 	}
 
-	discount := &model.Discount{
+	discount := &models.Discount{
 		ProductName: coupon.ProductName,
 		Amount:      coupon.Amount,
 		Description: coupon.Description,
 	}
 
-	res := &model.DiscountResponse{
+	res := &models.DiscountResponse{
 		Discount: discount,
 	}
 
 	return res, nil
 }
 
-func (s *DiscountService) CreateDiscount(ctx context.Context, req *model.Discount) (*model.DiscountResponse, error) {
-	coupon := &model.Coupon{
+func (s *DiscountService) CreateDiscount(ctx context.Context, req *models.Discount) (*models.DiscountResponse, error) {
+	coupon := &models.Coupon{
 		ProductName: req.ProductName,
 		Description: req.Description,
 		Amount:      req.Amount,
@@ -60,21 +60,21 @@ func (s *DiscountService) CreateDiscount(ctx context.Context, req *model.Discoun
 		return nil, status.Error(codes.Internal, "Internal error")
 	}
 
-	discount := &model.Discount{
+	discount := &models.Discount{
 		ProductName: coupon.ProductName,
 		Amount:      coupon.Amount,
 		Description: coupon.Description,
 	}
 
-	res := &model.DiscountResponse{
+	res := &models.DiscountResponse{
 		Discount: discount,
 	}
 
 	return res, nil
 }
 
-func (s *DiscountService) UpdateDiscount(ctx context.Context, req *model.Discount) (*model.DiscountResponse, error) {
-	coupon := &model.Coupon{
+func (s *DiscountService) UpdateDiscount(ctx context.Context, req *models.Discount) (*models.DiscountResponse, error) {
+	coupon := &models.Coupon{
 		Id:          req.Id,
 		ProductName: req.ProductName,
 		Description: req.Description,
@@ -86,29 +86,29 @@ func (s *DiscountService) UpdateDiscount(ctx context.Context, req *model.Discoun
 		return nil, status.Error(codes.Internal, "Internal error")
 	}
 
-	discount := &model.Discount{
+	discount := &models.Discount{
 		ProductName: coupon.ProductName,
 		Amount:      coupon.Amount,
 		Description: coupon.Description,
 	}
 
-	res := &model.DiscountResponse{
+	res := &models.DiscountResponse{
 		Discount: discount,
 	}
 
 	return res, nil
 }
 
-func (s *DiscountService) DeleteDiscount(ctx context.Context, req *model.DiscountRequest) (*model.DeleteDiscountResponse, error) {
+func (s *DiscountService) DeleteDiscount(ctx context.Context, req *models.DiscountRequest) (*models.DeleteDiscountResponse, error) {
 	if err := s.repo.DeleteDiscount(req.ProductName); err != nil {
 		fmt.Printf("Error while deleting discount: %v\n", err)
-		if errors.Is(err, repository.ErrCouponNotFound) {
+		if errors.Is(err, repositories.ErrCouponNotFound) {
 			return nil, status.Error(codes.NotFound, "Coupon not found")
 		}
 		return nil, status.Error(codes.Internal, "Internal error")
 	}
 
-	res := &model.DeleteDiscountResponse{
+	res := &models.DeleteDiscountResponse{
 		Success: true,
 	}
 
