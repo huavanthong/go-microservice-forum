@@ -2,21 +2,24 @@ syntax = "proto3";
 
 package discount;
 
-option go_package = "github.com/example/discount-service/internal/proto/discount;discount";
+option go_package = "internal/proto/discount";
 
+// DiscountSerrvice defines services
+service DiscountService {
+  rpc GetDiscount(DiscountRequest) returns (DiscountResponse);
+  rpc CreateDiscount(DiscountResponse) returns (DiscountResponse);
+  rpc UpdateDiscount(DiscountResponse) returns (DiscountResponse);
+  rpc DeleteDiscount(DiscountRequest) returns (DiscountResponse);
+}
+
+// DiscountRequest defines the request for a Discount call
 message DiscountRequest {
   string product_name = 1;
 }
 
+// DiscountResponse is the response from a DiscountRequest call
 message DiscountResponse {
   string product_name = 1;
-  float32 amount = 2;
+  float amount = 2;
   string description = 3;
-}
-
-service DiscountService {
-  rpc GetDiscount(DiscountRequest) returns (DiscountResponse);
-  rpc CreateDiscount(DiscountResponse) returns (google.protobuf.BoolValue);
-  rpc UpdateDiscount(DiscountResponse) returns (google.protobuf.BoolValue);
-  rpc DeleteDiscount(DiscountRequest) returns (google.protobuf.BoolValue);
 }

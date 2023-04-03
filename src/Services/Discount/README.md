@@ -74,3 +74,14 @@ Let's go over the different components of this project structure:
 * tests: This folder contains the tests for the Discount and Coupon microservices. The tests cover unit testing, integration testing, and end-to-end testing.
 
 * docker-compose.yml: This file contains the configuration for running the Discount and Coupon microservices together using Docker Compose.
+# Getting Started
+1. Run docker basket microservice
+```
+
+```
+2. Build Basket-microservice
+
+3. Build proto buff for Discount.
+```
+protoc --proto_path=./internal/proto/discount ./internal/proto/discount/discount.proto --go_out=. --go-grpc_out=.
+```
