@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/services"
@@ -26,9 +26,10 @@ func NewDiscountController(discountService services.DiscountService) *DiscountCo
 // @Tags discount
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} payload.UserRegisterSuccess
+// @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
-// @Router /discount/:productName [get]
+// @Failure 404 {object} models.GenericResponse
+// @Router /discount/ [get]
 func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 
 	var reqDiscount *models.GetDiscountRequest
@@ -48,22 +49,25 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 
 	discount, err := c.discountService.GetDiscountByID(reqDiscount.ID)
 	if err != nil {
-		if errors.Is(err, models.ErrNotFound) {
+		// Not found
+		if strings.Contains(err.Error(), "Id exists") {
 			ctx.JSON(http.StatusNotFound,
 				models.GenericResponse{
-					Status:  "fail",
+					Success: false,
 					Code:    http.StatusNotFound,
-					Message: err.Error(),
+					Message: "Discount not found",
+					Data:    nil,
+					Errors:  []string{err.Error()},
 				})
 			return
 		}
-
+		// Success
 		ctx.JSON(http.StatusOK,
 			models.GenericResponse{
 				Success: true,
 				Code:    http.StatusOK,
 				Message: "Get discount success",
-				Data:    models.GetDiscountResponse,
+				Data:    discount,
 				Errors:  nil,
 			})
 		return
@@ -74,8 +78,8 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 }
 
 // CreateDiscount godoc
-// @Summary Create coupon
-// @Description Create coupon
+// @Summary Create discount for product
+// @Description Create discount for product
 // @Tags discount
 // @Accept  json
 // @Produce  json
@@ -84,24 +88,42 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 // @Success 500 {object} http.StatusInternalServerError
 // @Router /discount [post]
 func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
-	var coupon models.Coupon
-	if err := ctx.ShouldBindJSON(&coupon); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+
+	var discount models.Discount
+	if err := ctx.ShouldBindJSON(&discount); err != nil {
+		ctx.JSON(http.StatusBadRequest,
+			models.GenericResponse{
+				Success: false,
+				Code:    http.StatusBadRequest,
+				Message: "Invalid data request to create discount",
+				Data:    nil,
+				Errors:  []string{err.Error()},
+			})
 		return
 	}
 
-	ok, err := c.discountService.CreateDiscount(coupon)
+	err := c.discountService.CreateDiscount(&discount)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError,
+			models.GenericResponse{
+				Success: false,
+				Code:    http.StatusInternalServerError,
+				Message: "failed to create discount",
+				Data:    nil,
+				Errors:  []string{err.Error()},
+			})
 		return
 	}
 
-	if !ok {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create discount"})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{"message": "discount created successfully"})
+	ctx.JSON(http.StatusOK,
+		models.GenericResponse{
+			Success: true,
+			Code:    http.StatusOK,
+			Message: "discount created successfully",
+			Data:    nil,
+			Errors:  nil,
+		})
+	return
 }
 
 // UpdateDiscount godoc
@@ -116,24 +138,41 @@ func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 // @Success 500 {object} http.StatusInternalServerError
 // @Router /discount [put]
 func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
-	var coupon models.Coupon
-	if err := ctx.ShouldBindJSON(&coupon); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	var discount models.Discount
+	if err := ctx.ShouldBindJSON(&discount); err != nil {
+		ctx.JSON(http.StatusBadRequest,
+			models.GenericResponse{
+				Success: false,
+				Code:    http.StatusBadRequest,
+				Message: "Invalid data request to update discount",
+				Data:    nil,
+				Errors:  []string{err.Error()},
+			})
 		return
 	}
 
-	ok, err := c.discountService.UpdateDiscount(coupon)
+	err := c.discountService.UpdateDiscount(&discount)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError,
+			models.GenericResponse{
+				Success: false,
+				Code:    http.StatusInternalServerError,
+				Message: "Internal server service error",
+				Data:    nil,
+				Errors:  []string{err.Error()},
+			})
 		return
 	}
 
-	if !ok {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "discount not found"})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{"message": "discount updated successfully"})
+	ctx.JSON(http.StatusOK,
+		models.GenericResponse{
+			Success: true,
+			Code:    http.StatusOK,
+			Message: "discount updated successfully",
+			Data:    nil,
+			Errors:  nil,
+		})
+	return
 }
 
 // DeleteDiscount godoc
@@ -142,28 +181,38 @@ func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 // @Tags discount
 // @Accept  json
 // @Produce  json
+// @Param discountId path string true "Discout ID"
 // @Success 200 {object} http.StatusOK
 // @Failure 400 {object} http.StatusBadRequest
 // @Failure 404 {object} http.StatusNotFound
 // @Success 500 {object} http.StatusInternalServerError
-// @Router /discount [put]
+// @Router /discount/{userId}} [delete]
 func (c *DiscountController) DeleteDiscount(ctx *gin.Context) {
-	productName := ctx.Query("productName")
-	if productName == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "missing productName parameter"})
-		return
-	}
 
-	ok, err := c.discountService.DeleteDiscount(productName)
+	// get user ID from URL path
+	discountId := ctx.Param("discountId")
+
+	// call discount service to find discount by ID
+	err := c.discountService.DeleteDiscount(discountId)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError,
+			models.GenericResponse{
+				Success: false,
+				Code:    http.StatusInternalServerError,
+				Message: "Internal server service error",
+				Data:    nil,
+				Errors:  []string{err.Error()},
+			})
 		return
 	}
 
-	if !ok {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "discount not found"})
-		return
-	}
-
-	ctx.JSON(http.StatusOK, gin.H{"message": "discount deleted successfully"})
+	ctx.JSON(http.StatusOK,
+		models.GenericResponse{
+			Success: true,
+			Code:    http.StatusOK,
+			Message: "discount deleted successfully",
+			Data:    nil,
+			Errors:  nil,
+		})
+	return
 }

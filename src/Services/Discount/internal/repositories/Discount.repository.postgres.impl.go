@@ -36,10 +36,10 @@ func NewPostgresDBDiscountRepository(cfg config.DatabaseConfig) (*PostgresDBDisc
 	}, nil
 }
 
-func (r *PostgresDBDiscountRepository) GetDiscount(productName string) (*models.Coupon, error) {
-	coupon := &models.Coupon{}
+func (r *PostgresDBDiscountRepository) GetDiscount(ID int) (*models.DiscountDBResponse, error) {
+	discount := &models.DiscountDBResponse{}
 
-	err := r.db.Get(coupon, "SELECT * FROM Coupon WHERE ProductName = $1", productName)
+	err := r.db.Get(discount, "SELECT * FROM Discount WHERE ID = $1", ID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -47,13 +47,13 @@ func (r *PostgresDBDiscountRepository) GetDiscount(productName string) (*models.
 		return nil, fmt.Errorf("failed to get discount: %w", err)
 	}
 
-	return coupon, nil
+	return discount, nil
 }
 
-func (r *PostgresDBDiscountRepository) CreateDiscount(coupon *models.Coupon) error {
+func (r *PostgresDBDiscountRepository) CreateDiscount(discount *models.Discount) error {
 	result, err := r.db.Exec(
-		"INSERT INTO Coupon (ProductName, Description, Amount) VALUES ($1, $2, $3)",
-		coupon.ProductName, coupon.Description, coupon.Amount,
+		"INSERT INTO Discount (ProductName, Description, Percentage, Quantity, StartDate, EndDate) VALUES ($1, $2, $3, $4, $5, $6)",
+		discount.ProductName, discount.Description, discount.Percentage, discount.Quantity, discount.StartDate, discount.EndDate,
 	)
 	if err != nil {
 		return fmt.Errorf("failed to create discount: %w", err)
@@ -68,10 +68,10 @@ func (r *PostgresDBDiscountRepository) CreateDiscount(coupon *models.Coupon) err
 	return nil
 }
 
-func (r *PostgresDBDiscountRepository) UpdateDiscount(coupon *models.Coupon) error {
+func (r *PostgresDBDiscountRepository) UpdateDiscount(discount *models.Discount) error {
 	result, err := r.db.Exec(
-		"UPDATE Coupon SET ProductName=$1, Description=$2, Amount=$3 WHERE Id=$4",
-		coupon.ProductName, coupon.Description, coupon.Amount, coupon.ID,
+		"UPDATE Coupon SET ProductName=$1, Description=$2, Percentage=$3, Quantity=$4, StartDate=$5, EndDate=$6 WHERE ID=$7",
+		discount.ProductName, discount.Description, discount.Percentage, discount.Quantity, discount.StartDate, discount.EndDate, discount.ID,
 	)
 	if err != nil {
 		return fmt.Errorf("failed to update discount: %w", err)
@@ -86,8 +86,8 @@ func (r *PostgresDBDiscountRepository) UpdateDiscount(coupon *models.Coupon) err
 	return nil
 }
 
-func (r *PostgresDBDiscountRepository) DeleteDiscount(productName string) error {
-	result, err := r.db.Exec("DELETE FROM Coupon WHERE ProductName = $1", productName)
+func (r *PostgresDBDiscountRepository) DeleteDiscount(ID int) error {
+	result, err := r.db.Exec("DELETE FROM Discount WHERE ID = $1", ID)
 	if err != nil {
 		return fmt.Errorf("failed to delete discount: %w", err)
 	}

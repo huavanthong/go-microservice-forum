@@ -10,7 +10,7 @@ import (
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/controllers"
-	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/proto/discount"
+	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/proto/discountpb"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/routes"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/services"
@@ -43,7 +43,7 @@ func main() {
 	// Set up gRPC server
 	grpcServer := grpc.NewServer()
 	discountServer := services.NewDiscountService(db, logger)
-	discount.RegisterDiscountServer(grpcServer, discountServer)
+	discountpb.RegisterDiscountServer(grpcServer, discountServer)
 
 	// Set up HTTP server
 	router := gin.Default()

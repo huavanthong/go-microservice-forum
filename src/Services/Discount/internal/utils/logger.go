@@ -10,7 +10,7 @@ import (
 )
 
 // NewLogger creates a new instance of logger
-func NewLogger(logger config.Logger) (*zap.Logger, error) {
+func NewLogger(logger config.LoggerConfig) (*zap.Logger, error) {
 
 	// Check log level
 	level := zap.NewAtomicLevel()
@@ -28,7 +28,7 @@ func NewLogger(logger config.Logger) (*zap.Logger, error) {
 	case "panic":
 		level.SetLevel(zap.PanicLevel)
 	default:
-		return nil, fmt.Errorf("unknown log level: %s", config.LogLevel)
+		return nil, fmt.Errorf("unknown log level: %s", logger.LogLevel)
 	}
 
 	// Initialize instance

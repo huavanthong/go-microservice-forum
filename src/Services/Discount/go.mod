@@ -6,7 +6,6 @@ require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.15.0
 	github.com/stretchr/testify v1.8.2
 	go.uber.org/zap v1.21.0
