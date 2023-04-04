@@ -22,16 +22,26 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces"
 )
 
-func main() {
+var (
+	configPath = "./internal/infrastructure/config"
 
+	server      interfaces.Server
+	ctx         context.Context
+	mongoclient *mongo.Client
+	redisclient *redis.Client
+
+	basketService *services.BasketService
+)
+
+func init() {
 	// Loading config from variable environment
 	config, err := config.LoadConfig("./internal/infrastructure/config")
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}
 
-	// Init an context running in background
-	ctx := context.TODO()
+	// Init context running in background
+	ctx = context.TODO()
 
 	// Connect to Redis
 	redisClient := redis.NewClient(&redis.Options{
@@ -47,11 +57,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 	fmt.Println("Redis client connected successfully...")
 
 	// Connect to MongoDB
-	mongoClient, err := mongo.NewClient(options.Client().ApplyURI(config.DBUri))
+	mongoClient, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27018"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,13 +75,31 @@ func main() {
 	}
 
 	fmt.Println("MongoDB successfully connected...")
+
 	/*****************************************************************/
 	// Create Redis and MongoDB repositories
 	redisRepo := redisdb.NewRedisBasketRepository(redisClient, context.Background())
 	mongoRepo := mongodb.NewMongoDBBasketRepository(mongoClient, "basket", "carts")
 
 	// Create BasketService with Redis and MongoDB repositories
-	basketService := services.NewBasketService(redisRepo, mongoRepo)
+	basketService = services.NewBasketService(redisRepo, mongoRepo)
+
+}
+
+// @title Basket Service API Document
+// @version 1.0
+// @description List APIs of Basket Service
+// @termsOfService http://swagger.io/terms/
+
+// @host localhost:8001
+// @BasePath /api/v1
+func main() {
+
+	// Loading config from variable environment
+	config, err := config.LoadConfig("./internal/infrastructure/config")
+	if err != nil {
+		log.Fatal("Could not load environment variables", err)
+	}
 
 	// Create a new instance of the logger.
 	log := logrus.New()
@@ -84,9 +111,8 @@ func main() {
 	}
 
 	// Start the server
-	go func() {
-		if err := srv.Start(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("failed to start server: %v", err)
-		}
-	}()
+	err = srv.Start()
+	if err != nil && err != http.ErrServerClosed {
+		log.Fatalf("failed to start server: %v", err)
+	}
 }

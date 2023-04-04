@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
@@ -19,35 +20,6 @@ func NewBasketController(basketService *services.BasketService) *BasketControlle
 	}
 }
 
-// CreateBasket godoc
-// @Summary Create basket by user name
-// @Description Create basket by user name
-// @Tags basket
-// @Accept  json
-// @Produce  json
-// @Param userName path string true "userName"
-// @Failure 400 {object} http.StatusBadRequest
-// @Failure 500 {object} http.StatusInternalServerError
-// @Success 200 {array} entities.shoppingCart
-// @Router /Basket [post]
-// CreateBasket create basket by user name
-func (bc *BasketController) CreateBasket(ctx *gin.Context) {
-
-	userName := ctx.Param("userName")
-	// if err != nil {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-	// 	return
-	// }
-
-	shoppingCart, err := bc.basketService.CreateBasket(userName)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create basket"})
-		return
-	}
-
-	ctx.JSON(http.StatusCreated, shoppingCart)
-}
-
 // GetBasket godoc
 // @Summary Get basket by user name
 // @Description Get basket by user name
@@ -55,10 +27,10 @@ func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param userName path string true "userName"
-// @Failure 400 {object} http.StatusBadRequest
-// @Failure 500 {object} http.StatusInternalServerError
-// @Success 200 {array} entities.shoppingCart
-// @Router /Basket [get]
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Success 200 {array} string
+// @Router /basket [get]
 // GetBasket get basket by user name
 func (bc *BasketController) GetBasket(ctx *gin.Context) {
 
@@ -77,6 +49,37 @@ func (bc *BasketController) GetBasket(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, basket)
 }
 
+// CreateBasket godoc
+// @Summary Create basket by user name
+// @Description Create basket by user name
+// @Tags basket
+// @Accept  json
+// @Produce  json
+// @Param userName path string true "User Name"
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Success 200 {array} string
+// @Router /basket [post]
+// CreateBasket create basket by user name
+func (bc *BasketController) CreateBasket(ctx *gin.Context) {
+
+	userName := ctx.Param("userName")
+	// if err != nil {
+	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+	// 	return
+	// }
+
+	fmt.Println("Check 1: ", userName)
+
+	shoppingCart, err := bc.basketService.CreateBasket(userName)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create basket"})
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, shoppingCart)
+}
+
 // UpdateBasket godoc
 // @Summary Update basket by user name
 // @Description Update basket by user name
@@ -84,10 +87,10 @@ func (bc *BasketController) GetBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param userName path string true "userName"
-// @Failure 400 {object} http.StatusBadRequest
-// @Failure 500 {object} http.StatusInternalServerError
-// @Success 200 {array} entities.shoppingCart
-// @Router /Basket [patch]
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Success 200 {array} string
+// @Router /basket [patch]
 // UpdateBasket update basket by user name
 func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 
@@ -126,10 +129,10 @@ func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param userName path string true "userName"
-// @Failure 400 {object} http.StatusBadRequest
-// @Failure 500 {object} http.StatusInternalServerError
-// @Success 200 {array} entities.shoppingCart
-// @Router /Basket/{userName} [delete]
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Success 200 {array} string
+// @Router /basket/{userName} [delete]
 // UpdateBasket update basket by user name
 func (bc *BasketController) DeleteBasket(ctx *gin.Context) {
 
@@ -152,11 +155,11 @@ func (bc *BasketController) DeleteBasket(ctx *gin.Context) {
 // @Tags basket
 // @Accept  json
 // @Produce  json
-// @Param basketCheckout body entites.BasketCheckout true "Basket Checkout"
-// @Failure 400 {object} http.StatusBadRequest
-// @Failure 500 {object} http.StatusInternalServerError
-// @Success 200 {array} entities.shoppingCart
-// @Router /Basket/{userName} [delete]
+// @Param basketCheckout body string true "Basket Checkout"
+// @Failure 400 {object} string
+// @Failure 500 {object} string
+// @Success 200 {array} string
+// @Router /Basket/{userName} [get]
 // Checkout checkout basket
 func (bc *BasketController) Checkout(ctx *gin.Context) {
 	var basketCheckout entities.BasketCheckout
