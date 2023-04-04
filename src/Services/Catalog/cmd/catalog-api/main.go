@@ -46,8 +46,8 @@ var (
 	categoryStorage *mongodb.CategoryStorage
 
 	// Repositories setting
-	productRepo       repositories.ProductRepository
-	productSearchRepo repositories.ProductSearchRepository
+	productRepo       repositories.ProductRepositoryImpl
+	productSearchRepo repositories.ProductSearchRepositoryImpl
 	categoryRepo      repositories.CategoryRepository
 
 	// Handler setting
@@ -141,7 +141,7 @@ func handleFlags(db *mongo.Database) {
 func init() {
 
 	// Loading config from variable environment
-	config, err := configs.LoadConfig("./internal/infrastructure/configs")
+	_, err := configs.LoadConfig("./internal/infrastructure/configs")
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}

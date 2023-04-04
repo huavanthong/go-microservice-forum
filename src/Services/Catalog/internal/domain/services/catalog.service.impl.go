@@ -19,7 +19,7 @@ type CatalogServiceImpl struct {
 	ctx               context.Context
 }
 
-func NewCatalogServiceImpl(log *zap.Logger, productRepo *repositories.ProductRepositoryImpl, catalogSearchRepo *repositories.ProductSearchRepositoryImpl, ctx context.Context) CatalogService {
+func NewCatalogServiceImpl(log *zap.Logger, productRepo repositories.ProductRepositoryImpl, catalogSearchRepo repositories.ProductSearchRepositoryImpl, ctx context.Context) CatalogService {
 	return &CatalogServiceImpl{
 		log,
 		productRepo,
