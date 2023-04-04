@@ -5,7 +5,7 @@ import (
 )
 
 type DiscountService interface {
-	GetDiscountByID(ID string) (*models.GetDiscountResponse, error)
+	GetDiscount(ID string) (*models.GetDiscountResponse, error)
 	CreateDiscount(discount *models.Discount) error
 	UpdateDiscount(discount *models.Discount) error
 	DeleteDiscount(ID string) error

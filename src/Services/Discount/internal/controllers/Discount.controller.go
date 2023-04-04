@@ -14,8 +14,8 @@ type DiscountController struct {
 	discountService services.DiscountService
 }
 
-func NewDiscountController(discountService services.DiscountService) *DiscountController {
-	return &DiscountController{
+func NewDiscountController(discountService services.DiscountService) DiscountController {
+	return DiscountController{
 		discountService: discountService,
 	}
 }
@@ -50,7 +50,7 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 		return
 	}
 
-	discount, err := c.discountService.GetDiscountByID(discountId)
+	discount, err := c.discountService.GetDiscount(discountId)
 	if err != nil {
 		// Not found
 		if strings.Contains(err.Error(), "Id exists") {

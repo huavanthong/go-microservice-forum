@@ -2,8 +2,9 @@ package services
 
 import (
 	"fmt"
-	"log"
 	"strconv"
+
+	"go.uber.org/zap"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/repositories"
@@ -13,26 +14,26 @@ import (
 )
 
 // DiscountService represents the discount service
-type DiscountService struct {
-	logger       *log.Logger
-	discountRepo repositories.PostgresDBDiscountRepository
+type DiscountServiceImpl struct {
+	log          *zap.Logger
+	discountRepo repositories.DiscountRepository
 }
 
-func NewDiscountService(logger *log.Logger, discountRepo repositories.PostgresDBDiscountRepository) *DiscountService {
-	return &DiscountService{
-		logger:       logger,
+func NewDiscountService(log *zap.Logger, discountRepo repositories.DiscountRepository) DiscountService {
+	return &DiscountServiceImpl{
+		log:          log,
 		discountRepo: discountRepo,
 	}
 }
 
 // GetDiscount gets the discount based on the input parameters
-func (s *DiscountService) GetDiscountByID(ID string) (*models.GetDiscountResponse, error) {
+func (ds *DiscountServiceImpl) GetDiscount(ID string) (*models.GetDiscountResponse, error) {
 
 	// convert string id to int id
 	intId, _ := strconv.Atoi(ID)
 
 	// Get discount from repository
-	discountResponse, err := s.discountRepo.GetDiscountByID(intId)
+	discountResponse, err := ds.discountRepo.GetDiscount(intId)
 	if err != nil {
 		fmt.Printf("Error while getting discount: %v\n", err)
 		return nil, status.Error(codes.Internal, "Internal error")
@@ -48,20 +49,20 @@ func (s *DiscountService) GetDiscountByID(ID string) (*models.GetDiscountRespons
 	return res, nil
 }
 
-func (s *DiscountService) CreateDiscount(discount *models.Discount) error {
+func (ds *DiscountServiceImpl) CreateDiscount(discount *models.Discount) error {
 
-	return s.discountRepo.CreateDiscount(discount)
+	return ds.discountRepo.CreateDiscount(discount)
 }
 
-func (s *DiscountService) UpdateDiscount(discount *models.Discount) error {
+func (ds *DiscountServiceImpl) UpdateDiscount(discount *models.Discount) error {
 
-	return s.discountRepo.UpdateDiscount(discount)
+	return ds.discountRepo.UpdateDiscount(discount)
 }
 
-func (s *DiscountService) DeleteDiscount(ID string) error {
+func (ds *DiscountServiceImpl) DeleteDiscount(ID string) error {
 
 	// convert string id to int id
 	intId, _ := strconv.Atoi(ID)
 
-	return s.discountRepo.DeleteDiscountByID(intId)
+	return ds.discountRepo.DeleteDiscount(intId)
 }

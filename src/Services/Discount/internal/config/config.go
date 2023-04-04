@@ -6,6 +6,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+type AppConfig struct {
+	Port string `mapstructure:"port"`
+}
 type DatabaseConfig struct {
 	Host     string `mapstructure:"host"`
 	Port     int    `mapstructure:"port"`
@@ -18,6 +21,7 @@ type LoggerConfig struct {
 	LogLevel string `mapstructure:"log_level"`
 }
 type Config struct {
+	App      AppConfig      `mapstructure:"database"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Logger   LoggerConfig   `mapstructure:"logger"`
 }

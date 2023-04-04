@@ -5,8 +5,8 @@ import (
 )
 
 type DiscountRepository interface {
-	GetDiscountByID(ID int) (*models.DiscountDBResponse, error)
+	GetDiscount(ID int) (*models.DiscountDBResponse, error)
 	CreateDiscount(discount *models.Discount) error
 	UpdateDiscount(discount *models.Discount) error
-	DeleteDiscountByID(ID int) error
+	DeleteDiscount(ID int) error
 }

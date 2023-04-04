@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/models"
 
 	"github.com/jmoiron/sqlx"
@@ -15,25 +14,9 @@ type PostgresDBDiscountRepository struct {
 	db *sqlx.DB
 }
 
-func NewPostgresDBDiscountRepository(cfg config.DatabaseConfig) (*PostgresDBDiscountRepository, error) {
+func NewPostgresDBDiscountRepository(db *sqlx.DB) DiscountRepository {
 
-	// Create connection string from config
-	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName)
-
-	// Open connection on PostgreSQL
-	db, err := sqlx.Open("postgres", connStr)
-	if err != nil {
-		return nil, fmt.Errorf("failed to open DB: %w", err)
-	}
-	// Ping database to ensure connection is valid
-	if err = db.Ping(); err != nil {
-		return nil, fmt.Errorf("failed to ping DB: %w", err)
-	}
-
-	return &PostgresDBDiscountRepository{
-		db: db,
-	}, nil
+	return &PostgresDBDiscountRepository{db: db}
 }
 
 func (r *PostgresDBDiscountRepository) GetDiscount(ID int) (*models.DiscountDBResponse, error) {
