@@ -67,7 +67,7 @@ func init() {
 	discountRepository = repositories.NewPostgresDBDiscountRepository(db)
 
 	// Create DiscountService with Postgres repositories
-	discountService = services.NewDiscountService(logger, discountRepository)
+	discountService = services.NewDiscountServiceImpl(logger, discountRepository)
 
 	// Create DiscountController
 	DiscountController = controllers.NewDiscountController(discountService)

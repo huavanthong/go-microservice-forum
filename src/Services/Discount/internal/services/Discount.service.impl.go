@@ -19,7 +19,7 @@ type DiscountServiceImpl struct {
 	discountRepo repositories.DiscountRepository
 }
 
-func NewDiscountService(log *zap.Logger, discountRepo repositories.DiscountRepository) DiscountService {
+func NewDiscountServiceImpl(log *zap.Logger, discountRepo repositories.DiscountRepository) DiscountService {
 	return &DiscountServiceImpl{
 		log:          log,
 		discountRepo: discountRepo,
