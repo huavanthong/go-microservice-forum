@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
+
+	"github.com/jmoiron/sqlx"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/controllers"
@@ -20,8 +23,28 @@ import (
 // Declare global variable
 var (
 	configPath string = "./internal/config/config.yml"
+	server     *gin.Engine
+	db         *sqlx.DB
+
+	userService         services.UserService
+	UserController      controllers.UserController
+	UserRouteController routes.UserRouteController
+
+	authService         services.AuthService
+	AuthController      controllers.AuthController
+	AuthRouteController routes.AuthRouteController
 )
 
+func init() {
+	// Load configuration from file
+	config, err := config.LoadConfig(configPath)
+	if err != nil {
+		log.Fatalf("Failed to load configuration: %v", err)
+	}
+	// Initialize context in background
+	ctx := context.TODO()
+
+}
 func main() {
 
 	// Load configuration from file
@@ -30,19 +53,25 @@ func main() {
 		log.Fatalf("Failed to load configuration: %v", err)
 	}
 
-	// Set up database connection
-	db, err := repositories.NewPostgresDBDiscountRepository(cfg.Database)
-	if err != nil {
-		log.Fatalf("Failed to set up database: %v", err)
-	}
-	defer db.Close()
-
 	// Set up logger
-	logger := utils.NewLogger(cfg.LogLevel)
+	logger, err := utils.NewLogger(cfg.LogLevel)
+	if err != nil {
+		log.Fatalf("Failed to Initialize logger: %v", err)
+	}
+
+	/*****************************************************************/
+	// Set up database connection
+	discountRepos, err := repositories.NewPostgresDBDiscountRepository(cfg.Database)
+	if err != nil {
+		log.Fatalf("Failed to Initialize Postgres discount database: %v", err)
+	}
+
+	// Create DiscountService with Postgres repositories
+	discountService := services.NewBasketService(logger, discountRepos)
 
 	// Set up gRPC server
 	grpcServer := grpc.NewServer()
-	discountServer := services.NewDiscountService(db, logger)
+	discountServer := services.NewDiscountService(DiscountRepos, logger)
 	discountpb.RegisterDiscountServer(grpcServer, discountServer)
 
 	// Set up HTTP server

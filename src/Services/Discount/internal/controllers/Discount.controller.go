@@ -29,8 +29,11 @@ func NewDiscountController(discountService services.DiscountService) *DiscountCo
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
 // @Failure 404 {object} models.GenericResponse
-// @Router /discount/ [get]
+// @Router /discount/{discountId} [get]
 func (c *DiscountController) GetDiscount(ctx *gin.Context) {
+
+	// get user ID from URL path
+	discountId := ctx.Param("discountId")
 
 	var reqDiscount *models.GetDiscountRequest
 
@@ -47,7 +50,7 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 		return
 	}
 
-	discount, err := c.discountService.GetDiscountByID(reqDiscount.ID)
+	discount, err := c.discountService.GetDiscountByID(discountId)
 	if err != nil {
 		// Not found
 		if strings.Contains(err.Error(), "Id exists") {
@@ -186,7 +189,7 @@ func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 // @Failure 400 {object} http.StatusBadRequest
 // @Failure 404 {object} http.StatusNotFound
 // @Success 500 {object} http.StatusInternalServerError
-// @Router /discount/{userId}} [delete]
+// @Router /discount/{discountId}} [delete]
 func (c *DiscountController) DeleteDiscount(ctx *gin.Context) {
 
 	// get user ID from URL path
