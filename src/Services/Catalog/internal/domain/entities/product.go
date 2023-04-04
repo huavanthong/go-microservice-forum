@@ -25,11 +25,6 @@ type Product struct {
 	DeleteAt  string `json:"deleted_at" bson:"deleted_at"`
 }
 
-type CategoryFilter struct {
-	Category string
-	Brand    string
-}
-
 type ProductFilter struct {
 	Category    string
 	ProductType string

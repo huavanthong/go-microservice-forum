@@ -141,29 +141,20 @@ func (cr *CategoryStorage) Delete(id string) error {
 	return nil
 }
 
-func (cr *CategoryStorage) GetCategories(page int, limit int) ([]*entities.Category, error) {
-
-	// page return product
-	if page == 0 {
-		page = 1
-	}
-
-	// limit data return
-	if limit == 0 {
-		limit = 20
-	}
-
-	skip := (page - 1) * limit
-
-	opt := options.FindOptions{}
-	opt.SetLimit(int64(limit))
-	opt.SetSkip(int64(skip))
+func (cr *CategoryStorage) GetCategories(filter *entities.CategoryFilter, pagination *entities.Pagination) ([]*entities.Category, error) {
 
 	// create a query command
 	query := bson.M{}
 
+	// Check condition
+	opts := options.Find()
+	if pagination != nil {
+		opts.SetSkip(pagination.Offset())
+		opts.SetLimit(pagination.Limit)
+	}
+
 	// find all categories with optional data
-	cursor, err := cr.collection.Find(cr.ctx, query, &opt)
+	cursor, err := cr.collection.Find(cr.ctx, query, opts)
 	if err != nil {
 		return nil, err
 	}

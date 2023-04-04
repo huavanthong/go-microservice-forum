@@ -23,7 +23,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 
 	docs "github.com/huavanthong/microservice-golang/src/Services/Catalog/docs"
 
@@ -47,17 +46,17 @@ var (
 	categoryStorage *mongodb.CategoryStorage
 
 	// Repositories setting
-	productRepo       *repositories.ProductRepositoryImpl
-	productSearchRepo *repositories.ProductSearchRepositoryImpl
-	categoryRepo      *repositories.CategoryRepositoryImpl
-
-	// Services setting
-	catalogtService *services.CatalogServiceImpl
-	categoryService *services.CategoryServiceImpl
+	productRepo       repositories.ProductRepository
+	productSearchRepo repositories.ProductSearchRepository
+	categoryRepo      repositories.CategoryRepository
 
 	// Handler setting
 	catalogHandler  handlers.CatalogHandler
 	categoryHandler handlers.CategoryHandler
+
+	// Services setting
+	catalogtService services.CatalogService
+	categoryService services.CategoryService
 )
 
 func dropCollections(db *mongo.Database) error {
@@ -154,14 +153,14 @@ func init() {
 	ctx = context.TODO()
 
 	// Connect to MongoDB
-	mongoconn := options.Client().ApplyURI(config.DBUri)
+	mongoconn := options.Client().ApplyURI("mongodb://localhost:27017")
 	mongoclient, err := mongo.Connect(ctx, mongoconn)
 
 	if err != nil {
 		panic(err)
 	}
 
-	if err := mongoclient.Ping(ctx, readpref.Primary()); err != nil {
+	if err := mongoclient.Ping(ctx, nil); err != nil {
 		panic(err)
 	}
 

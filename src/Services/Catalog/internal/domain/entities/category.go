@@ -15,3 +15,8 @@ type Category struct {
 	UpdatedAt     string             `json:"updated_at" bson:"updated_at"`
 	DeleteAt      string             `json:"deleted_at" bson:"deleted_at"`
 }
+
+type CategoryFilter struct {
+	Category string
+	Brand    string
+}

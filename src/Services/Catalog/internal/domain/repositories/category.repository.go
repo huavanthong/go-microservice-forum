@@ -9,7 +9,7 @@ type CategoryRepository interface {
 	GetCategoryByID(id string) (*entities.Category, error)
 	UpdateCategory(c *entities.Category) (*entities.Category, error)
 	DeleteCategory(id string) error
-	GetCategories(page int, limit int) ([]*entities.Category, error)
+	GetCategories(filter *entities.CategoryFilter, pagination *entities.Pagination) ([]*entities.Category, error)
 }
 
 type CategorySearchRepository interface {

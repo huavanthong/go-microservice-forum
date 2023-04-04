@@ -14,14 +14,18 @@ import (
 
 type CatalogServiceImpl struct {
 	log               *zap.Logger
-	catalogRepo       *repositories.ProductRepositoryImpl
-	catalogSearchRepo *repositories.ProductSearchRepositoryImpl
-
-	ctx context.Context
+	catalogRepo       repositories.ProductRepositoryImpl
+	catalogSearchRepo repositories.ProductSearchRepositoryImpl
+	ctx               context.Context
 }
 
-func NewCatalogServiceImpl(log *zap.Logger, productRepo *repositories.ProductRepositoryImpl, catalogSearchRepo *repositories.ProductSearchRepositoryImpl, ctx context.Context) *CatalogServiceImpl {
-	return &CatalogServiceImpl{log, productRepo, catalogSearchRepo, ctx}
+func NewCatalogServiceImpl(log *zap.Logger, productRepo *repositories.ProductRepositoryImpl, catalogSearchRepo *repositories.ProductSearchRepositoryImpl, ctx context.Context) CatalogService {
+	return &CatalogServiceImpl{
+		log,
+		productRepo,
+		catalogSearchRepo,
+		ctx,
+	}
 }
 
 func (cs *CatalogServiceImpl) CreateProduct(pr *models.CreateProductRequest) (*entities.Product, error) {
