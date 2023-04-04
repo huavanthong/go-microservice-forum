@@ -81,7 +81,13 @@ Let's go over the different components of this project structure:
 ```
 2. Build Basket-microservice
 
+
 3. Build proto buff for Discount.
 ```
 protoc --proto_path=./internal/proto/discount ./internal/proto/discount/discount.proto --go_out=. --go-grpc_out=.
+```
+
+4. Generate swagger
+```
+swag init -g .\cmd\coupon\main.go --output .\docs
 ```

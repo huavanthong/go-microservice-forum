@@ -1,0 +1,99 @@
+basePath: /api/v1
+host: localhost:8002
+info:
+  contact: {}
+  description: List APIs of UserManagement Service
+  termsOfService: http://swagger.io/terms/
+  title: Discount Service API Document
+  version: "1.0"
+paths:
+  /discount:
+    post:
+      consumes:
+      - application/json
+      description: Create discount for product
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create discount for product
+      tags:
+      - discount
+    put:
+      consumes:
+      - application/json
+      description: Update coupon
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update coupon
+      tags:
+      - discount
+  /discount/{discountId}:
+    get:
+      consumes:
+      - application/json
+      description: Get discount for product name
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get discount for product name
+      tags:
+      - discount
+  /discount/{discountId}}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete coupon by product name
+      parameters:
+      - description: Discout ID
+        in: path
+        name: discountId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete coupon by product name
+      tags:
+      - discount
+swagger: "2.0"

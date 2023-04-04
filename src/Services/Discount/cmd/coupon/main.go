@@ -8,6 +8,9 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/jmoiron/sqlx"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/config"
@@ -76,10 +79,16 @@ func init() {
 
 }
 
+// @title Discount Service API Document
+// @version 1.0
+// @description List APIs of UserManagement Service
+// @termsOfService http://swagger.io/terms/
+
+// @host localhost:8002
+// @BasePath /api/v1
 func main() {
 
 	config, err := config.LoadConfig(".")
-
 	if err != nil {
 		log.Fatal("Could not load config", err)
 	}
@@ -141,11 +150,17 @@ func startGinServer(config config.Config) {
 
 	server.Use(cors.New(corsConfig))
 
-	router := server.Group("/api")
+	router := server.Group("/api/v1")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success"})
 	})
 
 	DiscountRouteController.DiscountRoute(router, discountService)
+
+	// Set up swagger
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	log.Println("Starting server on port: ", config.App.Port)
 	log.Fatal(server.Run(":" + config.App.Port))
+
 }

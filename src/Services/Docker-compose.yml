@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  discountdb:
+    image: postgres
+
+  discount.api:
+   image: ${DOCKER_REGISTRY-}discountapi
+    build:
+      context: .
+      dockerfile: Services/Discount/Dockerfile

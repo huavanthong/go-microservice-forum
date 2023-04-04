@@ -26,9 +26,8 @@ func NewDiscountController(discountService services.DiscountService) DiscountCon
 // @Tags discount
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} models.GenericResponse
-// @Failure 400 {object} models.GenericResponse
-// @Failure 404 {object} models.GenericResponse
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
 // @Router /discount/{discountId} [get]
 func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 
@@ -86,9 +85,8 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 // @Tags discount
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} http.StatusOK
-// @Failure 400 {object} http.StatusBadRequest
-// @Success 500 {object} http.StatusInternalServerError
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
 // @Router /discount [post]
 func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 
@@ -135,10 +133,8 @@ func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 // @Tags discount
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} http.StatusOK
-// @Failure 400 {object} http.StatusBadRequest
-// @Failure 404 {object} http.StatusNotFound
-// @Success 500 {object} http.StatusInternalServerError
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
 // @Router /discount [put]
 func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 	var discount models.Discount
@@ -185,10 +181,8 @@ func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param discountId path string true "Discout ID"
-// @Success 200 {object} http.StatusOK
-// @Failure 400 {object} http.StatusBadRequest
-// @Failure 404 {object} http.StatusNotFound
-// @Success 500 {object} http.StatusInternalServerError
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
 // @Router /discount/{discountId}} [delete]
 func (c *DiscountController) DeleteDiscount(ctx *gin.Context) {
 
