@@ -1,6 +1,7 @@
 package entities
 
 type BasketCheckout struct {
+	UserID        string  `json:"userID"`
 	UserName      string  `json:"userName"`
 	TotalPrice    float64 `json:"totalPrice"`
 	FirstName     string  `json:"firstName"`

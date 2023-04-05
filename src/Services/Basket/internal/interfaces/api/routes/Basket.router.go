@@ -26,7 +26,7 @@ import (
 // }
 
 /* Design new: Thiết kế như vậy thì router sẽ bị phụ thuộc vào controller ở trong*/
-func RegisterRoutes(router *gin.RouterGroup, basketService *services.BasketService) {
+func RegisterRoutes(router *gin.RouterGroup, basketService services.BasketService) {
 
 	basketController := controllers.NewBasketController(basketService)
 

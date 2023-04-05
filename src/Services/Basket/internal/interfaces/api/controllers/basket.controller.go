@@ -1,21 +1,23 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/services"
 
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/api/models"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/response"
+
 	"github.com/gin-gonic/gin"
 )
 
 type BasketController struct {
-	basketService *services.BasketService
+	basketService services.BasketService
 }
 
-func NewBasketController(basketService *services.BasketService) *BasketController {
-	return &BasketController{
+func NewBasketController(basketService services.BasketService) BasketController {
+	return BasketController{
 		basketService: basketService,
 	}
 }
@@ -55,29 +57,28 @@ func (bc *BasketController) GetBasket(ctx *gin.Context) {
 // @Tags basket
 // @Accept  json
 // @Produce  json
-// @Param userName path string true "User Name"
+// @Param basket body models.CreateBasketRequest true "New Basket"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Success 200 {array} string
 // @Router /basket [post]
-// CreateBasket create basket by user name
+// CreateBasket create basket by user id
 func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 
-	userName := ctx.Param("userName")
-	// if err != nil {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-	// 	return
-	// }
-
-	fmt.Println("Check 1: ", userName)
-
-	shoppingCart, err := bc.basketService.CreateBasket(userName)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create basket"})
+	// Deserialization data from request
+	var basketReq models.CreateBasketRequest
+	if err := ctx.ShouldBindJSON(&basketReq); err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, shoppingCart)
+	basket, err := bc.basketService.CreateBasket(&basketReq)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.NewErrorResponse(http.StatusInternalServerError, "Failed to create basket"))
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, response.NewSuccessResponse(basket))
 }
 
 // UpdateBasket godoc
@@ -100,7 +101,7 @@ func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 	// 	return
 	// }
 
-	var basket entities.ShoppingCart
+	var basket entities.Basket
 	if err := ctx.ShouldBindJSON(&basket); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

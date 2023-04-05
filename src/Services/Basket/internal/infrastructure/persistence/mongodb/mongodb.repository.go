@@ -3,81 +3,88 @@ package mongodb
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/persistence"
 )
 
 // Define struct for MongoDB Basket Repository
-type MongoDBBasketRepository struct {
+type MongoDBBasketPersistence struct {
 	client     *mongo.Client
 	database   string
 	collection string
 }
 
-// NewMongoDBBasketRepository returns a new instance of MongoDBBasketRepository
-func NewMongoDBBasketRepository(client *mongo.Client, database string, collection string) *MongoDBBasketRepository {
+// NewMongoDBBasketPersistence returns a new instance of MongoDBBasketPersistence
+func NewMongoDBBasketPersistence(client *mongo.Client, database string, collection string) persistence.BasketPersistence {
 
-	return &MongoDBBasketRepository{
+	return &MongoDBBasketPersistence{
 		client:     client,
 		database:   database,
 		collection: collection,
 	}
 }
 
-func (r *MongoDBBasketRepository) Create(userName string) (*entities.ShoppingCart, error) {
+func (mbp *MongoDBBasketPersistence) Create(userId string) (*entities.Basket, error) {
 
-	// Create entity for Shopping Cart start for shopping
-	cart := &entities.ShoppingCart{
-		UserName: userName,
-		Items:    make([]entities.ShoppingCartItem, 0),
-	}
+	// Create entity basket to storing in MongoDB
+	var basket entities.Basket
+
+	// Bson generate object id
+	basket.ID = primitive.NewObjectID()
+	basket.UserID = userId
+	basket.Items = make([]entities.BasketItem, 0)
+	basket.CreatedAt = time.Now()
+	basket.UpdatedAt = basket.CreatedAt
 
 	// Retrieves the MongoDB collection where the basket data is stored
-	coll := r.client.Database(r.database).Collection(r.collection)
+	coll := mbp.client.Database(mbp.database).Collection(mbp.collection)
 
 	// Insert to monodb
-	_, err := coll.InsertOne(context.Background(), cart)
+	_, err := coll.InsertOne(context.Background(), basket)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create basket for user %s: %v", userName, err)
+		return nil, fmt.Errorf("failed to create basket for user %s: %v", userId, err)
 	}
 
-	return cart, nil
+	return &basket, nil
 }
 
-func (r *MongoDBBasketRepository) GetByUserName(userName string) (*entities.ShoppingCart, error) {
+func (mbp *MongoDBBasketPersistence) GetByUserName(userName string) (*entities.Basket, error) {
 
 	// Retrieves the MongoDB collection where the basket data is stored
-	coll := r.client.Database(r.database).Collection(r.collection)
+	coll := mbp.client.Database(mbp.database).Collection(mbp.collection)
 
 	// Create a filter to find the basket with the given user_name.
 	filter := bson.M{"user_name": userName}
 
-	// Search for the first document matching the filter.
+	// Search for the first document matching the filtembp.
 	result := coll.FindOne(context.Background(), filter)
 	if err := result.Err(); err != nil {
 		return nil, fmt.Errorf("failed to get basket for user %s: %v", userName, err)
 	}
 	// If the search is successful, it decodes the document found into a entity
-	basket := &entities.ShoppingCart{}
+	basket := &entities.Basket{}
 	if err := result.Decode(basket); err != nil {
 		return nil, fmt.Errorf("failed to decode basket for user %s: %v", userName, err)
 	}
 	return basket, nil
 }
 
-func (r *MongoDBBasketRepository) Update(basket *entities.ShoppingCart) (*entities.ShoppingCart, error) {
+func (mbp *MongoDBBasketPersistence) Update(basket *entities.Basket) (*entities.Basket, error) {
 	// Retrieves the MongoDB collection where the basket data is stored
-	coll := r.client.Database(r.database).Collection(r.collection)
+	coll := mbp.client.Database(mbp.database).Collection(mbp.collection)
 
 	// Create a filter to find the basket with the given user_name.
 	filter := bson.M{"user_name": basket.UserName}
 
 	// Create an update statement with the $set operator, which sets
-	// the items field to the new items in the ShoppingCart object.
+	// the items field to the new items in the Basket object.
 	update := bson.M{"$set": bson.M{"items": basket.Items}}
 
 	// Specify that the updated document should be returned
@@ -96,14 +103,14 @@ func (r *MongoDBBasketRepository) Update(basket *entities.ShoppingCart) (*entiti
 	return basket, nil
 }
 
-func (r *MongoDBBasketRepository) Delete(userName string) error {
+func (mbp *MongoDBBasketPersistence) Delete(userName string) error {
 	// Retrieves the MongoDB collection where the basket data is stored
-	coll := r.client.Database(r.database).Collection(r.collection)
+	coll := mbp.client.Database(mbp.database).Collection(mbp.collection)
 
-	// Specifies the shopping cart to be deleted based on the userName parameter.
+	// Specifies the shopping cart to be deleted based on the userName parametembp.
 	filter := bson.M{"user_name": userName}
 
-	// called on the collection to delete the shopping cart that matches the filter.
+	// called on the collection to delete the shopping cart that matches the filtembp.
 	_, err := coll.DeleteOne(context.Background(), filter)
 	if err != nil {
 		return fmt.Errorf("failed to delete basket for user %s: %v", userName, err)

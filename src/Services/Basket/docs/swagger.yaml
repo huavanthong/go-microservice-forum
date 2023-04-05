@@ -1,0 +1,204 @@
+basePath: /api/v1
+definitions:
+  models.CreateBasketRequest:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/models.Item'
+        type: array
+      user_id:
+        example: "1234567890"
+        type: string
+      user_name:
+        example: hvthong
+        type: string
+    required:
+    - user_id
+    - user_name
+    type: object
+  models.Item:
+    properties:
+      image_url:
+        example: default.png
+        type: string
+      price:
+        example: 1400
+        type: number
+      product_id:
+        type: string
+      product_name:
+        example: phone
+        type: string
+      quantity:
+        example: 1
+        minimum: 1
+        type: integer
+    required:
+    - product_id
+    - product_name
+    - quantity
+    type: object
+host: localhost:8001
+info:
+  contact: {}
+  description: List APIs of Basket Service
+  termsOfService: http://swagger.io/terms/
+  title: Basket Service API Document
+  version: "1.0"
+paths:
+  /Basket/{userName}:
+    get:
+      consumes:
+      - application/json
+      description: Checkout basket
+      parameters:
+      - description: Basket Checkout
+        in: body
+        name: basketCheckout
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Checkout basket after completed items in shopping cart
+      tags:
+      - basket
+  /basket:
+    get:
+      consumes:
+      - application/json
+      description: Get basket by user name
+      parameters:
+      - description: userName
+        in: path
+        name: userName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get basket by user name
+      tags:
+      - basket
+    patch:
+      consumes:
+      - application/json
+      description: Update basket by user name
+      parameters:
+      - description: userName
+        in: path
+        name: userName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update basket by user name
+      tags:
+      - basket
+    post:
+      consumes:
+      - application/json
+      description: Create basket by user name
+      parameters:
+      - description: New Basket
+        in: body
+        name: basket
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateBasketRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Create basket by user name
+      tags:
+      - basket
+  /basket/{userName}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete basket by user name
+      parameters:
+      - description: userName
+        in: path
+        name: userName
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete basket by user name
+      tags:
+      - basket
+swagger: "2.0"

@@ -46,6 +46,13 @@
 │       │   ├── middleware
 │       │   │   ├── authentication.go
 │       │   │   └── logging.go
+│       │   ├── models
+│       │   │   ├── request
+│       │   │   │   ├── basket_request.go
+│       │   │   │   └── item_request.go
+│       │   │   └── response
+│       │   │       ├── basket_response.go
+│       │   │       └── item_response.go
 │       │   ├── routes
 │       │   │   └── basket_routes.go
 │       │   └── server.go
@@ -56,21 +63,35 @@
 ```
 Explain project structure:
 
-* cmd/: Thư mục chứa các file chính của ứng dụng, ví dụ như basket để khởi động HTTP server.
+* cmd/: Folder chứa các file main.go để chạy server hoặc worker, đây là entrypoint của chương trình.
 
-* internal/: Thư mục chứa các file và thư mục bên trong của ứng dụng, không được xuất bản bên ngoài gói. Bao gồm các package chứa mã nguồn cho các thành phần của ứng dụng:
+* internal/: Folder chính của project, chứa toàn bộ mã nguồn của project, được chia thành các lớp và module theo kiến trúc Clean Architecture.
 
 ** domain/: Chứa các thành phần của lớp domain trong kiến trúc DDD, bao gồm các entities, repositories, services, và value objects.
+    
+    *** entities: định nghĩa các struct tượng trưng cho các đối tượng trong domain.
 
-** infrastructure/: Chứa các thành phần cơ sở hạ tầng của ứng dụng, bao gồm các giao tiếp với cơ sở dữ liệu, bộ nhớ đệm, messaging queue, ...
+    *** repositories: chứa các interface và implementation của repository pattern, định nghĩa các phương thức để truy vấn và lưu trữ dữ liệu của domain.
 
-    *** database: typically contains modules for managing database connections, such as database configuration files, migration files, and database client libraries. It's responsible for initializing the connection to the database and handling any required migrations.
+    *** services: chứa các business logic của domain, tương tác với các repositories để thực hiện các thao tác CRUD và xử lý các luồng logic phức tạp hơn.
 
-    *** logging: typically containes logger 
+** infrastructure/: Chứa các phần mềm và công nghệ cơ bản cho project, như cấu hình, logging, database, cache, messaging...
 
-    *** persistence: typically contains modules that define the repository interface and provide the actual implementation of methods that interact with the database. 
+    *** config: chứa cấu hình của ứng dụng, đọc và parse từ file config.yaml để sử dụng trong runtime.
 
-** interfaces/: Chứa mã nguồn cho HTTP server và các đối tượng liên quan (handler, middleware, router, model).
+    *** database: chứa module cho database, có thể là SQL, NoSQL hay Graph Database, đi kèm với đó là các migration script để khởi tạo schema và seed data cho database.
+
+    *** logging: chứa module cho logging, cung cấp các hàm log.Error(), log.Warning(), log.Info() để ghi lại các thông tin và lỗi trong quá trình chạy ứng dụng.
+
+    *** persistence: chứa các implementation cho các interface của repository pattern, xử lý các thao tác lưu trữ dữ liệu với các công nghệ khác nhau, như MongoDB hay Redis.
+
+** interfaces/: chứa các API endpoints và web server, tương tác với services để xử lý các request và response.
+
+    *** api: chứa các file controller và middleware cho RESTful API, định nghĩa các endpoint và xử lý các input và output.
+
+        **** controllers:
+
+    *** persistence: chứa các interface cho repository pattern, làm trung gian giữa services và các implementation của persistence.
 
 
 ** utils/: Chứa các hàm tiện ích cho ứng dụng.

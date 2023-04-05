@@ -7,53 +7,56 @@ import (
 
 	redis "github.com/go-redis/redis/v8"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/persistence"
 )
 
 // Define struct for Redis Basket Repository
-type RedisBasketRepository struct {
+type RedisBasketPersistence struct {
 	client *redis.Client
 	ctx    context.Context
 }
 
-// NewRedisBasketRepository returns a new instance of RedisBasketRepository
-func NewRedisBasketRepository(client *redis.Client, ctx context.Context) *RedisBasketRepository {
-	return &RedisBasketRepository{
+// NewRedisBasketPersistence returns a new instance of RedisBasketPersistence
+func NewRedisBasketPersistence(client *redis.Client, ctx context.Context) persistence.BasketPersistence {
+	return &RedisBasketPersistence{
 		client: client,
 		ctx:    ctx,
 	}
 }
 
-func (r *RedisBasketRepository) Create(userName string) (*entities.ShoppingCart, error) {
+func (rbp *RedisBasketPersistence) Create(userId string) (*entities.Basket, error) {
 
-	// Concatenate the userName parameter with the string "basket:".
+	// Concatenate the userId parameter with the string "basket:".
 	// This is the key that will be used to store the basket in Redis.
-	key := fmt.Sprintf("basket:%s", userName)
 
+	key := fmt.Sprintf("basket:%s", userId)
+	fmt.Println("Check redis 1: ", key)
 	// Create shopping cart based on user name
-	basket := &entities.ShoppingCart{UserName: userName}
+	basket := &entities.Basket{UserID: userId}
 
 	// Serialize the ShoppingCart object into a JSON string
 	data, err := json.Marshal(basket)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create basket for user %s: %v", userName, err)
+		return nil, fmt.Errorf("failed to create basket for user %s: %v", userId, err)
 	}
 
 	// Set the value for the key in Redis.
-	err = r.client.Set(r.ctx, key, data, 0).Err()
+	err = rbp.client.Set(rbp.ctx, key, data, 0).Err()
+	fmt.Println("Check redis 2: ", err)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create basket for user %s: %v", userName, err)
+		return nil, fmt.Errorf("failed to create basket for user %s: %v", userId, err)
 	}
 
 	return basket, nil
 }
 
-func (r *RedisBasketRepository) GetByUserName(userName string) (*entities.ShoppingCart, error) {
+func (rbp *RedisBasketPersistence) GetByUserName(userName string) (*entities.Basket, error) {
 
 	// Generating key
 	key := fmt.Sprintf("basket:%s", userName)
 
 	// Retrieves the data associated with the key from Redis
-	data, err := r.client.Get(r.ctx, key).Bytes()
+	data, err := rbp.client.Get(rbp.ctx, key).Bytes()
 	if err != nil {
 		if err == redis.Nil {
 			return nil, nil
@@ -61,7 +64,7 @@ func (r *RedisBasketRepository) GetByUserName(userName string) (*entities.Shoppi
 		return nil, fmt.Errorf("failed to get basket for user %s: %v", userName, err)
 	}
 
-	basket := &entities.ShoppingCart{}
+	basket := &entities.Basket{}
 
 	// If data is retrieved successfully,it unmarshals the data into a new instance.
 	err = json.Unmarshal(data, basket)
@@ -72,7 +75,7 @@ func (r *RedisBasketRepository) GetByUserName(userName string) (*entities.Shoppi
 	return basket, nil
 }
 
-func (r *RedisBasketRepository) Update(basket *entities.ShoppingCart) (*entities.ShoppingCart, error) {
+func (rbp *RedisBasketPersistence) Update(basket *entities.Basket) (*entities.Basket, error) {
 	// Generating key
 	key := fmt.Sprintf("basket:%s", basket.UserName)
 
@@ -83,7 +86,7 @@ func (r *RedisBasketRepository) Update(basket *entities.ShoppingCart) (*entities
 	}
 
 	// Set the value for the key in Redis.
-	err = r.client.Set(r.ctx, key, data, 0).Err()
+	err = rbp.client.Set(rbp.ctx, key, data, 0).Err()
 	if err != nil {
 		return nil, fmt.Errorf("failed to update basket for user %s: %v", basket.UserName, err)
 	}
@@ -91,12 +94,12 @@ func (r *RedisBasketRepository) Update(basket *entities.ShoppingCart) (*entities
 	return basket, nil
 }
 
-func (r *RedisBasketRepository) Delete(userName string) error {
+func (rbp *RedisBasketPersistence) Delete(userName string) error {
 	// Generating key
 	key := fmt.Sprintf("basket:%s", userName)
 
 	// Delete the data associated with the key from Redis
-	err := r.client.Del(r.ctx, key).Err()
+	err := rbp.client.Del(rbp.ctx, key).Err()
 	if err != nil {
 		return fmt.Errorf("failed to delete basket for user %s: %v", userName, err)
 	}

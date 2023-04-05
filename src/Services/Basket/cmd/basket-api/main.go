@@ -13,7 +13,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/services"
+
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/persistence"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/mongodb"
@@ -30,7 +33,10 @@ var (
 	mongoclient *mongo.Client
 	redisclient *redis.Client
 
-	basketService *services.BasketService
+	mongoPersistence persistence.BasketPersistence
+	redisPersistence persistence.BasketPersistence
+	basketRepository repositories.BasketRepository
+	basketService    services.BasketService
 )
 
 func init() {
@@ -77,12 +83,15 @@ func init() {
 	fmt.Println("MongoDB successfully connected...")
 
 	/*****************************************************************/
-	// Create Redis and MongoDB repositories
-	redisRepo := redisdb.NewRedisBasketRepository(redisClient, context.Background())
-	mongoRepo := mongodb.NewMongoDBBasketRepository(mongoClient, "basket", "carts")
+	// Create Redis and MongoDB persistence
+	mongoPersistence = mongodb.NewMongoDBBasketPersistence(mongoClient, "basket", "carts")
+	redisPersistence = redisdb.NewRedisBasketPersistence(redisClient, context.Background())
+
+	// Create basket repositories
+	basketRepository = repositories.NewBasketRepositoryImpl(mongoPersistence, redisPersistence)
 
 	// Create BasketService with Redis and MongoDB repositories
-	basketService = services.NewBasketService(redisRepo, mongoRepo)
+	basketService = services.NewBasketServiceImpl(basketRepository)
 
 }
 

@@ -39,6 +39,9 @@ func main() {
 		panic(err)
 	}
 
+	data := redisClient.Get(ctx, "test")
+	fmt.Println("Check value from key test: ", data)
+
 	fmt.Println("Redis client connected successfully...")
 
 	// Handle graceful shutdown

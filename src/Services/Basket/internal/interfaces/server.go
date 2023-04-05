@@ -17,10 +17,10 @@ import (
 type Server struct {
 	config        *config.Config
 	logger        *logrus.Logger
-	basketService *services.BasketService
+	basketService services.BasketService
 }
 
-func NewServer(cfg *config.Config, logger *logrus.Logger, basketService *services.BasketService) (*Server, error) {
+func NewServer(cfg *config.Config, logger *logrus.Logger, basketService services.BasketService) (*Server, error) {
 
 	return &Server{
 		config:        cfg,
