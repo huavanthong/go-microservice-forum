@@ -56,12 +56,12 @@ func init() {
 	defer redisClient.Close()
 
 	if _, err := redisClient.Ping(ctx).Result(); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	err = redisClient.Set(ctx, "test", "Welcome to Golang with Redis and MongoDB", 0).Err()
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	fmt.Println("Redis client connected successfully...")

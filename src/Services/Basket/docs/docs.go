@@ -68,7 +68,7 @@ const docTemplate = `{
         },
         "/basket": {
             "get": {
-                "description": "Get basket by user name",
+                "description": "Get basket by user id",
                 "consumes": [
                     "application/json"
                 ],
@@ -78,7 +78,7 @@ const docTemplate = `{
                 "tags": [
                     "basket"
                 ],
-                "summary": "Get basket by user name",
+                "summary": "Get basket by user id",
                 "parameters": [
                     {
                         "type": "string",
@@ -113,7 +113,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create basket by user name",
+                "description": "Create basket by user id",
                 "consumes": [
                     "application/json"
                 ],
@@ -123,7 +123,7 @@ const docTemplate = `{
                 "tags": [
                     "basket"
                 ],
-                "summary": "Create basket by user name",
+                "summary": "Create basket by user id",
                 "parameters": [
                     {
                         "description": "New Basket",
@@ -160,7 +160,7 @@ const docTemplate = `{
                 }
             },
             "patch": {
-                "description": "Update basket by user name",
+                "description": "Update basket by user id",
                 "consumes": [
                     "application/json"
                 ],
@@ -170,14 +170,16 @@ const docTemplate = `{
                 "tags": [
                     "basket"
                 ],
-                "summary": "Update basket by user name",
+                "summary": "Update basket by user id",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "userName",
-                        "name": "userName",
-                        "in": "path",
-                        "required": true
+                        "description": "Update Basket",
+                        "name": "basket",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateBasketRequest"
+                        }
                     }
                 ],
                 "responses": {
@@ -207,7 +209,7 @@ const docTemplate = `{
         },
         "/basket/{userName}": {
             "delete": {
-                "description": "Delete basket by user name",
+                "description": "Delete basket by user id",
                 "consumes": [
                     "application/json"
                 ],
@@ -217,7 +219,7 @@ const docTemplate = `{
                 "tags": [
                     "basket"
                 ],
-                "summary": "Delete basket by user name",
+                "summary": "Delete basket by user id",
                 "parameters": [
                     {
                         "type": "string",

@@ -23,8 +23,8 @@ func NewBasketController(basketService services.BasketService) BasketController 
 }
 
 // GetBasket godoc
-// @Summary Get basket by user name
-// @Description Get basket by user name
+// @Summary Get basket by user id
+// @Description Get basket by user id
 // @Tags basket
 // @Accept  json
 // @Produce  json
@@ -33,7 +33,6 @@ func NewBasketController(basketService services.BasketService) BasketController 
 // @Failure 500 {object} string
 // @Success 200 {array} string
 // @Router /basket [get]
-// GetBasket get basket by user name
 func (bc *BasketController) GetBasket(ctx *gin.Context) {
 
 	userName := ctx.Param("userName")
@@ -52,8 +51,8 @@ func (bc *BasketController) GetBasket(ctx *gin.Context) {
 }
 
 // CreateBasket godoc
-// @Summary Create basket by user name
-// @Description Create basket by user name
+// @Summary Create basket by user id
+// @Description Create basket by user id
 // @Tags basket
 // @Accept  json
 // @Produce  json
@@ -82,8 +81,8 @@ func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 }
 
 // UpdateBasket godoc
-// @Summary Update basket by user name
-// @Description Update basket by user name
+// @Summary Update basket by user id
+// @Description Update basket by user id
 // @Tags basket
 // @Accept  json
 // @Produce  json
@@ -91,8 +90,7 @@ func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Success 200 {array} string
-// @Router /basket [update]
-// UpdateBasket update basket by user name
+// @Router /basket [patch]
 func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 
 	// Deserialization data from request
@@ -119,8 +117,8 @@ func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 }
 
 // DeleteBasket godoc
-// @Summary Delete basket by user name
-// @Description Delete basket by user name
+// @Summary Delete basket by user id
+// @Description Delete basket by user id
 // @Tags basket
 // @Accept  json
 // @Produce  json
@@ -129,7 +127,6 @@ func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 // @Failure 500 {object} string
 // @Success 200 {array} string
 // @Router /basket/{userName} [delete]
-// UpdateBasket update basket by user name
 func (bc *BasketController) DeleteBasket(ctx *gin.Context) {
 
 	userName := ctx.Param("userName")

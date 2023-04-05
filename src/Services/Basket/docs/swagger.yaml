@@ -82,7 +82,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get basket by user name
+      description: Get basket by user id
       parameters:
       - description: userName
         in: path
@@ -106,19 +106,20 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: Get basket by user name
+      summary: Get basket by user id
       tags:
       - basket
     patch:
       consumes:
       - application/json
-      description: Update basket by user name
+      description: Update basket by user id
       parameters:
-      - description: userName
-        in: path
-        name: userName
+      - description: Update Basket
+        in: body
+        name: basket
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/models.CreateBasketRequest'
       produces:
       - application/json
       responses:
@@ -136,13 +137,13 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: Update basket by user name
+      summary: Update basket by user id
       tags:
       - basket
     post:
       consumes:
       - application/json
-      description: Create basket by user name
+      description: Create basket by user id
       parameters:
       - description: New Basket
         in: body
@@ -167,14 +168,14 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: Create basket by user name
+      summary: Create basket by user id
       tags:
       - basket
   /basket/{userName}:
     delete:
       consumes:
       - application/json
-      description: Delete basket by user name
+      description: Delete basket by user id
       parameters:
       - description: userName
         in: path
@@ -198,7 +199,7 @@ paths:
           description: Internal Server Error
           schema:
             type: string
-      summary: Delete basket by user name
+      summary: Delete basket by user id
       tags:
       - basket
 swagger: "2.0"
