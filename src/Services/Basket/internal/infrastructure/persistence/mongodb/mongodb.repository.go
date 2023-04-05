@@ -55,23 +55,23 @@ func (mbp *MongoDBBasketPersistence) Create(userId string) (*entities.Basket, er
 	return &basket, nil
 }
 
-func (mbp *MongoDBBasketPersistence) GetByUserName(userName string) (*entities.Basket, error) {
+func (mbp *MongoDBBasketPersistence) Get(userId string) (*entities.Basket, error) {
 
 	// Retrieves the MongoDB collection where the basket data is stored
 	coll := mbp.client.Database(mbp.database).Collection(mbp.collection)
 
 	// Create a filter to find the basket with the given user_name.
-	filter := bson.M{"user_name": userName}
+	filter := bson.M{"user_id": userId}
 
 	// Search for the first document matching the filtembp.
 	result := coll.FindOne(context.Background(), filter)
 	if err := result.Err(); err != nil {
-		return nil, fmt.Errorf("failed to get basket for user %s: %v", userName, err)
+		return nil, fmt.Errorf("failed to get basket for user %s: %v", userId, err)
 	}
 	// If the search is successful, it decodes the document found into a entity
 	basket := &entities.Basket{}
 	if err := result.Decode(basket); err != nil {
-		return nil, fmt.Errorf("failed to decode basket for user %s: %v", userName, err)
+		return nil, fmt.Errorf("failed to decode basket for user %s: %v", userId, err)
 	}
 	return basket, nil
 }

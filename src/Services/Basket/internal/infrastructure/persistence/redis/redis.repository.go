@@ -26,11 +26,14 @@ func NewRedisBasketPersistence(client *redis.Client, ctx context.Context) persis
 
 func (rbp *RedisBasketPersistence) Create(userId string) (*entities.Basket, error) {
 
+	if _, err := rbp.client.Ping(rbp.ctx).Result(); err != nil {
+		panic(err)
+	}
 	// Concatenate the userId parameter with the string "basket:".
 	// This is the key that will be used to store the basket in Redis.
 
 	key := fmt.Sprintf("basket:%s", userId)
-	fmt.Println("Check redis 1: ", key)
+
 	// Create shopping cart based on user name
 	basket := &entities.Basket{UserID: userId}
 
@@ -42,7 +45,7 @@ func (rbp *RedisBasketPersistence) Create(userId string) (*entities.Basket, erro
 
 	// Set the value for the key in Redis.
 	err = rbp.client.Set(rbp.ctx, key, data, 0).Err()
-	fmt.Println("Check redis 2: ", err)
+	fmt.Println("Check redis 3: ", err)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create basket for user %s: %v", userId, err)
 	}
@@ -50,10 +53,10 @@ func (rbp *RedisBasketPersistence) Create(userId string) (*entities.Basket, erro
 	return basket, nil
 }
 
-func (rbp *RedisBasketPersistence) GetByUserName(userName string) (*entities.Basket, error) {
+func (rbp *RedisBasketPersistence) Get(userId string) (*entities.Basket, error) {
 
 	// Generating key
-	key := fmt.Sprintf("basket:%s", userName)
+	key := fmt.Sprintf("basket:%s", userId)
 
 	// Retrieves the data associated with the key from Redis
 	data, err := rbp.client.Get(rbp.ctx, key).Bytes()
@@ -61,7 +64,7 @@ func (rbp *RedisBasketPersistence) GetByUserName(userName string) (*entities.Bas
 		if err == redis.Nil {
 			return nil, nil
 		}
-		return nil, fmt.Errorf("failed to get basket for user %s: %v", userName, err)
+		return nil, fmt.Errorf("failed to get basket for user %s: %v", userId, err)
 	}
 
 	basket := &entities.Basket{}
@@ -69,7 +72,7 @@ func (rbp *RedisBasketPersistence) GetByUserName(userName string) (*entities.Bas
 	// If data is retrieved successfully,it unmarshals the data into a new instance.
 	err = json.Unmarshal(data, basket)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get basket for user %s: %v", userName, err)
+		return nil, fmt.Errorf("failed to get basket for user %s: %v", userId, err)
 	}
 
 	return basket, nil

@@ -38,8 +38,8 @@ func (bs *BasketServiceImpl) GetBasket(userName string) (*entities.Basket, error
 	return basket, nil
 }
 
-func (bs *BasketServiceImpl) UpdateBasket(userName string, cart *entities.Basket) (*entities.Basket, error) {
-	updatedBasket, err := bs.basketRepo.UpdateBasket(userName, cart)
+func (bs *BasketServiceImpl) UpdateBasket(basket *entities.Basket) (*entities.Basket, error) {
+	updatedBasket, err := bs.basketRepo.UpdateBasket(basket)
 	if err != nil {
 		return nil, err
 	}

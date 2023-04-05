@@ -87,20 +87,15 @@ func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 // @Tags basket
 // @Accept  json
 // @Produce  json
-// @Param userName path string true "userName"
+// @Param basket body models.CreateBasketRequest true "Update Basket"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Success 200 {array} string
-// @Router /basket [patch]
+// @Router /basket [update]
 // UpdateBasket update basket by user name
 func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 
-	userName := ctx.Param("userName")
-	// if err != nil {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User Name"})
-	// 	return
-	// }
-
+	// Deserialization data from request
 	var basket entities.Basket
 	if err := ctx.ShouldBindJSON(&basket); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -115,7 +110,7 @@ func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 	// 	}
 	// }
 
-	if updatedBasket, err := bc.basketService.UpdateBasket(userName, &basket); err != nil {
+	if updatedBasket, err := bc.basketService.UpdateBasket(&basket); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		ctx.JSON(http.StatusOK, updatedBasket)

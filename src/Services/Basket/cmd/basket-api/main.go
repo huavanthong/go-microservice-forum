@@ -41,7 +41,7 @@ var (
 
 func init() {
 	// Loading config from variable environment
-	config, err := config.LoadConfig("./internal/infrastructure/config")
+	config, err := config.LoadConfig(configPath)
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}
@@ -63,6 +63,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println("Redis client connected successfully...")
 
 	// Connect to MongoDB
@@ -105,7 +106,7 @@ func init() {
 func main() {
 
 	// Loading config from variable environment
-	config, err := config.LoadConfig("./internal/infrastructure/config")
+	config, err := config.LoadConfig(configPath)
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}

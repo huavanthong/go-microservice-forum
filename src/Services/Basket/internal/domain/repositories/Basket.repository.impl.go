@@ -38,12 +38,12 @@ func (br *BasketRepositoryImpl) CreateBasket(userId string) (*entities.Basket, e
 	return basket, nil
 }
 
-func (br *BasketRepositoryImpl) GetBasket(userName string) (*entities.Basket, error) {
+func (br *BasketRepositoryImpl) GetBasket(userId string) (*entities.Basket, error) {
 	// Try to get basket from Redis
-	basket, err := br.redisPersistence.GetByUserName(userName)
+	basket, err := br.redisPersistence.Get(userId)
 	if err != nil {
 		// Try to get basket from MongoDB
-		basket, err = br.mongoPersistence.GetByUserName(userName)
+		basket, err = br.mongoPersistence.Get(userId)
 		if err != nil {
 			return nil, err
 		}
@@ -58,16 +58,17 @@ func (br *BasketRepositoryImpl) GetBasket(userName string) (*entities.Basket, er
 	return basket, nil
 }
 
-func (br *BasketRepositoryImpl) UpdateBasket(userName string, cart *entities.Basket) (*entities.Basket, error) {
+func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities.Basket, error) {
+
 	// Update basket in Redis
-	if _, err := br.redisPersistence.Update(cart); err != nil {
+	if _, err := br.redisPersistence.Update(basket); err != nil {
 		return nil, err
 	}
 
 	// Update basket in MongoDB
-	if _, err := br.mongoPersistence.Update(cart); err != nil {
+	if _, err := br.mongoPersistence.Update(basket); err != nil {
 		// Rollback Redis basket update on error
-		oldCart, err := br.redisPersistence.GetByUserName(userName)
+		oldCart, err := br.redisPersistence.Get(basket.UserID)
 		if err != nil {
 			return nil, err
 		}
@@ -78,7 +79,7 @@ func (br *BasketRepositoryImpl) UpdateBasket(userName string, cart *entities.Bas
 		return nil, err
 	}
 
-	return cart, nil
+	return basket, nil
 }
 
 func (br *BasketRepositoryImpl) DeleteBasket(userName string) error {
