@@ -3,30 +3,18 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
-
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/config"
 
 	redis "github.com/go-redis/redis/v8"
+	redisdb "github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/redis"
 )
 
 func main() {
-	// Load configurations
-	cfg, err := config.LoadConfig("./internal/infrastructure/config")
-	if err != nil {
-		log.Fatalf("failed to load configurations: %v", err)
-	}
-
 	// Init context in background
 	ctx := context.TODO()
 
-	// Connect to Redis
+	// Khởi tạo Redis Client
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: cfg.RedisUri,
+		Addr: "localhost:6379",
 	})
 	defer redisClient.Close()
 
@@ -34,39 +22,19 @@ func main() {
 		panic(err)
 	}
 
-	err = redisClient.Set(ctx, "test", "Welcome to Golang with Redis and MongoDB", 0).Err()
+	err := redisClient.Set(ctx, "test", "Welcome to Golang with Redis and MongoDB", 0).Err()
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Redis client connected successfully...")
+	// You can move this to another layer
+	data := redisClient.Get(ctx, "test")
+	fmt.Println("Check value from key test: ", data)
 
-	// // Create a new instance of the server
-	// srv, err := interfaces.NewServer(cfg)
-	// if err != nil {
-	// 	log.Fatalf("failed to create server instance: %v", err)
-	// }
+	// Khởi tạo RedisBasketPersistence
+	redisPersistence := redisdb.NewRedisBasketPersistence(redisClient, ctx)
 
-	// // Start the server
-	// go func() {
-	// 	if err := srv.Start(); err != nil && err != http.ErrServerClosed {
-	// 		log.Fatalf("failed to start server: %v", err)
-	// 	}
-	// }()
+	// Sử dụng RedisBasketPersistence để thao tác với Redis
+	_, _ = redisPersistence.Create("example-user")
 
-	// Handle graceful shutdown
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-	log.Println("shutting down server...")
-
-	// Wait for pending requests to complete before shutting down
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	// if err := srv.Shutdown(ctx); err != nil {
-	// 	log.Fatalf("failed to gracefully shutdown server: %v", err)
-	// }
-
-	log.Println("server stopped")
 }

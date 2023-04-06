@@ -39,9 +39,17 @@ var (
 	basketService    services.BasketService
 )
 
+func GetValue(client *redis.Client, ctx context.Context) error {
+
+	data := client.Get(ctx, "test")
+	fmt.Println("Check value from key test: ", data)
+
+	return nil
+}
+
 func init() {
 	// Loading config from variable environment
-	config, err := config.LoadConfig(configPath)
+	_, err := config.LoadConfig(configPath)
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}
@@ -51,7 +59,9 @@ func init() {
 
 	// Connect to Redis
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: config.RedisUri,
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
 	})
 	defer redisClient.Close()
 
@@ -86,7 +96,7 @@ func init() {
 	/*****************************************************************/
 	// Create Redis and MongoDB persistence
 	mongoPersistence = mongodb.NewMongoDBBasketPersistence(mongoClient, "basket", "carts")
-	redisPersistence = redisdb.NewRedisBasketPersistence(redisClient, context.Background())
+	redisPersistence = redisdb.NewRedisBasketPersistence(redisClient, ctx)
 
 	// Create basket repositories
 	basketRepository = repositories.NewBasketRepositoryImpl(mongoPersistence, redisPersistence)
