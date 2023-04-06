@@ -26,13 +26,9 @@ func NewRedisBasketPersistence(client *redis.Client, ctx context.Context) persis
 
 func (rbp *RedisBasketPersistence) Create(userId string) (*entities.Basket, error) {
 
-	test := rbp.client.Get(rbp.ctx, "test")
-	fmt.Println("Check value from key test: ", test)
-
 	// Concatenate the userId parameter with the string "basket:".
 	// This is the key that will be used to store the basket in Redis.
 	key := fmt.Sprintf("basket:%s", userId)
-
 	// Create shopping cart based on user name
 	basket := &entities.Basket{UserID: userId}
 
@@ -55,9 +51,9 @@ func (rbp *RedisBasketPersistence) Get(userId string) (*entities.Basket, error) 
 
 	// Generating key
 	key := fmt.Sprintf("basket:%s", userId)
-
 	// Retrieves the data associated with the key from Redis
 	data, err := rbp.client.Get(rbp.ctx, key).Bytes()
+
 	if err != nil {
 		if err == redis.Nil {
 			return nil, nil

@@ -32,7 +32,7 @@ func RegisterRoutes(router *gin.RouterGroup, basketService services.BasketServic
 
 	basketRoutes := router.Group("/basket")
 	{
-		basketRoutes.GET("/:id", basketController.GetBasket)
+		basketRoutes.GET("/:userid", basketController.GetBasket)
 		basketRoutes.POST("/", basketController.CreateBasket)
 		basketRoutes.DELETE("/:id", basketController.DeleteBasket)
 

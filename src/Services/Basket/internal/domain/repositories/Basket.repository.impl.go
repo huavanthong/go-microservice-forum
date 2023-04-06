@@ -1,9 +1,8 @@
 package repositories
 
 import (
-	"fmt"
-
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/api/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/persistence"
 )
 
@@ -16,29 +15,40 @@ func NewBasketRepositoryImpl(mongoPersistence persistence.BasketPersistence, red
 	return &BasketRepositoryImpl{mongoPersistence, redisPersistence}
 }
 
-func (br *BasketRepositoryImpl) CreateBasket(userId string) (*entities.Basket, error) {
+func (br *BasketRepositoryImpl) CreateBasket(cbr *models.CreateBasketRequest) (*entities.Basket, error) {
 
-	// Create basket in Redis
-	fmt.Println("Check 1: ")
-	basket, err := br.redisPersistence.Create(userId)
+	userId := cbr.UserID
+
+	// Try to get basket from MongoDB
+	basket, err := br.mongoPersistence.Get(userId)
 	if err != nil {
-		return nil, err
+		// Try to get basket from Redis
+		basket, err = br.redisPersistence.Get(userId)
+		if err != nil {
+			// Basket not found in MongoDB and Redis, create a new one
+			basket, err = br.redisPersistence.Create(userId)
+			if err != nil {
+				return nil, err
+			}
+
+			// Create basket in MongoDB
+			_, err = br.mongoPersistence.Create(userId)
+			if err != nil {
+				// Rollback Redis basket creation on error
+				br.redisPersistence.Delete(userId)
+				return nil, err
+			}
+
+			// Generate info response
+			basket.UserName = cbr.UserName
+		}
 	}
-	fmt.Println("Check 2: ", err)
-	fmt.Println("Check 2: ", basket)
-	// Create basket in MongoDB
-	_, err = br.mongoPersistence.Create(userId)
-	if err != nil {
-		// Rollback Redis basket creation on error
-		br.redisPersistence.Delete(userId)
-		return nil, err
-	}
-	fmt.Println("Check 3: ", err)
 
 	return basket, nil
 }
 
 func (br *BasketRepositoryImpl) GetBasket(userId string) (*entities.Basket, error) {
+
 	// Try to get basket from Redis
 	basket, err := br.redisPersistence.Get(userId)
 	if err != nil {

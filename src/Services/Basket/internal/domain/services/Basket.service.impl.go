@@ -19,19 +19,15 @@ func NewBasketServiceImpl(basketRepo repositories.BasketRepository) BasketServic
 
 func (bs *BasketServiceImpl) CreateBasket(cbr *models.CreateBasketRequest) (*entities.Basket, error) {
 
-	basket, err := bs.basketRepo.CreateBasket(cbr.UserID)
+	basket, err := bs.basketRepo.CreateBasket(cbr)
 	if err != nil {
 		return nil, err
 	}
-
-	// Generate response
-	basket.UserName = cbr.UserName
-
 	return basket, nil
 }
 
-func (bs *BasketServiceImpl) GetBasket(userName string) (*entities.Basket, error) {
-	basket, err := bs.basketRepo.GetBasket(userName)
+func (bs *BasketServiceImpl) GetBasket(userId string) (*entities.Basket, error) {
+	basket, err := bs.basketRepo.GetBasket(userId)
 	if err != nil {
 		return nil, err
 	}

@@ -67,51 +67,6 @@ const docTemplate = `{
             }
         },
         "/basket": {
-            "get": {
-                "description": "Get basket by user id",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "basket"
-                ],
-                "summary": "Get basket by user id",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "userName",
-                        "name": "userName",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
             "post": {
                 "description": "Create basket by user id",
                 "consumes": [
@@ -180,6 +135,53 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.CreateBasketRequest"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/basket/{userId}": {
+            "get": {
+                "description": "Get basket by user id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "basket"
+                ],
+                "summary": "Get basket by user id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {

@@ -28,20 +28,20 @@ func NewBasketController(basketService services.BasketService) BasketController 
 // @Tags basket
 // @Accept  json
 // @Produce  json
-// @Param userName path string true "userName"
+// @Param userid path string true "User ID"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Success 200 {array} string
-// @Router /basket [get]
+// @Router /basket/{userid} [get]
 func (bc *BasketController) GetBasket(ctx *gin.Context) {
 
-	userName := ctx.Param("userName")
-	// if err != nil {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User Name"})
-	// 	return
-	// }
+	userId := ctx.Param("userid")
+	if userId == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "User ID is required"})
+		return
+	}
 
-	basket, err := bc.basketService.GetBasket(userName)
+	basket, err := bc.basketService.GetBasket(userId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get basket"})
 		return

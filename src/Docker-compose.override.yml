@@ -18,7 +18,7 @@ services:
   basket.api:
     container_name: basket.api
     environment:
-      MONGODB_CONNECTION_STRING: mongodb://admin:password@mongodb:27017/baskets
+      MONGODB_CONNECTION_STRING: mongodb://root:password123@mongodb:27017/baskets
       REDIS_CONNECTION_STRING: redis://redis:6379
     depends_on:
       - basketdb
