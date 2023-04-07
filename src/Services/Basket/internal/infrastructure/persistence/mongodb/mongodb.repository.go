@@ -10,7 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/ValueObjects"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
+
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/persistence"
 )
 
@@ -34,14 +36,14 @@ func NewMongoDBBasketPersistence(client *mongo.Client, database string, collecti
 func (mbp *MongoDBBasketPersistence) Create(userId string) (*entities.Basket, error) {
 
 	// Create entity basket to storing in MongoDB
-	var basket entities.Basket
-
-	// Bson generate object id
-	basket.ID = primitive.NewObjectID()
-	basket.UserID = userId
-	basket.Items = make([]entities.BasketItem, 0)
-	basket.CreatedAt = time.Now()
-	basket.UpdatedAt = basket.CreatedAt
+	createdAt := time.Now()
+	basket := entities.Basket{
+		ID:        ValueObjects.BasketID(primitive.NewObjectID().Hex()),
+		UserID:    userId,
+		Items:     make([]entities.BasketItem, 0),
+		CreatedAt: createdAt,
+		UpdatedAt: createdAt,
+	}
 
 	// Retrieves the MongoDB collection where the basket data is stored
 	coll := mbp.client.Database(mbp.database).Collection(mbp.collection)

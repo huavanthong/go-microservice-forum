@@ -29,9 +29,9 @@ func NewBasketController(basketService services.BasketService) BasketController 
 // @Accept  json
 // @Produce  json
 // @Param userid path string true "User ID"
-// @Failure 400 {object} response.NewErrorResponse
-// @Failure 500 {object} response.NewErrorResponse
-// @Success 200 {array} response.NewSuccessResponse
+// @Failure 400 {object} response.Response
+// @Failure 500 {object} response.Response
+// @Success 200 {array} response.Response
 // @Router /basket/{userid} [get]
 func (bc *BasketController) GetBasket(ctx *gin.Context) {
 
@@ -57,9 +57,9 @@ func (bc *BasketController) GetBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param basket body models.CreateBasketRequest true "New Basket"
-// @Failure 400 {object} response.NewErrorResponse
-// @Failure 500 {object} response.NewErrorResponse
-// @Success 200 {object} response.NewSuccessResponse
+// @Failure 400 {object} response.Response
+// @Failure 500 {object} response.Response
+// @Success 200 {object} response.Response
 // @Router /basket [post]
 // CreateBasket create basket by user id
 func (bc *BasketController) CreateBasket(ctx *gin.Context) {

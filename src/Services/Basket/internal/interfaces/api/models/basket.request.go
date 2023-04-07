@@ -6,6 +6,7 @@ type CreateBasketRequest struct {
 }
 
 type UpdateBasketRequest struct {
+	BasketID string `json:"id"`
 	UserID   string `json:"user_id" validate:"required" example:"1234567890"`
 	UserName string `json:"user_name" validate:"required" example:"hvthong"`
 	Items    []Item `json:"items"`

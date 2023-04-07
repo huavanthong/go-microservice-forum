@@ -2,10 +2,6 @@ basePath: /api/v1
 definitions:
   models.CreateBasketRequest:
     properties:
-      items:
-        items:
-          $ref: '#/definitions/models.Item'
-        type: array
       user_id:
         example: "1234567890"
         type: string
@@ -37,6 +33,39 @@ definitions:
     - product_id
     - product_name
     - quantity
+    type: object
+  models.UpdateBasketRequest:
+    properties:
+      id:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/models.Item'
+        type: array
+      user_id:
+        example: "1234567890"
+        type: string
+      user_name:
+        example: hvthong
+        type: string
+    required:
+    - user_id
+    - user_name
+    type: object
+  response.APIError:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  response.Response:
+    properties:
+      data: {}
+      error:
+        $ref: '#/definitions/response.APIError'
+      success:
+        type: boolean
     type: object
 host: localhost:8001
 info:
@@ -89,7 +118,7 @@ paths:
         name: basket
         required: true
         schema:
-          $ref: '#/definitions/models.CreateBasketRequest'
+          $ref: '#/definitions/models.UpdateBasketRequest'
       produces:
       - application/json
       responses:
@@ -127,49 +156,16 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              type: string
-            type: array
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            $ref: '#/definitions/response.Response'
       summary: Create basket by user id
-      tags:
-      - basket
-  /basket/{userId}:
-    get:
-      consumes:
-      - application/json
-      description: Get basket by user id
-      parameters:
-      - description: User ID
-        in: path
-        name: userId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              type: string
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Get basket by user id
       tags:
       - basket
   /basket/{userName}:
@@ -201,6 +197,37 @@ paths:
           schema:
             type: string
       summary: Delete basket by user id
+      tags:
+      - basket
+  /basket/{userid}:
+    get:
+      consumes:
+      - application/json
+      description: Get basket by user id
+      parameters:
+      - description: User ID
+        in: path
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.Response'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Get basket by user id
       tags:
       - basket
 swagger: "2.0"

@@ -10,7 +10,7 @@ type Basket struct {
 	ID             ValueObjects.BasketID `json:"id" bson:"_id,omitempty"`
 	UserID         string                `json:"user_id" bson:"user_id"`
 	UserName       string                `json:"user_name" bson:"user_name"`
-	Items          BasketItems           `json:"items" bson:"items"`
+	Items          []BasketItem          `json:"items" bson:"items"`
 	TotalPrice     float64               `json:"total_price" bson:"total_price"`
 	TotalDiscounts float64               `json:"total_discounts" bson:"total_discounts"`
 	CreatedAt      time.Time             `json:"created_at" bson:"created_at"`
@@ -18,11 +18,11 @@ type Basket struct {
 	ExpiresAt      time.Time             `json:"expires_at" bson:"expires_at"`
 }
 
-func (basket *Basket) AddItem(basketItem BasketItem) (Basket, error) {
+func (basket *Basket) AddItem(basketItem BasketItem) (*Basket, error) {
 
 	basket.Items = append(basket.Items, basketItem)
 
-	return nil
+	return basket, nil
 }
 
 type BasketItem struct {
@@ -37,13 +37,5 @@ type BasketItem struct {
 	UpdatedAt      time.Time `json:"updated_at" bson:"updated_at"`
 }
 
+// Value to Object
 type BasketItems []BasketItem
-
-func (items BasketItems) Validate() error {
-	for _, item := range items {
-		if err := item.Validate(); err != nil {
-			return err
-		}
-	}
-	return nil
-}

@@ -20,6 +20,7 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/persistence"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/config"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/loggers"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/mongodb"
 	redisdb "github.com/huavanthong/microservice-golang/src/Services/Basket/internal/infrastructure/persistence/redis"
@@ -33,8 +34,6 @@ var (
 	configPath       = "./internal/infrastructure/config"
 	basketDatabase   = "basket-microservice"
 	basketCollection = "basket"
-
-	logger *logrus.Entry
 
 	server      *gin.Engine // The framework's instance, it contains the muxer, middleware and configuration settings.
 	myServer    interfaces.Server
@@ -55,7 +54,7 @@ func init() {
 		log.Fatal("Could not load environment variables", err)
 	}
 
-	logger = logger.InitLogger()
+	logger := loggers.InitLogger()
 
 	logger.WithFields(logrus.Fields{
 		"app": "myapp",
@@ -63,7 +62,7 @@ func init() {
 	})
 
 	// Sử dụng logger
-	logger.Info("Hello, world!")
+	logger.Info("Starting application...")
 
 	// Init context running in background
 	ctx = context.TODO()
