@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/ValueObjects"
@@ -20,9 +21,32 @@ func NewBasketServiceImpl(basketRepo repositories.BasketRepository) BasketServic
 	}
 }
 
+func convertRequestCreateToBasket(request *models.CreateBasketRequest) *entities.Basket {
+
+	basketItems := make([]entities.BasketItem, 0)
+	createdAt := time.Now()
+
+	basket := &entities.Basket{
+		ID:             ValueObjects.NewBasketID(),
+		UserID:         request.UserID,
+		UserName:       request.UserName,
+		Items:          basketItems,
+		TotalPrice:     0,
+		TotalDiscounts: 0,
+		CreatedAt:      createdAt,
+		UpdatedAt:      createdAt,
+		ExpiresAt:      createdAt,
+	}
+
+	return basket
+}
+
 func (bs *BasketServiceImpl) CreateBasket(cbr *models.CreateBasketRequest) (*entities.Basket, error) {
 
-	basket, err := bs.basketRepo.CreateBasket(cbr)
+	// Convert request to create basket data
+	basketRequest := convertRequestCreateToBasket(cbr)
+	fmt.Println("Check basket: ", basketRequest)
+	basket, err := bs.basketRepo.CreateBasket(basketRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -70,14 +94,14 @@ func convertRequestUpdateToBasket(request *models.UpdateBasketRequest) *entities
 
 func (bs *BasketServiceImpl) UpdateBasket(request *models.UpdateBasketRequest) (*entities.Basket, error) {
 
-	// Convert request to update data
-	basket := convertRequestUpdateToBasket(request)
+	// Convert request to update basket data
+	basketRequest := convertRequestUpdateToBasket(request)
 
-	updatedBasket, err := bs.basketRepo.UpdateBasket(basket)
+	basket, err := bs.basketRepo.UpdateBasket(basketRequest)
 	if err != nil {
 		return nil, err
 	}
-	return updatedBasket, nil
+	return basket, nil
 }
 
 func (bs *BasketServiceImpl) DeleteBasket(userName string) error {

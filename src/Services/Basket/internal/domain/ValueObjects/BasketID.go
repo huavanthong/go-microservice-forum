@@ -1,19 +1,16 @@
 package ValueObjects
 
 import (
-	"errors"
-
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type BasketID string
 
-func NewBasketID(id string) (BasketID, error) {
-	if id == "" {
-		return "", errors.New("basket id cannot be empty")
-	}
+func NewBasketID() BasketID {
 
-	return BasketID(id), nil
+	id := string(primitive.NewObjectID().Hex())
+
+	return BasketID(id)
 }
 
 func (id BasketID) Value() (primitive.ObjectID, error) {

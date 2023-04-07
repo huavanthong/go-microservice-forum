@@ -3,14 +3,11 @@ package mongodb
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/ValueObjects"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/persistence"
@@ -33,17 +30,7 @@ func NewMongoDBBasketPersistence(client *mongo.Client, database string, collecti
 	}
 }
 
-func (mbp *MongoDBBasketPersistence) Create(userId string) (*entities.Basket, error) {
-
-	// Create entity basket to storing in MongoDB
-	createdAt := time.Now()
-	basket := entities.Basket{
-		ID:        ValueObjects.BasketID(primitive.NewObjectID().Hex()),
-		UserID:    userId,
-		Items:     make([]entities.BasketItem, 0),
-		CreatedAt: createdAt,
-		UpdatedAt: createdAt,
-	}
+func (mbp *MongoDBBasketPersistence) Create(basket *entities.Basket) (*entities.Basket, error) {
 
 	// Retrieves the MongoDB collection where the basket data is stored
 	coll := mbp.client.Database(mbp.database).Collection(mbp.collection)
@@ -51,10 +38,10 @@ func (mbp *MongoDBBasketPersistence) Create(userId string) (*entities.Basket, er
 	// Insert to monodb
 	_, err := coll.InsertOne(context.Background(), basket)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create basket for user %s: %v", userId, err)
+		return nil, fmt.Errorf("failed to create basket for user %s: %v", basket.UserID, err)
 	}
 
-	return &basket, nil
+	return basket, nil
 }
 
 func (mbp *MongoDBBasketPersistence) Get(userId string) (*entities.Basket, error) {

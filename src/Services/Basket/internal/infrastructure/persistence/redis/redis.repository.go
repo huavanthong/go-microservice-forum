@@ -28,13 +28,17 @@ func NewRedisBasketPersistence(logger *logrus.Entry, client *redis.Client, ctx c
 	}
 }
 
-func (rbp *RedisBasketPersistence) Create(userId string) (*entities.Basket, error) {
+func (rbp *RedisBasketPersistence) Create(basket *entities.Basket) (*entities.Basket, error) {
 
 	// Concatenate the userId parameter with the string "basket:".
 	// This is the key that will be used to store the basket in Redis.
+	fmt.Println("Check basket info: ", basket)
+
+	var userId string = basket.UserID
+
 	key := fmt.Sprintf("basket:%s", userId)
+
 	// Create shopping cart based on user name
-	basket := &entities.Basket{UserID: userId}
 
 	// Serialize the ShoppingCart object into a JSON string
 	data, err := json.Marshal(basket)
@@ -50,7 +54,7 @@ func (rbp *RedisBasketPersistence) Create(userId string) (*entities.Basket, erro
 		return nil, fmt.Errorf("failed to create basket for user %s: %v", userId, err)
 	}
 
-	rbp.logger.Printf("Basket for user %s has been successfully retrieved from Redis", userId)
+	rbp.logger.Printf("Basket for user %s has been successfully retrieved from Redis", basket.UserID)
 
 	return basket, nil
 }

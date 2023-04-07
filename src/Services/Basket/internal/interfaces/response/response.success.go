@@ -1,7 +1,7 @@
 package response
 
 type SuccessResponse struct {
-	Response `json:"response"`
+	Response
 }
 
 func NewSuccessResponse(data interface{}) *SuccessResponse {

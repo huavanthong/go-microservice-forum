@@ -6,8 +6,8 @@ import (
 
 // BasketPersistence is an interface for managing Basket based on CRUD operation
 type BasketPersistence interface {
-	Create(userId string) (*entities.Basket, error)
+	Create(basket *entities.Basket) (*entities.Basket, error)
 	Get(userId string) (*entities.Basket, error)
 	Update(basket *entities.Basket) (*entities.Basket, error)
-	Delete(userName string) error
+	Delete(userId string) error
 }
