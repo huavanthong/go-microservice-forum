@@ -81,7 +81,7 @@ func (mbp *MongoDBBasketPersistence) Update(basket *entities.Basket) (*entities.
 	coll := mbp.client.Database(mbp.database).Collection(mbp.collection)
 
 	// Create a filter to find the basket with the given user_name.
-	filter := bson.M{"user_name": basket.UserName}
+	filter := bson.M{"user_id": basket.UserID}
 
 	// Create an update statement with the $set operator, which sets
 	// the items field to the new items in the Basket object.

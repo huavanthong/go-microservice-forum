@@ -19,6 +19,20 @@ func NewBasketServiceImpl(basketRepo repositories.BasketRepository) BasketServic
 
 func (bs *BasketServiceImpl) CreateBasket(cbr *models.CreateBasketRequest) (*entities.Basket, error) {
 
+	// Bởi vì chúng ta sẽ không sử dụng việc tính toán totalPrices, totalDiscount ngay lúc này, nên ta sẽ bỏ qua bước này.
+	/*
+		totalPrice := 0.0
+		totalDiscounts := 0.0
+
+		for _, item := range basket.Items {
+			totalPrice += item.Price
+			totalDiscounts += item.Discount
+		}
+
+		basket.TotalPrice = totalPrice
+		basket.TotalDiscounts = totalDiscounts
+	*/
+
 	basket, err := bs.basketRepo.CreateBasket(cbr)
 	if err != nil {
 		return nil, err
@@ -34,7 +48,10 @@ func (bs *BasketServiceImpl) GetBasket(userId string) (*entities.Basket, error) 
 	return basket, nil
 }
 
-func (bs *BasketServiceImpl) UpdateBasket(basket *entities.Basket) (*entities.Basket, error) {
+func (bs *BasketServiceImpl) UpdateBasket(ubq *models.UpdateBasketRequest) (*entities.Basket, error) {
+
+	var basket entities.Basket
+
 	updatedBasket, err := bs.basketRepo.UpdateBasket(basket)
 	if err != nil {
 		return nil, err

@@ -3,9 +3,13 @@ package models
 type CreateBasketRequest struct {
 	UserID   string `json:"user_id" validate:"required" example:"1234567890"`
 	UserName string `json:"user_name" validate:"required" example:"hvthong"`
-	Items    []Item `json:"items"`
 }
 
+type UpdateBasketRequest struct {
+	UserID   string `json:"user_id" validate:"required" example:"1234567890"`
+	UserName string `json:"user_name" validate:"required" example:"hvthong"`
+	Items    []Item `json:"items"`
+}
 type Item struct {
 	ProductID   string  `json:"product_id" validate:"required" `
 	ProductName string  `json:"product_name" validate:"required" example:"phone"`

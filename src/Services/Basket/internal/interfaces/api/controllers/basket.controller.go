@@ -29,25 +29,25 @@ func NewBasketController(basketService services.BasketService) BasketController 
 // @Accept  json
 // @Produce  json
 // @Param userid path string true "User ID"
-// @Failure 400 {object} string
-// @Failure 500 {object} string
-// @Success 200 {array} string
+// @Failure 400 {object} response.NewErrorResponse
+// @Failure 500 {object} response.NewErrorResponse
+// @Success 200 {array} response.NewSuccessResponse
 // @Router /basket/{userid} [get]
 func (bc *BasketController) GetBasket(ctx *gin.Context) {
 
 	userId := ctx.Param("userid")
 	if userId == "" {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "User ID is required"})
+		ctx.JSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, "User ID is required"))
 		return
 	}
 
 	basket, err := bc.basketService.GetBasket(userId)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get basket"})
+		ctx.JSON(http.StatusInternalServerError, response.NewErrorResponse(http.StatusInternalServerError, "Failed to create basket"))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, basket)
+	ctx.JSON(http.StatusOK, response.NewSuccessResponse(basket))
 }
 
 // CreateBasket godoc
@@ -57,21 +57,21 @@ func (bc *BasketController) GetBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param basket body models.CreateBasketRequest true "New Basket"
-// @Failure 400 {object} string
-// @Failure 500 {object} string
-// @Success 200 {array} string
+// @Failure 400 {object} response.NewErrorResponse
+// @Failure 500 {object} response.NewErrorResponse
+// @Success 200 {object} response.NewSuccessResponse
 // @Router /basket [post]
 // CreateBasket create basket by user id
 func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 
 	// Deserialization data from request
-	var basketReq models.CreateBasketRequest
-	if err := ctx.ShouldBindJSON(&basketReq); err != nil {
+	var cbq models.CreateBasketRequest
+	if err := ctx.ShouldBindJSON(&cbq); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, err.Error()))
 		return
 	}
 
-	basket, err := bc.basketService.CreateBasket(&basketReq)
+	basket, err := bc.basketService.CreateBasket(&cbq)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, response.NewErrorResponse(http.StatusInternalServerError, "Failed to create basket"))
 		return
@@ -86,7 +86,7 @@ func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 // @Tags basket
 // @Accept  json
 // @Produce  json
-// @Param basket body models.CreateBasketRequest true "Update Basket"
+// @Param basket body models.UpdateBasketRequest true "Update Basket"
 // @Failure 400 {object} string
 // @Failure 500 {object} string
 // @Success 200 {array} string
@@ -94,8 +94,8 @@ func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 
 	// Deserialization data from request
-	var basket entities.Basket
-	if err := ctx.ShouldBindJSON(&basket); err != nil {
+	var ubq models.UpdateBasketRequest
+	if err := ctx.ShouldBindJSON(&ubq); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -108,7 +108,7 @@ func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 	// 	}
 	// }
 
-	if updatedBasket, err := bc.basketService.UpdateBasket(&basket); err != nil {
+	if updatedBasket, err := bc.basketService.UpdateBasket(&ubq); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		ctx.JSON(http.StatusOK, updatedBasket)

@@ -8,6 +8,6 @@ import (
 type BasketService interface {
 	CreateBasket(cbr *models.CreateBasketRequest) (*entities.Basket, error)
 	GetBasket(userId string) (*entities.Basket, error)
-	UpdateBasket(cart *entities.Basket) (*entities.Basket, error)
+	UpdateBasket(ubq *models.UpdateBasketRequest) (*entities.Basket, error)
 	DeleteBasket(userName string) error
 }

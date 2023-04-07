@@ -4,7 +4,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/api/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/persistence"
 )
 
@@ -22,8 +21,10 @@ func NewBasketRepositoryImpl(logger *logrus.Entry, mongoPersistence persistence.
 	}
 }
 
-func (br *BasketRepositoryImpl) CreateBasket(cbr *models.CreateBasketRequest) (*entities.Basket, error) {
-	userId := cbr.UserID
+func (br *BasketRepositoryImpl) CreateBasket(createBasket *entities.Basket) (*entities.Basket, error) {
+
+	// Extract user Id from request
+	userId := createBasket.UserID
 
 	// Try to get basket from MongoDB
 	basket, err := br.mongoPersistence.Get(userId)
@@ -55,12 +56,12 @@ func (br *BasketRepositoryImpl) CreateBasket(cbr *models.CreateBasketRequest) (*
 			}
 
 			// Generate info response
-			basket.UserName = cbr.UserName
+			basket.UserName = createBasket.UserName
 		}
 	}
 
 	// Log the basket being returned
-	br.logger.Printf("Returning basket %+v for user ID %s", basket, userId)
+	br.logger.Printf("Create basket %+v for user ID %s", basket, userId)
 
 	return basket, nil
 }
@@ -97,7 +98,8 @@ func (br *BasketRepositoryImpl) GetBasket(userId string) (*entities.Basket, erro
 func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities.Basket, error) {
 
 	// Update basket in Redis
-	if _, err := br.redisPersistence.Update(basket); err != nil {
+	updatebasket, err := br.redisPersistence.Update(basket)
+	if err != nil {
 		return nil, err
 	}
 
