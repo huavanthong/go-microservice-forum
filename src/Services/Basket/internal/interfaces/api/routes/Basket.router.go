@@ -33,9 +33,10 @@ func RegisterRoutes(router *gin.RouterGroup, basketService services.BasketServic
 	basketRoutes := router.Group("/basket")
 	{
 		basketRoutes.GET("/:userid", basketController.GetBasket)
-		basketRoutes.POST("/", basketController.CreateBasket)
+		basketRoutes.POST("", basketController.CreateBasket)
+		basketRoutes.PATCH("", basketController.UpdateBasket)
 		basketRoutes.DELETE("/:userid", basketController.DeleteBasket)
-
+		// Health check
 		basketRoutes.GET("/health", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{"status": "OK"})
 		})

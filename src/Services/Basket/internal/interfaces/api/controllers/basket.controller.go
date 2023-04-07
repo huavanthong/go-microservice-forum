@@ -87,9 +87,9 @@ func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param basket body models.UpdateBasketRequest true "Update Basket"
-// @Failure 400 {object} string
-// @Failure 500 {object} string
-// @Success 200 {array} string
+// @Failure 400 {object} response.Response
+// @Failure 500 {object} response.Response
+// @Success 200 {object} response.Response
 // @Router /basket [patch]
 func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 
@@ -122,20 +122,20 @@ func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 // @Tags basket
 // @Accept  json
 // @Produce  json
-// @Param userName path string true "userName"
-// @Failure 400 {object} string
-// @Failure 500 {object} string
-// @Success 200 {array} string
-// @Router /basket/{userName} [delete]
+// @Param userid path string true "User ID"
+// @Failure 400 {object} response.Response
+// @Failure 500 {object} response.Response
+// @Success 200 {array} response.Response
+// @Router /basket/{userid} [delete]
 func (bc *BasketController) DeleteBasket(ctx *gin.Context) {
 
-	userName := ctx.Param("userName")
-	// if err != nil {
-	// 	ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User Name"})
-	// 	return
-	// }
+	userId := ctx.Param("userid")
+	if userId == "" {
+		ctx.JSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, "User ID is required"))
+		return
+	}
 
-	if err := bc.basketService.DeleteBasket(userName); err != nil {
+	if err := bc.basketService.DeleteBasket(userId); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 	} else {
 		ctx.JSON(http.StatusOK, gin.H{})

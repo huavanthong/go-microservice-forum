@@ -12,11 +12,15 @@ func InitLogger() *logrus.Entry {
 	// Create a new logger instance
 	logger := logrus.New()
 
-	// Set log level to Info
-	logger.SetLevel(logrus.InfoLevel)
-
 	// Set formatter to json
 	logger.SetFormatter(&logrus.JSONFormatter{})
+
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	logger.SetOutput(os.Stdout)
+
+	// Set log level to Info
+	logger.SetLevel(logrus.TraceLevel)
 
 	// Create a new log file
 	logFile, err := os.OpenFile("log.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)

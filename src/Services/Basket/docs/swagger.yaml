@@ -36,7 +36,8 @@ definitions:
     type: object
   models.UpdateBasketRequest:
     properties:
-      id:
+      basket_id:
+        example: 642fedd2ce582b2d899aa602
         type: string
       items:
         items:
@@ -125,17 +126,15 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              type: string
-            type: array
+            $ref: '#/definitions/response.Response'
         "400":
           description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/response.Response'
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            $ref: '#/definitions/response.Response'
       summary: Update basket by user id
       tags:
       - basket

@@ -131,22 +131,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/response.Response"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/response.Response"
                         }
                     }
                 }
@@ -302,8 +299,9 @@
                 "user_name"
             ],
             "properties": {
-                "id": {
-                    "type": "string"
+                "basket_id": {
+                    "type": "string",
+                    "example": "642fedd2ce582b2d899aa602"
                 },
                 "items": {
                     "type": "array",
