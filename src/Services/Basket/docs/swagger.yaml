@@ -21,6 +21,7 @@ definitions:
         example: 1400
         type: number
       product_id:
+        example: 5bbdadf782ebac06a695a8e7
         type: string
       product_name:
         example: phone
@@ -60,7 +61,15 @@ definitions:
       message:
         type: string
     type: object
-  response.Response:
+  response.ErrorResponse:
+    properties:
+      data: {}
+      error:
+        $ref: '#/definitions/response.APIError'
+      success:
+        type: boolean
+    type: object
+  response.SuccessResponse:
     properties:
       data: {}
       error:
@@ -76,38 +85,6 @@ info:
   title: Basket Service API Document
   version: "1.0"
 paths:
-  /Basket/{userName}:
-    get:
-      consumes:
-      - application/json
-      description: Checkout basket
-      parameters:
-      - description: Basket Checkout
-        in: body
-        name: basketCheckout
-        required: true
-        schema:
-          type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              type: string
-            type: array
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Checkout basket after completed items in shopping cart
-      tags:
-      - basket
   /basket:
     patch:
       consumes:
@@ -126,15 +103,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.ErrorResponse'
       summary: Update basket by user id
       tags:
       - basket
@@ -155,27 +132,27 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.ErrorResponse'
       summary: Create basket by user id
       tags:
       - basket
-  /basket/{userName}:
+  /basket/{userid}:
     delete:
       consumes:
       - application/json
       description: Delete basket by user id
       parameters:
-      - description: userName
+      - description: User ID
         in: path
-        name: userName
+        name: userid
         required: true
         type: string
       produces:
@@ -184,21 +161,18 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              type: string
-            type: array
+            $ref: '#/definitions/response.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            type: string
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            type: string
+            $ref: '#/definitions/response.ErrorResponse'
       summary: Delete basket by user id
       tags:
       - basket
-  /basket/{userid}:
     get:
       consumes:
       - application/json
@@ -216,17 +190,47 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/response.Response'
+              $ref: '#/definitions/response.SuccessResponse'
             type: array
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/response.Response'
+            $ref: '#/definitions/response.ErrorResponse'
       summary: Get basket by user id
+      tags:
+      - basket
+  /basket/checkout:
+    post:
+      consumes:
+      - application/json
+      description: Checkout basket
+      parameters:
+      - description: Basket Checkout
+        in: body
+        name: basketCheckout
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponse'
+      summary: Checkout basket after completed items in shopping cart
       tags:
       - basket
 swagger: "2.0"

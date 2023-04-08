@@ -30,10 +30,9 @@ func NewRedisBasketPersistence(logger *logrus.Entry, client *redis.Client, ctx c
 
 func (rbp *RedisBasketPersistence) Create(basket *entities.Basket) (*entities.Basket, error) {
 
+	rbp.logger.Info("Creating a basket for user id %s in Redis", basket.UserID)
 	// Concatenate the userId parameter with the string "basket:".
 	// This is the key that will be used to store the basket in Redis.
-	fmt.Println("Check basket info: ", basket)
-
 	var userId string = basket.UserID
 
 	key := fmt.Sprintf("basket:%s", userId)
@@ -54,12 +53,14 @@ func (rbp *RedisBasketPersistence) Create(basket *entities.Basket) (*entities.Ba
 		return nil, fmt.Errorf("failed to create basket for user %s: %v", userId, err)
 	}
 
-	rbp.logger.Printf("Basket for user %s has been successfully retrieved from Redis", basket.UserID)
+	rbp.logger.Info("Basket for user %s has been successfully retrieved from Redis", basket.UserID)
 
 	return basket, nil
 }
 
 func (rbp *RedisBasketPersistence) Get(userId string) (*entities.Basket, error) {
+
+	rbp.logger.Info("Getting basket by user id %s in Redis ", userId)
 
 	// Generating key
 	key := fmt.Sprintf("basket:%s", userId)
@@ -85,37 +86,52 @@ func (rbp *RedisBasketPersistence) Get(userId string) (*entities.Basket, error) 
 		return nil, fmt.Errorf("failed to get basket for user %s: %v", userId, err)
 	}
 
+	rbp.logger.Info("Got a basket by user id %s successfully in Redis", basket.UserID)
+
 	return basket, nil
 }
 
 func (rbp *RedisBasketPersistence) Update(basket *entities.Basket) (*entities.Basket, error) {
+
+	rbp.logger.Info("Updating the basket by user id %s in Redis", basket.UserID)
+
 	// Generating key
-	key := fmt.Sprintf("basket:%s", basket.UserName)
+	key := fmt.Sprintf("basket:%s", basket.UserID)
 
 	// Serialize the ShoppingCart object into a JSON string
 	data, err := json.Marshal(basket)
 	if err != nil {
-		return nil, fmt.Errorf("failed to update basket for user %s: %v", basket.UserName, err)
+		rbp.logger.Errorf("failed to update basket for user %s: %v", basket.UserID, err)
+		return nil, fmt.Errorf("failed to update basket for user %s: %v", basket.UserID, err)
 	}
 
 	// Set the value for the key in Redis.
 	err = rbp.client.Set(rbp.ctx, key, data, 0).Err()
 	if err != nil {
-		return nil, fmt.Errorf("failed to update basket for user %s: %v", basket.UserName, err)
+		rbp.logger.Errorf("failed to update basket for user %s: %v", basket.UserID, err)
+		return nil, fmt.Errorf("failed to update basket for user %s: %v", basket.UserID, err)
 	}
+
+	rbp.logger.Info("Updated a basket by user id %s successfully in Redis", basket.UserID)
 
 	return basket, nil
 }
 
-func (rbp *RedisBasketPersistence) Delete(userName string) error {
+func (rbp *RedisBasketPersistence) Delete(userId string) error {
+
+	rbp.logger.Info("Deleting the basket by user id %s in Redis", userId)
+
 	// Generating key
-	key := fmt.Sprintf("basket:%s", userName)
+	key := fmt.Sprintf("basket:%s", userId)
 
 	// Delete the data associated with the key from Redis
 	err := rbp.client.Del(rbp.ctx, key).Err()
 	if err != nil {
-		return fmt.Errorf("failed to delete basket for user %s: %v", userName, err)
+		rbp.logger.Errorf("failed to delete basket for user %s: %v", userId, err)
+		return fmt.Errorf("failed to delete basket for user %s: %v", userId, err)
 	}
+
+	rbp.logger.Info("Deleted a basket by user id %s successfully in Redis", userId)
 
 	return nil
 }

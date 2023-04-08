@@ -1,7 +1,7 @@
 package services
 
 import (
-	"fmt"
+	"errors"
 	"time"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/ValueObjects"
@@ -45,7 +45,6 @@ func (bs *BasketServiceImpl) CreateBasket(cbr *models.CreateBasketRequest) (*ent
 
 	// Convert request to create basket data
 	basketRequest := convertRequestCreateToBasket(cbr)
-	fmt.Println("Check basket: ", basketRequest)
 	basket, err := bs.basketRepo.CreateBasket(basketRequest)
 	if err != nil {
 		return nil, err
@@ -62,7 +61,8 @@ func (bs *BasketServiceImpl) GetBasket(userId string) (*entities.Basket, error) 
 	return basket, nil
 }
 
-func convertRequestUpdateToBasket(request *models.UpdateBasketRequest) *entities.Basket {
+func convertRequestUpdateToBasket(request *models.UpdateBasketRequest, oldBasket *entities.Basket) *entities.Basket {
+	createdAt := time.Now()
 
 	basketItems := make([]entities.BasketItem, len(request.Items))
 	for i, item := range request.Items {
@@ -74,8 +74,17 @@ func convertRequestUpdateToBasket(request *models.UpdateBasketRequest) *entities
 			DiscountAmount: 0,
 			TotalPrice:     float64(item.Quantity) * item.Price,
 			ImageURL:       item.ImageURL,
-			CreatedAt:      time.Now(),
-			UpdatedAt:      time.Now(),
+			CreatedAt:      createdAt,
+			UpdatedAt:      createdAt,
+		}
+
+		if oldBasket != nil {
+			for _, oldItem := range oldBasket.Items {
+				if oldItem.ProductID == item.ProductID {
+					basketItems[i].CreatedAt = oldItem.CreatedAt
+					break
+				}
+			}
 		}
 	}
 
@@ -86,7 +95,9 @@ func convertRequestUpdateToBasket(request *models.UpdateBasketRequest) *entities
 		Items:          basketItems,
 		TotalPrice:     0,
 		TotalDiscounts: 0,
-		UpdatedAt:      time.Now(),
+		CreatedAt:      oldBasket.CreatedAt,
+		UpdatedAt:      createdAt,
+		ExpiresAt:      oldBasket.ExpiresAt,
 	}
 
 	return basket
@@ -94,10 +105,21 @@ func convertRequestUpdateToBasket(request *models.UpdateBasketRequest) *entities
 
 func (bs *BasketServiceImpl) UpdateBasket(request *models.UpdateBasketRequest) (*entities.Basket, error) {
 
-	// Convert request to update basket data
-	basketRequest := convertRequestUpdateToBasket(request)
+	// Check basket exist by user ID
+	basket, err := bs.basketRepo.GetBasket(request.UserID)
+	if err != nil {
+		return nil, err
+	}
 
-	basket, err := bs.basketRepo.UpdateBasket(basketRequest)
+	if basket == nil {
+		return nil, errors.New("Basket not found by user id")
+	}
+
+	// Convert request to update basket data
+	basketRequest := convertRequestUpdateToBasket(request, basket)
+
+	// Execute to update basket
+	basket, err = bs.basketRepo.UpdateBasket(basketRequest)
 	if err != nil {
 		return nil, err
 	}

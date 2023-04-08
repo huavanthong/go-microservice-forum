@@ -118,3 +118,30 @@ docker run -p 8080:8080 --env MONGODB_LOCAL_URI=mongodb://mongodb:27017/basketdb
 ```
 
 ## Redis 
+
+## Running app on local
+1. Buidl app
+```
+go build -o basket-api.exe .\cmd\basket-api\main.go
+```
+
+2. Run app
+```
+./basket-api.exe
+```
+
+## Swagger
+1. Install swag
+```
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
+2. Generate documents for swagger
+```
+swag init -g ./cmd/basket-api/main.go --output docs
+```
+
+3. Access swagger on basket microservice
+```
+http://localhost:8001/api/v1/swagger/index.html
+```

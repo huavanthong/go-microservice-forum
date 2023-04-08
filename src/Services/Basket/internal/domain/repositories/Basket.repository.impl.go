@@ -23,7 +23,6 @@ func NewBasketRepositoryImpl(logger *logrus.Entry, mongoPersistence persistence.
 
 func (br *BasketRepositoryImpl) CreateBasket(basket *entities.Basket) (*entities.Basket, error) {
 
-	var create_basket *entities.Basket
 	// Extract user Id from request
 	userId := basket.UserID
 
@@ -32,27 +31,26 @@ func (br *BasketRepositoryImpl) CreateBasket(basket *entities.Basket) (*entities
 
 	// Try to get basket from MongoDB
 	find_basket, err := br.mongoPersistence.Get(userId)
+	create_basket := find_basket
 	if err != nil {
 		br.logger.Errorf("Failed to get basket from MongoDB: %s", err.Error())
 
 		// Try to get basket from Redis
-		find_basket, err = br.redisPersistence.Get(userId)
-		if err != nil {
+		if find_basket, err = br.redisPersistence.Get(userId); err != nil {
 			br.logger.Errorf("Failed to get basket from Redis: %s", err.Error())
 			return nil, err
 		}
 
+		create_basket = find_basket
 		if find_basket == nil {
 			// Basket not found in MongoDB and Redis, create a new one
-			create_basket, err = br.redisPersistence.Create(basket)
-			if err != nil {
+			if create_basket, err = br.redisPersistence.Create(basket); err != nil {
 				br.logger.Errorf("Failed to create basket in Redis: %s", err.Error())
 				return nil, err
 			}
 
 			// Create basket in MongoDB
-			create_basket, err = br.mongoPersistence.Create(basket)
-			if err != nil {
+			if create_basket, err = br.mongoPersistence.Create(basket); err != nil {
 				// Rollback Redis basket creation on error
 				br.redisPersistence.Delete(userId)
 				br.logger.Errorf("Failed to create basket in MongoDB: %s", err.Error())
@@ -73,17 +71,24 @@ func (br *BasketRepositoryImpl) GetBasket(userId string) (*entities.Basket, erro
 	br.logger.Info("Getting basket for user ID %s", userId)
 
 	// Try to get basket from Redis
-	basket, err := br.redisPersistence.Get(userId)
+	find_basket, err := br.redisPersistence.Get(userId)
 	if err != nil {
+		br.logger.Errorf("Failed to get basket from Redis: %s", err.Error())
+		return nil, err
+	}
+
+	get_basket := find_basket
+	if get_basket == nil {
+
 		// Try to get basket from MongoDB
-		basket, err = br.mongoPersistence.Get(userId)
+		get_basket, err = br.mongoPersistence.Get(userId)
 		if err != nil {
 			br.logger.Errorf("Failed to get basket for user ID %s: %v", userId, err)
 			return nil, err
 		}
 
 		// Cache basket in Redis
-		basket, err = br.redisPersistence.Update(basket)
+		get_basket, err = br.redisPersistence.Update(get_basket)
 		if err != nil {
 			br.logger.Errorf("Failed to update basket in Redis for user ID %s: %v", userId, err)
 			return nil, err
@@ -91,9 +96,9 @@ func (br *BasketRepositoryImpl) GetBasket(userId string) (*entities.Basket, erro
 	}
 
 	// Log the basket being returned
-	br.logger.Info("Returned basket %+v for user ID %s", basket, userId)
+	br.logger.Info("Returned basket %+v for user ID %s ", get_basket, userId)
 
-	return basket, nil
+	return get_basket, nil
 }
 
 func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities.Basket, error) {
@@ -101,7 +106,7 @@ func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities
 	userId := basket.UserID
 
 	// Log the user ID being processed
-	br.logger.Info("Updating basket for user ID %s", userId)
+	br.logger.Info("Updating basket for user ID %s: ", userId)
 
 	// Update basket in Redis
 	update_basket, err := br.redisPersistence.Update(basket)
@@ -132,25 +137,45 @@ func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities
 	return update_basket, nil
 }
 
-func (br *BasketRepositoryImpl) DeleteBasket(userName string) error {
+func (br *BasketRepositoryImpl) DeleteBasket(userId string) error {
+
+	// Log the user ID being processed
+	br.logger.Info("Deleting basket for user ID %s: ", userId)
+
 	// Delete basket from Redis
-	if err := br.redisPersistence.Delete(userName); err != nil {
+	if err := br.redisPersistence.Delete(userId); err != nil {
+		br.logger.Errorf("Failed to delete basket in Redis for user ID %s: %v", userId, err)
 		return err
 	}
 
 	// Delete basket from MongoDB
-	if err := br.mongoPersistence.Delete(userName); err != nil {
-		// // Rollback Redis basket deletion on error
-		// oldCart, err := br.redisPersistence.Create(userName)
-		// if err != nil {
-		// 	return err
-		// }
-		// if _, err := br.redisPersistence.Update(oldCart); err != nil {
-		// 	return err
-		// }
+	if err := br.mongoPersistence.Delete(userId); err != nil {
+		// Rollback Redis basket deletion on error
+		br.logger.Warnf("Failed to delete basket in MongoDB for user ID %s, rolling back Redis deletion", userId)
+		get_basket, err := br.redisPersistence.Get(userId)
+		if err != nil {
+			br.logger.Errorf("Failed to get basket in Redis for user ID %s during rollback: %v", userId, err)
+			return err
+		}
+		if get_basket == nil {
+			br.logger.Warnf("No basket found in Redis for user ID %s during rollback", userId)
+			return err
+		}
+		if _, err := br.redisPersistence.Create(get_basket); err != nil {
+			br.logger.Errorf("Failed to create basket in Redis for user ID %s during rollback: %v", userId, err)
+			return err
+		}
+		if _, err := br.redisPersistence.Update(get_basket); err != nil {
+			br.logger.Errorf("Failed to update basket in Redis for user ID %s during rollback: %v", userId, err)
+			return err
+		}
 
+		br.logger.Infof("Rollback succeeded for user ID %s", userId)
 		return err
 	}
+
+	// Log the basket being returned
+	br.logger.Info("Deleted basket success for user ID %s", userId)
 
 	return nil
 }

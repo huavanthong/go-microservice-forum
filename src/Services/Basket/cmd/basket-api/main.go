@@ -31,9 +31,9 @@ import (
 )
 
 var (
-	configPath       = "./internal/infrastructure/config"
-	basketDatabase   = "basket-microservice"
-	basketCollection = "basket"
+	configPath           = "./internal/infrastructure/config"
+	basketDatabaseName   = "basket-microservice"
+	basketCollectionName = "basket"
 
 	server      *gin.Engine // The framework's instance, it contains the muxer, middleware and configuration settings.
 	myServer    interfaces.Server
@@ -41,6 +41,7 @@ var (
 	mongoClient *mongo.Client   // MongoDB
 	redisClient *redis.Client   // For in-memory data store
 
+	basketCollection *mongo.Collection
 	mongoPersistence persistence.BasketPersistence
 	redisPersistence persistence.BasketPersistence
 	basketRepository repositories.BasketRepository
@@ -104,7 +105,8 @@ func init() {
 	fmt.Println("Redis client connected successfully...")
 	/*****************************************************************/
 	// Create Redis and MongoDB persistence
-	mongoPersistence = mongodb.NewMongoDBBasketPersistence(mongoClient, basketDatabase, basketCollection)
+	basketCollection = mongoClient.Database(basketDatabaseName).Collection(basketCollectionName)
+	mongoPersistence = mongodb.NewMongoDBBasketPersistence(logger, basketCollection, ctx)
 	redisPersistence = redisdb.NewRedisBasketPersistence(logger, redisClient, ctx)
 
 	// Create basket repositories

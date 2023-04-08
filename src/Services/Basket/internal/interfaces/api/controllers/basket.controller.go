@@ -29,9 +29,9 @@ func NewBasketController(basketService services.BasketService) BasketController 
 // @Accept  json
 // @Produce  json
 // @Param userid path string true "User ID"
-// @Failure 400 {object} response.Response
-// @Failure 500 {object} response.Response
-// @Success 200 {array} response.Response
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Success 200 {array} response.SuccessResponse
 // @Router /basket/{userid} [get]
 func (bc *BasketController) GetBasket(ctx *gin.Context) {
 
@@ -43,11 +43,12 @@ func (bc *BasketController) GetBasket(ctx *gin.Context) {
 
 	basket, err := bc.basketService.GetBasket(userId)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, response.NewErrorResponse(http.StatusInternalServerError, "Failed to create basket"))
+		ctx.JSON(http.StatusInternalServerError, response.NewErrorResponse(http.StatusInternalServerError, "Basket not exists"))
 		return
 	}
 
 	ctx.JSON(http.StatusOK, response.NewSuccessResponse(basket))
+	return
 }
 
 // CreateBasket godoc
@@ -57,9 +58,9 @@ func (bc *BasketController) GetBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param basket body models.CreateBasketRequest true "New Basket"
-// @Failure 400 {object} response.Response
-// @Failure 500 {object} response.Response
-// @Success 200 {object} response.Response
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Success 200 {object} response.SuccessResponse
 // @Router /basket [post]
 // CreateBasket create basket by user id
 func (bc *BasketController) CreateBasket(ctx *gin.Context) {
@@ -78,6 +79,7 @@ func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, response.NewSuccessResponse(basket))
+	return
 }
 
 // UpdateBasket godoc
@@ -87,16 +89,16 @@ func (bc *BasketController) CreateBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param basket body models.UpdateBasketRequest true "Update Basket"
-// @Failure 400 {object} response.Response
-// @Failure 500 {object} response.Response
-// @Success 200 {object} response.Response
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Success 200 {object} response.SuccessResponse
 // @Router /basket [patch]
 func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 
 	// Deserialization data from request
 	var ubq models.UpdateBasketRequest
 	if err := ctx.ShouldBindJSON(&ubq); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, err.Error()))
 		return
 	}
 
@@ -107,13 +109,14 @@ func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 	// 		item.Price -= coupon.Amount
 	// 	}
 	// }
-
-	if updatedBasket, err := bc.basketService.UpdateBasket(&ubq); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	} else {
-		ctx.JSON(http.StatusOK, updatedBasket)
+	updatedBasket, err := bc.basketService.UpdateBasket(&ubq)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.NewErrorResponse(http.StatusInternalServerError, err.Error()))
+		return
 	}
 
+	ctx.JSON(http.StatusOK, response.NewSuccessResponse(updatedBasket))
+	return
 }
 
 // DeleteBasket godoc
@@ -123,9 +126,9 @@ func (bc *BasketController) UpdateBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param userid path string true "User ID"
-// @Failure 400 {object} response.Response
-// @Failure 500 {object} response.Response
-// @Success 200 {array} response.Response
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Success 200 {object} response.SuccessResponse
 // @Router /basket/{userid} [delete]
 func (bc *BasketController) DeleteBasket(ctx *gin.Context) {
 
@@ -136,10 +139,12 @@ func (bc *BasketController) DeleteBasket(ctx *gin.Context) {
 	}
 
 	if err := bc.basketService.DeleteBasket(userId); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	} else {
-		ctx.JSON(http.StatusOK, gin.H{})
+		ctx.JSON(http.StatusInternalServerError, response.NewErrorResponse(http.StatusInternalServerError, err.Error()))
+		return
 	}
+
+	ctx.JSON(http.StatusOK, response.NewSuccessResponse("Deleted successfully"))
+
 }
 
 // Checkout godoc
@@ -149,22 +154,24 @@ func (bc *BasketController) DeleteBasket(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param basketCheckout body string true "Basket Checkout"
-// @Failure 400 {object} string
-// @Failure 500 {object} string
-// @Success 200 {array} string
-// @Router /Basket/{userName} [get]
+// @Failure 400 {object} response.ErrorResponse
+// @Failure 500 {object} response.ErrorResponse
+// @Success 200 {object} response.SuccessResponse
+// @Router /basket/checkout [post]
 // Checkout checkout basket
 func (bc *BasketController) Checkout(ctx *gin.Context) {
+
+	// Deserialization data from request
 	var basketCheckout entities.BasketCheckout
 	if err := ctx.ShouldBindJSON(&basketCheckout); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, err.Error()))
 		return
 	}
 
 	// get existing basket with total price
-	basket, err := bc.basketService.GetBasket(basketCheckout.UserName)
+	basket, err := bc.basketService.GetBasket(basketCheckout.UserID)
 	if err != nil || basket == nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "basket not found"})
+		ctx.JSON(http.StatusBadRequest, response.NewErrorResponse(http.StatusBadRequest, "basket not found"))
 		return
 	}
 
