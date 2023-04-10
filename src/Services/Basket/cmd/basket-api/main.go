@@ -86,10 +86,16 @@ func init() {
 
 	// Connect to Redis
 	redisClient = redis.NewClient(&redis.Options{
-		Addr:     config.RedisUri,
+		Addr:     config.Redis.RedisUri,
 		Password: "",
 		DB:       0,
 	})
+
+	// redisClient = redis.NewClient(&redis.Options{
+	// 	Addr:     "localhost:6379",
+	// 	Password: "eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81",
+	// 	DB:       0, // use default DB
+	// })
 	// Error: happen if you close redis connection, please don't close if you want to use out scope
 	// defer redisClient.Close()
 

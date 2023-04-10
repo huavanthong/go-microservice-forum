@@ -15,3 +15,4 @@ services:
 
 volumes:
   mongo_data_basket:
+  redis_cache_basket:

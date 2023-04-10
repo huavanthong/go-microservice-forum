@@ -106,6 +106,12 @@ docker-compose.yml: File cấu hình docker-compose để khởi động ứng
 
 
 # Getting Started
+# Docker Compose
+To rebuild image for testing
+```
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
+```
+
 ## Basket service
 Build basket microservice image:
 ```
@@ -114,6 +120,8 @@ docker build -t basket-service .
 
 After build successully, we can run container by command:
 ```
+docker run -p 8001:80 --env MONGODB_LOCAL_URI=mongodb://root:password123@basketdb:27018 -it --rm basketapi
+
 docker run -p 8080:8080 --env MONGODB_LOCAL_URI=mongodb://mongodb:27017/basketdb REDIS_URL=localhost:6379 basket-service
 ```
 
@@ -145,3 +153,4 @@ swag init -g ./cmd/basket-api/main.go --output docs
 ```
 http://localhost:8001/api/v1/swagger/index.html
 ```
+

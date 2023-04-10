@@ -72,3 +72,6 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
 
 * Microservice pattern
     - Circuit pattern. Refer: [here](https://medium.com/nerd-for-tech/design-patterns-for-microservices-circuit-breaker-pattern-ba402a45aac2)
+
+## Docker
+1. Connect go-app with mongo db manually. Refer: [here](https://wahyu-ehs.medium.com/golang-and-mongodb-in-docker-cab7773c04ce)
