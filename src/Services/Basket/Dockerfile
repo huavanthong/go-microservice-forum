@@ -9,6 +9,9 @@ FROM golang:1.17-alpine AS build
 ## that will hold our application source files
 WORKDIR /src
 
+# Install curl
+RUN apk update && apk add --no-cache curl
+
 # Copy the go.mod and go.sum files to the working directory
 COPY ["Services/Basket/go.mod", "Services/Basket/"]
 COPY ["Services/Basket/go.sum", "Services/Basket/"]
