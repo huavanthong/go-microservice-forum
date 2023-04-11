@@ -4,21 +4,32 @@ services:
   discountdb:
     container_name: discountdb
     environment:
-      - POSTGRES_USER=admin
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin1234
-      - POSTGRES_DB=DiscountDb
+      - POSTGRES_DB=discount_service
     restart: always
-    ports:
-        - "5432:5432"
+    expose:
+        - 5432
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   discount.api:
     container_name: discount.api
     environment:
       - "DatabaseSettings:ConnectionString=Server=discountdb;Port=5432;Database=DiscountDb;User Id=admin;Password=admin1234;"
     depends_on:
-      - discountdb
-    ports:
-      - "8002:80"
+      discountdb:
+        condition: service_healthy
 
+  nginx.proxy:
+    container_name: nginx.proxy
+    ports:
+      - "4500:4500"
+    depends_on: 
+      - discount.api

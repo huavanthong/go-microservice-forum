@@ -10,5 +10,11 @@ services:
       context: .
       dockerfile: Services/Discount/Dockerfile
 
+  nginx.proxy:
+    image: nginx
+    build:
+      context: .
+      dockerfile: ApiGateways/NginxProxy/Dockerfile
+    
 volumes:
   postgres_data:

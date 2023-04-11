@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	conStr := "postgres://postgres@postgres/postgres?sslmode=disable"
+	conStr := "postgres://postgres:admin1234@localhost:5432/discount_service?sslmode=disable"
 
 	fmt.Println("Postgres addr: " + conStr)
 

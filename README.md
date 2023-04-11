@@ -72,3 +72,8 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
 
 * Microservice pattern
     - Circuit pattern. Refer: [here](https://medium.com/nerd-for-tech/design-patterns-for-microservices-circuit-breaker-pattern-ba402a45aac2)
+
+
+## Docker-compose
+
+2. Docker - Postgres - Nginx - Golang reference. Refer: [here](https://github.com/karlkeefer/pngr/blob/master/nginx/Dockerfile)
