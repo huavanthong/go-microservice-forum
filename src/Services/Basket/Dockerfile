@@ -22,6 +22,9 @@ COPY . .
 ## Specify directory for execution
 WORKDIR "/src/Services/Basket/"
 
+# Chỉ định cổng mà container sẽ lắng nghe các kết nối đến. 
+EXPOSE 8001
+
 # Build binary file
 RUN go build -o basket-api ./cmd/basket-api/main.go
 
