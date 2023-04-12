@@ -37,6 +37,6 @@ services:
       - basketdb
       - basketredis
     ports:
-      - "8001:80"
+      - "8001:8001"
     env_file:
     - ./Services/Basket/internal/infrastructure/config/app.env
