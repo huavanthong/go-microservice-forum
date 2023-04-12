@@ -8,6 +8,8 @@ services:
       - POSTGRES_PASSWORD=admin1234
       - POSTGRES_DB=discount_service
     restart: always
+    ports:
+      - "5432:5432"
     expose:
         - 5432
     volumes:
@@ -26,10 +28,17 @@ services:
     depends_on:
       discountdb:
         condition: service_healthy
+    ports:
+      - "8002:8002"
+    env_file:
+      - ./Services/Discount/internal/config/discount.env  
+
 
   nginx.proxy:
     container_name: nginx.proxy
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/sites-available/default.conf
     ports:
-      - "4500:4500"
+      - "80:80"
     depends_on: 
       - discount.api

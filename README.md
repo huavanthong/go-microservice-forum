@@ -77,3 +77,4 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
 ## Docker-compose
 
 2. Docker - Postgres - Nginx - Golang reference. Refer: [here](https://github.com/karlkeefer/pngr/blob/master/nginx/Dockerfile)
+3. Updating a container with docker compose. Refer: [here](https://tcude.net/updating-container-with-docker-compose/)
