@@ -11,7 +11,7 @@ type AppConfig struct {
 }
 type DatabaseConfig struct {
 	Host     string `mapstructure:"host"`
-	Port     int    `mapstructure:"port"`
+	Port     string `mapstructure:"port"`
 	User     string `mapstructure:"user"`
 	Password string `mapstructure:"password"`
 	DBName   string `mapstructure:"dbname"`
@@ -29,7 +29,7 @@ type Config struct {
 func LoadConfig(path string) (*Config, error) {
 	// set default values for config
 	viper.SetDefault("database.host", "localhost")
-	viper.SetDefault("database.port", 5432)
+	viper.SetDefault("database.port", "5432")
 	viper.SetDefault("database.user", "postgres")
 	viper.SetDefault("database.password", "")
 	viper.SetDefault("database.dbname", "discount_service")
@@ -61,7 +61,7 @@ func LoadConfig(path string) (*Config, error) {
 	if config.Database.Host == "" {
 		return nil, fmt.Errorf("missing 'host' field in database config")
 	}
-	if config.Database.Port == 0 {
+	if config.Database.Port == "" {
 		return nil, fmt.Errorf("missing 'port' field in database config")
 	}
 	if config.Database.User == "" {

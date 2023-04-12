@@ -22,5 +22,7 @@ WORKDIR "/src/Services/Discount/"
 # Build binary file
 RUN go build -o discount-api ./cmd/discount-api/main.go
 
+EXPOSE 8002
+
 # Run command
 CMD ["./discount-api"]

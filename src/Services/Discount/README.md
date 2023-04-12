@@ -75,19 +75,47 @@ Let's go over the different components of this project structure:
 
 * docker-compose.yml: This file contains the configuration for running the Discount and Coupon microservices together using Docker Compose.
 # Getting Started
-1. Run docker basket microservice
+## Run on local machine
+1. Build Discount service on local machine
+```
+go build -o discount-api.exe .\cmd\discount-api\main.go
 ```
 
+2. Run Discount service on local machine
 ```
-2. Build Basket-microservice
+.\discount-api.exe
+```
 
+## Run on docker 
+1. Build Discount service images from Dockerfile on local machine.
+```
+docker build
+```
 
-3. Build proto buff for Discount.
+2. Running Discount images, creating container 
+```
+docker run -p 5432:5432 --env POSTGRES_PASSWORD=admin123 --env POSTGRES_USER=postgres --env POSTGRES_DB=discount_service -it --rm discountapi
+```
+
+3. After you docker-compose up all services, you can specific a service such as discount.api service to rebuild and update container.
+```
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --force-recreate --build discount.api
+```
+
+## Run Nginx images
+```
+docker run -p 8000:80 nginx
+```
+
+## Protobuf 
+1. Build proto buff for Discount.
 ```
 protoc --proto_path=./internal/proto/discount ./internal/proto/discount/discount.proto --go_out=. --go-grpc_out=.
 ```
 
-4. Generate swagger
+## Swagger
+1. Generate swagger
 ```
-swag init -g .\cmd\coupon\main.go --output .\docs
+swag init -g .\cmd\discount-api\main.go --output .\docs
 ```
+

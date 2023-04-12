@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"time"
 
-	"go.uber.org/zap"
-
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/utils"
@@ -14,13 +12,11 @@ import (
 
 // DiscountService represents the discount service
 type DiscountServiceImpl struct {
-	log          *zap.Logger
 	discountRepo repositories.DiscountRepository
 }
 
-func NewDiscountServiceImpl(log *zap.Logger, discountRepo repositories.DiscountRepository) DiscountService {
+func NewDiscountServiceImpl(discountRepo repositories.DiscountRepository) DiscountService {
 	return &DiscountServiceImpl{
-		log:          log,
 		discountRepo: discountRepo,
 	}
 }

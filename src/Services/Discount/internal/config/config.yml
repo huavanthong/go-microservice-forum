@@ -2,7 +2,7 @@ app:
   port: 8002
 
 database:
-  host: localhost
+  host: discountdb
   port: 5432
   user: postgres
   password: admin1234
