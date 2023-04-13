@@ -1,0 +1,70 @@
+# Introduction
+
+
+# Project Structure
+```lua 
+-ordering-microservices/
+  -cmd/
+    -ordering-api/
+      -main.go
+  -internal/
+    -app/
+      -application/
+        -commands/
+          -create_order_command.go
+          -update_order_command.go
+          -cancel_order_command.go
+          -pay_order_command.go
+        -queries/
+          -get_order_query.go
+          -get_orders_by_user_query.go
+          -get_orders_query.go
+        -services/
+          -order_service.go
+      -domain/
+        -entities/
+          -order.go
+        -events/
+          -event.go
+          -order_created_event.go
+          -order_updated_event.go
+          -order_cancelled_event.go
+          -order_paid_event.go
+        -repositories/
+          -order_repository.go
+          -event_store_repository.go
+        -valueobjects/
+          -order_item.go
+          -money.go
+      -infrastructure/
+        -persistence/
+          -db/
+            -migrations/
+              -20220413_001_init.sql
+            -postgres/
+              -postgres.go
+          -eventstore/
+            -event_store.go
+        -web/
+          -controllers/
+            -order_controller.go
+          -middlewares/
+            -auth_middleware.go
+            -cors_middleware.go
+      -shared/
+        -errors/
+          -app_error.go
+          -validation_error.go
+    -pkg/
+      -config/
+        -config.go
+      -logger/
+        -logger.go
+  -configs/
+    -config.yaml
+  -docs/
+    -api/
+      -swagger.yaml
+  -scripts/
+    -run_local.sh
+```
