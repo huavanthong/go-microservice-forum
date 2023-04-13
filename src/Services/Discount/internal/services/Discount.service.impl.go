@@ -61,7 +61,7 @@ func (ds *DiscountServiceImpl) GetDiscount(ID string) (*models.GetDiscountRespon
 	return generateGetDiscountResponse(discount)
 }
 
-// Convert request create discount to discount
+// Convert request create discount to discount entity
 func convertRequestCreatetToDiscount(discountReq *models.CreateDiscountRequest) (*models.Discount, error) {
 
 	// Business case specific that only one value for amount or percent
@@ -101,13 +101,54 @@ func (ds *DiscountServiceImpl) CreateDiscount(discountReq *models.CreateDiscount
 
 	discount, err := convertRequestCreatetToDiscount(discountReq)
 	if err != nil {
-		return nil, fmt.Errorf("Invalid request to create discount")
+		return nil, fmt.Errorf("Invalid request to create discount", err)
 	}
 
 	return ds.discountRepo.CreateDiscount(discount)
 }
 
-func (ds *DiscountServiceImpl) UpdateDiscount(discount *models.Discount) (*models.Discount, error) {
+// Convert request update discount to discount entity
+func convertRequestUpdateToDiscount(discountReq *models.UpdateDiscountRequest) (*models.Discount, error) {
+
+	// Business case specific that only one value for amount or percent
+	if discountReq.Amount > 0 && discountReq.Percentage > 0 {
+		return nil, fmt.Errorf("Cannot create discount with both amount and discount percent")
+	}
+
+	if discountReq.Amount == 0 && discountReq.Percentage == 0 {
+		return nil, fmt.Errorf("Cannot create discount with both zero amount and zero discount percent")
+	}
+
+	err := utils.ValidateStartDateEndDate(discountReq.StartDate, discountReq.EndDate)
+	if err != nil {
+		return nil, err
+	}
+
+	updateAt := time.Now()
+
+	discount := &models.Discount{
+		ProductID:    discountReq.ProductID,
+		ProductName:  discountReq.ProductName,
+		Description:  discountReq.Description,
+		DiscountType: discountReq.DiscountType,
+		Percentage:   discountReq.Percentage,
+		Amount:       discountReq.Amount,
+		Quantity:     discountReq.Quantity,
+		StartDate:    discountReq.StartDate,
+		EndDate:      discountReq.EndDate,
+		UpdatedAt:    updateAt,
+	}
+
+	return discount, nil
+}
+
+func (ds *DiscountServiceImpl) UpdateDiscount(discountReq *models.UpdateDiscountRequest) (*models.Discount, error) {
+	// Convert request update to discount
+	discount, err := convertRequestUpdateToDiscount(discountReq)
+
+	if err != nil {
+		return nil, fmt.Errorf("Invalid request to update discount", err)
+	}
 
 	return ds.discountRepo.UpdateDiscount(discount)
 }

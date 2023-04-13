@@ -140,7 +140,7 @@ func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 // @Router /discount [patch]
 func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 
-	var discountReq models.Discount
+	var discountReq models.UpdateDiscountRequest
 	if err := ctx.ShouldBindJSON(&discountReq); err != nil {
 		ctx.JSON(http.StatusBadRequest,
 			models.GenericResponse{

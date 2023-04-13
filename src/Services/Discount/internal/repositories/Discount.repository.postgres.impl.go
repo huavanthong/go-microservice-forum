@@ -38,7 +38,7 @@ func (r *PostgresDBDiscountRepository) CreateDiscount(discount *models.Discount)
 	result, err := r.db.NamedExec(
 		`INSERT INTO Discount (product_id, product_name, description, discount_type, percentage, amount, quantity, start_date, end_date, created_at, updated_at) 
 		VALUES (:product_id, :product_name, :description, :discount_type, :percentage, :amount, :quantity, :start_date, :end_date, :created_at, :updated_at)
-		RETURN id
+		RETURNING id
 		`, discount)
 
 	if err != nil {
