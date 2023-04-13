@@ -21,7 +21,7 @@ type LoggerConfig struct {
 	LogLevel string `mapstructure:"log_level"`
 }
 type Config struct {
-	App      AppConfig      `mapstructure:"database"`
+	App      AppConfig      `mapstructure:"App"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Logger   LoggerConfig   `mapstructure:"logger"`
 }
