@@ -5,20 +5,20 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gin-contrib/cors"
+	"github.com/jmoiron/sqlx"
+
 	"github.com/gin-gonic/gin"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/controllers"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/routes"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/services"
-	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/utils"
 )
 
 // Declare global variable
@@ -41,11 +41,12 @@ func init() {
 	}
 
 	// Create connection string from config
-	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		config.Database.Host, config.Database.Port, config.Database.User, config.Database.Password, config.Database.DBName)
+	// Example conStr: "postgres://postgres:admin1234@discountdb:5432/discount_service?sslmode=disable"
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		config.Database.User, config.Database.Password, config.Database.Host, config.Database.Port, config.Database.DBName)
 
 	// Open connection on PostgreSQL
-	db, err := sqlx.Open("postgres", connStr)
+	db, err := sqlx.Open("postgres", fmt.Sprintf(connStr))
 	if err != nil {
 		panic(err)
 	}
@@ -58,16 +59,18 @@ func init() {
 	fmt.Println("PostgreSQL successfully connected...")
 
 	// Set up logger
-	logger, err := utils.NewLogger(config.Logger)
-	if err != nil {
-		log.Fatalf("Failed to Initialize logger: %v", err)
-	}
+	// logger, err := utils.NewLogger()
+	// if err != nil {
+	// 	log.Fatalf("Failed to Initialize logger: %v", err)
+	// }
+
+	fmt.Println("Logger successfully initialized ...")
 
 	// Create PostgreSQL instance repositories
 	discountRepository = repositories.NewPostgresDBDiscountRepository(db)
 
 	// Create DiscountService with Postgres repositories
-	discountService = services.NewDiscountServiceImpl(logger, discountRepository)
+	discountService = services.NewDiscountServiceImpl(discountRepository)
 
 	// Create DiscountController
 	DiscountController = controllers.NewDiscountController(discountService)
@@ -88,16 +91,16 @@ func init() {
 // @BasePath /api/v1
 func main() {
 
-	config, err := config.LoadConfig(".")
+	config, err := config.LoadConfig(configPath)
 	if err != nil {
 		log.Fatal("Could not load config", err)
 	}
 
-	// startGinServer(config)
-	startGrpcServer(*config)
+	startGinServer(config)
+	//startGrpcServer()
 }
 
-func startGrpcServer(config config.Config) {
+func startGrpcServer() {
 	// // Set up gRPC server
 	// grpcServer := grpc.NewServer()
 	// discountServer := services.NewDiscountService(DiscountRepos, logger)
@@ -142,13 +145,9 @@ func startGrpcServer(config config.Config) {
 	// }
 }
 
-func startGinServer(config config.Config) {
+func startGinServer(config *config.Config) {
 
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
-	corsConfig.AllowCredentials = true
-
-	server.Use(cors.New(corsConfig))
+	fmt.Println("Starting GIN Server ...")
 
 	router := server.Group("/api/v1")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
@@ -160,7 +159,7 @@ func startGinServer(config config.Config) {
 	// Set up swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	log.Println("Starting server on port: ", config.App.Port)
+	fmt.Println("Starting server on port: ", config.App.Port)
 	log.Fatal(server.Run(":" + config.App.Port))
 
 }

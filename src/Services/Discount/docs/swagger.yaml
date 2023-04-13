@@ -1,4 +1,19 @@
 basePath: /api/v1
+definitions:
+  models.GenericResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      errors:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
 host: localhost:8002
 info:
   contact: {}
@@ -18,13 +33,11 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.GenericResponse'
       summary: Create discount for product
       tags:
       - discount
@@ -38,13 +51,11 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.GenericResponse'
       summary: Update coupon
       tags:
       - discount
@@ -59,13 +70,11 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.GenericResponse'
       summary: Get discount for product name
       tags:
       - discount
@@ -86,13 +95,11 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.GenericResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/models.GenericResponse'
       summary: Delete coupon by product name
       tags:
       - discount

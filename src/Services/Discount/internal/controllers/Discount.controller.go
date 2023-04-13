@@ -26,8 +26,8 @@ func NewDiscountController(discountService services.DiscountService) DiscountCon
 // @Tags discount
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]interface{}
+// @Success 200 {object} models.GenericResponse
+// @Failure 400 {object} models.GenericResponse
 // @Router /discount/{discountId} [get]
 func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 
@@ -85,8 +85,8 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 // @Tags discount
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]interface{}
+// @Success 200 {object} models.GenericResponse
+// @Failure 400 {object} models.GenericResponse
 // @Router /discount [post]
 func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 
@@ -133,8 +133,8 @@ func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 // @Tags discount
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]interface{}
+// @Success 200 {object} models.GenericResponse
+// @Failure 400 {object} models.GenericResponse
 // @Router /discount [put]
 func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 	var discount models.Discount
@@ -181,8 +181,8 @@ func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param discountId path string true "Discout ID"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]interface{}
+// @Success 200 {object} models.GenericResponse
+// @Failure 400 {object} models.GenericResponse
 // @Router /discount/{discountId}} [delete]
 func (c *DiscountController) DeleteDiscount(ctx *gin.Context) {
 
