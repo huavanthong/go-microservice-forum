@@ -1,5 +1,41 @@
 basePath: /api/v1
 definitions:
+  models.CreateDiscountRequest:
+    properties:
+      amount:
+        example: 15
+        type: number
+      description:
+        example: black friday
+        type: string
+      discount_type:
+        example: percent | amount
+        type: string
+      end_date:
+        example: 25-04-2023
+        type: string
+      percentage:
+        example: 10
+        type: number
+      product_id:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
+      product_name:
+        example: laptopn thinkpad
+        type: string
+      quantity:
+        example: 100
+        type: integer
+      start_date:
+        example: 13-04-2023
+        type: string
+    required:
+    - discount_type
+    - end_date
+    - product_id
+    - quantity
+    - start_date
+    type: object
   models.GenericResponse:
     properties:
       code:
@@ -23,28 +59,17 @@ info:
   version: "1.0"
 paths:
   /discount:
-    post:
-      consumes:
-      - application/json
-      description: Create discount for product
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.GenericResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.GenericResponse'
-      summary: Create discount for product
-      tags:
-      - discount
-    put:
+    patch:
       consumes:
       - application/json
       description: Update coupon
+      parameters:
+      - description: Update discount
+        in: body
+        name: discount
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateDiscountRequest'
       produces:
       - application/json
       responses:
@@ -57,6 +82,31 @@ paths:
           schema:
             $ref: '#/definitions/models.GenericResponse'
       summary: Update coupon
+      tags:
+      - discount
+    post:
+      consumes:
+      - application/json
+      description: Create discount for product
+      parameters:
+      - description: New discount
+        in: body
+        name: discount
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateDiscountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.GenericResponse'
+      summary: Create discount for product
       tags:
       - discount
   /discount/{discountId}:
@@ -78,15 +128,15 @@ paths:
       summary: Get discount for product name
       tags:
       - discount
-  /discount/{discountId}}:
+  /discount/{id}}:
     delete:
       consumes:
       - application/json
       description: Delete coupon by product name
       parameters:
-      - description: Discout ID
+      - description: Discount ID
         in: path
-        name: discountId
+        name: id
         required: true
         type: string
       produces:

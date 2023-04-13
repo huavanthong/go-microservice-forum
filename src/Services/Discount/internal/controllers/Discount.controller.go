@@ -85,13 +85,14 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 // @Tags discount
 // @Accept  json
 // @Produce  json
+// @Param discount body models.CreateDiscountRequest true "New discount"
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
 // @Router /discount [post]
 func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 
-	var discount models.Discount
-	if err := ctx.ShouldBindJSON(&discount); err != nil {
+	var discountReq models.CreateDiscountRequest
+	if err := ctx.ShouldBindJSON(&discountReq); err != nil {
 		ctx.JSON(http.StatusBadRequest,
 			models.GenericResponse{
 				Success: false,
@@ -103,7 +104,7 @@ func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 		return
 	}
 
-	err := c.discountService.CreateDiscount(&discount)
+	discount, err := c.discountService.CreateDiscount(&discountReq)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError,
 			models.GenericResponse{
@@ -121,7 +122,7 @@ func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 			Success: true,
 			Code:    http.StatusOK,
 			Message: "discount created successfully",
-			Data:    nil,
+			Data:    discount,
 			Errors:  nil,
 		})
 	return
@@ -133,12 +134,14 @@ func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 // @Tags discount
 // @Accept  json
 // @Produce  json
+// @Param discount body models.CreateDiscountRequest true "Update discount"
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
-// @Router /discount [put]
+// @Router /discount [patch]
 func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
-	var discount models.Discount
-	if err := ctx.ShouldBindJSON(&discount); err != nil {
+
+	var discountReq models.Discount
+	if err := ctx.ShouldBindJSON(&discountReq); err != nil {
 		ctx.JSON(http.StatusBadRequest,
 			models.GenericResponse{
 				Success: false,
@@ -150,7 +153,7 @@ func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 		return
 	}
 
-	err := c.discountService.UpdateDiscount(&discount)
+	discount, err := c.discountService.UpdateDiscount(&discountReq)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError,
 			models.GenericResponse{
@@ -168,7 +171,7 @@ func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 			Success: true,
 			Code:    http.StatusOK,
 			Message: "discount updated successfully",
-			Data:    nil,
+			Data:    discount,
 			Errors:  nil,
 		})
 	return
@@ -180,17 +183,17 @@ func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 // @Tags discount
 // @Accept  json
 // @Produce  json
-// @Param discountId path string true "Discout ID"
+// @Param id path string true "Discount ID"
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
-// @Router /discount/{discountId}} [delete]
+// @Router /discount/{id}} [delete]
 func (c *DiscountController) DeleteDiscount(ctx *gin.Context) {
 
 	// get user ID from URL path
-	discountId := ctx.Param("discountId")
+	id := ctx.Param("id")
 
 	// call discount service to find discount by ID
-	err := c.discountService.DeleteDiscount(discountId)
+	err := c.discountService.DeleteDiscount(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError,
 			models.GenericResponse{

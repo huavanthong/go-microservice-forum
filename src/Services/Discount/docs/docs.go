@@ -18,8 +18,8 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/discount": {
-            "put": {
-                "description": "Update coupon",
+            "post": {
+                "description": "Create discount for product",
                 "consumes": [
                     "application/json"
                 ],
@@ -29,7 +29,18 @@ const docTemplate = `{
                 "tags": [
                     "discount"
                 ],
-                "summary": "Update coupon",
+                "summary": "Create discount for product",
+                "parameters": [
+                    {
+                        "description": "New discount",
+                        "name": "discount",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateDiscountRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -45,8 +56,8 @@ const docTemplate = `{
                     }
                 }
             },
-            "post": {
-                "description": "Create discount for product",
+            "patch": {
+                "description": "Update coupon",
                 "consumes": [
                     "application/json"
                 ],
@@ -56,7 +67,18 @@ const docTemplate = `{
                 "tags": [
                     "discount"
                 ],
-                "summary": "Create discount for product",
+                "summary": "Update coupon",
+                "parameters": [
+                    {
+                        "description": "Update discount",
+                        "name": "discount",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateDiscountRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -102,7 +124,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/discount/{discountId}}": {
+        "/discount/{id}}": {
             "delete": {
                 "description": "Delete coupon by product name",
                 "consumes": [
@@ -118,8 +140,8 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Discout ID",
-                        "name": "discountId",
+                        "description": "Discount ID",
+                        "name": "id",
                         "in": "path",
                         "required": true
                     }
@@ -142,6 +164,54 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.CreateDiscountRequest": {
+            "type": "object",
+            "required": [
+                "discount_type",
+                "end_date",
+                "product_id",
+                "quantity",
+                "start_date"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "example": 15
+                },
+                "description": {
+                    "type": "string",
+                    "example": "black friday"
+                },
+                "discount_type": {
+                    "type": "string",
+                    "example": "percent | amount"
+                },
+                "end_date": {
+                    "type": "string",
+                    "example": "25-04-2023"
+                },
+                "percentage": {
+                    "type": "number",
+                    "example": 10
+                },
+                "product_id": {
+                    "type": "string",
+                    "example": "5bbdadf782ebac06a695a8e7"
+                },
+                "product_name": {
+                    "type": "string",
+                    "example": "laptopn thinkpad"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 100
+                },
+                "start_date": {
+                    "type": "string",
+                    "example": "13-04-2023"
+                }
+            }
+        },
         "models.GenericResponse": {
             "type": "object",
             "properties": {
