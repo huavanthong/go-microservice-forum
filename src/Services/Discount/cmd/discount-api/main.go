@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	docs "github.com/huavanthong/microservice-golang/src/Services/Discount/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -148,6 +149,8 @@ func startGrpcServer() {
 func startGinServer(config *config.Config) {
 
 	fmt.Println("Starting GIN Server ...")
+
+	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	router := server.Group("/api/v1")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
