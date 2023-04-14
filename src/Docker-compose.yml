@@ -10,6 +10,9 @@ services:
       context: .
       dockerfile: Services/Discount/Dockerfile
 
+  pgadmin:
+    image: dpage/pgadmin4  
+
   nginx.proxy:
     image: nginx
     build:
@@ -18,3 +21,4 @@ services:
     
 volumes:
   postgres_data:
+  pgadmin_data:
