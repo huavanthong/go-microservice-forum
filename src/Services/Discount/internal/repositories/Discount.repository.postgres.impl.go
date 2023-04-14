@@ -35,24 +35,24 @@ func (r *PostgresDBDiscountRepository) GetDiscount(ID int) (*models.Discount, er
 
 func (r *PostgresDBDiscountRepository) CreateDiscount(discount *models.Discount) (*models.Discount, error) {
 
-	result, err := r.db.NamedExec(
+	result, err := r.db.NamedQuery(
 		`INSERT INTO Discount (product_id, product_name, description, discount_type, percentage, amount, quantity, start_date, end_date) 
 		VALUES (:product_id, :product_name, :description, :discount_type, :percentage, :amount, :quantity, :start_date, :end_date)
 		RETURNING id
 		`, discount)
-
 	if err != nil {
 		return nil, fmt.Errorf("failed to create discount: %w", err)
 	}
-
-	discountID, err := result.LastInsertId()
-	if err != nil {
-		return nil, fmt.Errorf("failed to create discount: %w", err)
+	// Get id after insert from DB
+	// Refer: https://github.com/jmoiron/sqlx/issues/83
+	var id int
+	if result.Next() {
+		result.Scan(&id)
 	}
 
 	create_discount := &models.Discount{}
 
-	err = r.db.Get(create_discount, "SELECT * FROM Discount WHERE ID = $1", discountID)
+	err = r.db.Get(create_discount, "SELECT * FROM Discount WHERE ID = $1", id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
