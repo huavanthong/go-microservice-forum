@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/models"
@@ -25,7 +24,7 @@ func NewDiscountServiceImpl(discountRepo repositories.DiscountRepository) Discou
 func generateGetDiscountResponse(discount *models.Discount) (*models.GetDiscountResponse, error) {
 
 	return &models.GetDiscountResponse{
-		ID:           discount.ID,
+		ID:           discount.ID.String(),
 		ProductName:  discount.ProductName,
 		Description:  discount.Description,
 		DiscountType: discount.DiscountType,
@@ -38,13 +37,10 @@ func generateGetDiscountResponse(discount *models.Discount) (*models.GetDiscount
 }
 
 // GetDiscount gets the discount based on the input parameters
-func (ds *DiscountServiceImpl) GetDiscount(ID string) (*models.GetDiscountResponse, error) {
-
-	// convert string id to int id
-	intId, _ := strconv.Atoi(ID)
+func (ds *DiscountServiceImpl) GetDiscount(id string) (*models.GetDiscountResponse, error) {
 
 	// Get discount from repository
-	discount, err := ds.discountRepo.GetDiscount(intId)
+	discount, err := ds.discountRepo.GetDiscount(id)
 	if err != nil {
 
 		return nil, fmt.Errorf("Error while getting discount: %v", err)
@@ -149,10 +145,7 @@ func (ds *DiscountServiceImpl) UpdateDiscount(discountReq *models.UpdateDiscount
 	return ds.discountRepo.UpdateDiscount(discount)
 }
 
-func (ds *DiscountServiceImpl) DeleteDiscount(ID string) error {
+func (ds *DiscountServiceImpl) DeleteDiscount(id string) error {
 
-	// convert string id to int id
-	intId, _ := strconv.Atoi(ID)
-
-	return ds.discountRepo.DeleteDiscount(intId)
+	return ds.discountRepo.DeleteDiscount(id)
 }

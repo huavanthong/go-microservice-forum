@@ -1,33 +1,31 @@
 package repositories
 
 import (
-	"database/sql"
-	"errors"
 	"fmt"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/models"
 
-	"github.com/jmoiron/sqlx"
+	"gorm.io/gorm"
 )
 
 type PostgresDBDiscountRepository struct {
-	db *sqlx.DB
+	db *gorm.DB
 }
 
-func NewPostgresDBDiscountRepository(db *sqlx.DB) DiscountRepository {
+func NewPostgresDBDiscountRepository(db *gorm.DB) DiscountRepository {
 
 	return &PostgresDBDiscountRepository{db: db}
 }
 
-func (r *PostgresDBDiscountRepository) GetDiscount(ID int) (*models.Discount, error) {
+func (r *PostgresDBDiscountRepository) GetDiscount(id string) (*models.Discount, error) {
 	discount := &models.Discount{}
 
-	err := r.db.Get(discount, "SELECT * FROM Discount WHERE ID = $1", ID)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+	if err := r.db.First(discount, "id = ?", id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, fmt.Errorf("Discount not found with id: %s", id)
 		}
-		return nil, fmt.Errorf("failed to get discount: %w", err)
+		// Internal error on db
+		return nil, fmt.Errorf("Error on DB find for user", err)
 	}
 
 	return discount, nil
@@ -35,29 +33,18 @@ func (r *PostgresDBDiscountRepository) GetDiscount(ID int) (*models.Discount, er
 
 func (r *PostgresDBDiscountRepository) CreateDiscount(discount *models.Discount) (*models.Discount, error) {
 
-	result, err := r.db.NamedExec(
-		`INSERT INTO Discount (product_id, product_name, description, discount_type, percentage, amount, quantity, start_date, end_date, created_at, updated_at) 
-		VALUES (:product_id, :product_name, :description, :discount_type, :percentage, :amount, :quantity, :start_date, :end_date, :created_at, :updated_at)
-		RETURNING id
-		`, discount)
-
-	if err != nil {
-		return nil, fmt.Errorf("failed to create discount: %w", err)
+	if err := r.db.Create(discount).Error; err != nil {
+		return nil, fmt.Errorf("Faield to create discount", err)
 	}
 
-	discountID, err := result.LastInsertId()
-	if err != nil {
-		return nil, fmt.Errorf("failed to create discount: %w", err)
-	}
+	create_discount := &models.Discount{ID: discount.ID}
 
-	create_discount := &models.Discount{}
-
-	err = r.db.Get(create_discount, "SELECT * FROM Discount WHERE ID = $1", discountID)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+	if err := r.db.First(create_discount).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, fmt.Errorf("Discount not found with id", discount.ID)
 		}
-		return nil, fmt.Errorf("failed to get discount: %w", err)
+		// Internal error on db
+		return nil, fmt.Errorf("Error on DB find for user", err)
 	}
 
 	return create_discount, nil
@@ -65,56 +52,36 @@ func (r *PostgresDBDiscountRepository) CreateDiscount(discount *models.Discount)
 
 func (r *PostgresDBDiscountRepository) UpdateDiscount(discount *models.Discount) (*models.Discount, error) {
 
-	result, err := r.db.NamedExec(`UPDATE Discount SET
-	product_id = :product_id, 
-	product_name = :product_name, 
-	description = :description, 
-	percentage = :percentage, 
-	amount = :amount, 
-	quantity = :quantity, 
-	start_date = :start_date, 
-	end_date = :end_date, 
-	updated_at = :updated_at
-	WHERE id= :id
-	RETURNING id
-	`, discount)
+	temDiscount := &models.Discount{ID: discount.ID}
 
-	if err != nil {
-		return nil, fmt.Errorf("failed to update discount: %w", err)
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return nil, fmt.Errorf("failed to get affected rows: %w", err)
-	}
-	if rowsAffected == 0 {
-		return nil, errors.New("no rows affected")
-	}
-
-	update_discount := &models.Discount{}
-
-	err = r.db.Get(update_discount, "SELECT * FROM Discount WHERE ID = $1", discount.ID)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+	if err := r.db.First(temDiscount).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, fmt.Errorf("Discount not found with id", discount.ID)
 		}
-		return nil, fmt.Errorf("failed to get discount: %w", err)
+		// Internal error on db
+		return nil, fmt.Errorf("Error on DB find for user", err)
 	}
 
-	return update_discount, nil
+	if err := r.db.Save(discount).Error; err != nil {
+		return nil, fmt.Errorf("Error saving user: ", err)
+	}
+
+	return discount, nil
 }
 
-func (r *PostgresDBDiscountRepository) DeleteDiscount(ID int) error {
-	result, err := r.db.Exec("DELETE FROM Discount WHERE ID = $1", ID)
-	if err != nil {
-		return fmt.Errorf("failed to delete discount: %w", err)
+func (r *PostgresDBDiscountRepository) DeleteDiscount(id string) error {
+
+	discount := &models.Discount{}
+	if err := r.db.First(discount, "id = ?", id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return fmt.Errorf("Discount not found with id", discount.ID)
+		}
+		// Internal error on db
+		return fmt.Errorf("Error on DB find for user", err)
 	}
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return fmt.Errorf("failed to get affected rows: %w", err)
-	}
-	if rowsAffected == 0 {
-		return errors.New("no rows affected")
+
+	if err := r.db.Delete(discount).Error; err != nil {
+		return fmt.Errorf("Error deleting user", err)
 	}
 	return nil
 }

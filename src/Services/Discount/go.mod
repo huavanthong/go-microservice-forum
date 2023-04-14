@@ -3,9 +3,9 @@ module github.com/huavanthong/microservice-golang/src/Services/Discount
 go 1.16
 
 require (
-	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.9.0
 	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/google/uuid v1.3.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.2
 	github.com/spf13/viper v1.15.0

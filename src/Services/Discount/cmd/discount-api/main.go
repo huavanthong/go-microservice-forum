@@ -13,10 +13,12 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/config"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/controllers"
+	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/models"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/routes"
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/services"
@@ -47,15 +49,13 @@ func init() {
 		config.Database.User, config.Database.Password, config.Database.Host, config.Database.Port, config.Database.DBName)
 
 	// Open connection on PostgreSQL
-	db, err := sqlx.Open("postgres", fmt.Sprintf(connStr))
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
 
-	// Ping database to ensure connection is valid
-	if err = db.Ping(); err != nil {
-		panic(err)
-	}
+	fmt.Println("Running Migrations")
+	db.AutoMigrate(&models.Discount{})
 
 	fmt.Println("PostgreSQL successfully connected...")
 
