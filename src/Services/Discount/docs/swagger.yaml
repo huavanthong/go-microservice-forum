@@ -109,11 +109,17 @@ paths:
       summary: Create discount for product
       tags:
       - discount
-  /discount/{discountId}:
+  /discount/{id}:
     get:
       consumes:
       - application/json
       description: Get discount for product name
+      parameters:
+      - description: Discount ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -151,6 +157,25 @@ paths:
           schema:
             $ref: '#/definitions/models.GenericResponse'
       summary: Delete coupon by product name
+      tags:
+      - discount
+  /discounts:
+    get:
+      consumes:
+      - application/json
+      description: Get discount for product name
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.GenericResponse'
+      summary: Get discount for product name
       tags:
       - discount
 swagger: "2.0"

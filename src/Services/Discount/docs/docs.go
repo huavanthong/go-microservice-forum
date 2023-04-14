@@ -95,7 +95,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/discount/{discountId}": {
+        "/discount/{id}": {
             "get": {
                 "description": "Get discount for product name",
                 "consumes": [
@@ -108,6 +108,15 @@ const docTemplate = `{
                     "discount"
                 ],
                 "summary": "Get discount for product name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Discount ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -146,6 +155,35 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.GenericResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.GenericResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/discounts": {
+            "get": {
+                "description": "Get discount for product name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "discount"
+                ],
+                "summary": "Get discount for product name",
                 "responses": {
                     "200": {
                         "description": "OK",
