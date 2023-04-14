@@ -18,8 +18,9 @@ func NewRouteDiscountController(discountController controllers.DiscountControlle
 
 func (dc *DiscountRouteController) DiscountRoute(rg *gin.RouterGroup, discountService services.DiscountService) {
 
-	router := rg.Group("discount")
+	router := rg.Group("discounts")
 	router.GET("/:id", dc.discountController.GetDiscount)
+	router.GET("/", dc.discountController.GetDiscounts)
 	router.POST("/", dc.discountController.CreateDiscount)
 	router.PUT("/", dc.discountController.UpdateDiscount)
 	router.DELETE("/:id", dc.discountController.DeleteDiscount)

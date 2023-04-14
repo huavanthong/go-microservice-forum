@@ -17,7 +17,34 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/discount": {
+        "/discounts": {
+            "get": {
+                "description": "Get all discounts in repository.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "discount"
+                ],
+                "summary": "Get all discounts in repository.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.GenericResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.GenericResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create discount for product",
                 "consumes": [
@@ -75,7 +102,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.CreateDiscountRequest"
+                            "$ref": "#/definitions/models.UpdateDiscountRequest"
                         }
                     }
                 ],
@@ -95,7 +122,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/discount/{id}": {
+        "/discounts/{id}": {
             "get": {
                 "description": "Get discount for product name",
                 "consumes": [
@@ -133,7 +160,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/discount/{id}}": {
+        "/discounts/{id}}": {
             "delete": {
                 "description": "Delete coupon by product name",
                 "consumes": [
@@ -155,35 +182,6 @@ const docTemplate = `{
                         "required": true
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.GenericResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/models.GenericResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/discounts": {
-            "get": {
-                "description": "Get discount for product name",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "discount"
-                ],
-                "summary": "Get discount for product name",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -268,6 +266,59 @@ const docTemplate = `{
                 },
                 "success": {
                     "type": "boolean"
+                }
+            }
+        },
+        "models.UpdateDiscountRequest": {
+            "type": "object",
+            "required": [
+                "discount_type",
+                "end_date",
+                "id",
+                "product_id",
+                "quantity",
+                "start_date"
+            ],
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "example": 15
+                },
+                "description": {
+                    "type": "string",
+                    "example": "black friday"
+                },
+                "discount_type": {
+                    "type": "string",
+                    "example": "percent | amount"
+                },
+                "end_date": {
+                    "type": "string",
+                    "example": "25-04-2023"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "percentage": {
+                    "type": "number",
+                    "example": 10
+                },
+                "product_id": {
+                    "type": "string",
+                    "example": "5bbdadf782ebac06a695a8e7"
+                },
+                "product_name": {
+                    "type": "string",
+                    "example": "laptopn thinkpad"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "example": 100
+                },
+                "start_date": {
+                    "type": "string",
+                    "example": "13-04-2023"
                 }
             }
         }

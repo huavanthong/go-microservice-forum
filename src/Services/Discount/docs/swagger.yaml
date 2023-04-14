@@ -50,6 +50,46 @@ definitions:
       success:
         type: boolean
     type: object
+  models.UpdateDiscountRequest:
+    properties:
+      amount:
+        example: 15
+        type: number
+      description:
+        example: black friday
+        type: string
+      discount_type:
+        example: percent | amount
+        type: string
+      end_date:
+        example: 25-04-2023
+        type: string
+      id:
+        example: "1"
+        type: string
+      percentage:
+        example: 10
+        type: number
+      product_id:
+        example: 5bbdadf782ebac06a695a8e7
+        type: string
+      product_name:
+        example: laptopn thinkpad
+        type: string
+      quantity:
+        example: 100
+        type: integer
+      start_date:
+        example: 13-04-2023
+        type: string
+    required:
+    - discount_type
+    - end_date
+    - id
+    - product_id
+    - quantity
+    - start_date
+    type: object
 host: localhost:8002
 info:
   contact: {}
@@ -58,7 +98,25 @@ info:
   title: Discount Service API Document
   version: "1.0"
 paths:
-  /discount:
+  /discounts:
+    get:
+      consumes:
+      - application/json
+      description: Get all discounts in repository.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.GenericResponse'
+      summary: Get all discounts in repository.
+      tags:
+      - discount
     patch:
       consumes:
       - application/json
@@ -69,7 +127,7 @@ paths:
         name: discount
         required: true
         schema:
-          $ref: '#/definitions/models.CreateDiscountRequest'
+          $ref: '#/definitions/models.UpdateDiscountRequest'
       produces:
       - application/json
       responses:
@@ -109,7 +167,7 @@ paths:
       summary: Create discount for product
       tags:
       - discount
-  /discount/{id}:
+  /discounts/{id}:
     get:
       consumes:
       - application/json
@@ -134,7 +192,7 @@ paths:
       summary: Get discount for product name
       tags:
       - discount
-  /discount/{id}}:
+  /discounts/{id}}:
     delete:
       consumes:
       - application/json
@@ -157,25 +215,6 @@ paths:
           schema:
             $ref: '#/definitions/models.GenericResponse'
       summary: Delete coupon by product name
-      tags:
-      - discount
-  /discounts:
-    get:
-      consumes:
-      - application/json
-      description: Get discount for product name
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.GenericResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.GenericResponse'
-      summary: Get discount for product name
       tags:
       - discount
 swagger: "2.0"

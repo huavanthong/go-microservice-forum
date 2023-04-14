@@ -21,8 +21,8 @@ func NewDiscountController(discountService services.DiscountService) DiscountCon
 }
 
 // GetAllDiscounts godoc
-// @Summary Get discount for product name
-// @Description Get discount for product name
+// @Summary Get all discounts in repository.
+// @Description Get all discounts in repository.
 // @Tags discount
 // @Accept  json
 // @Produce  json
@@ -78,26 +78,11 @@ func (c *DiscountController) GetAllDiscounts(ctx *gin.Context) {
 // @Param id path string true "Discount ID"
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
-// @Router /discount/{id} [get]
+// @Router /discounts/{id} [get]
 func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 
 	// get user ID from URL path
 	id := ctx.Param("id")
-
-	var reqDiscount *models.GetDiscountRequest
-
-	// from context, bind user info to json
-	if err := ctx.ShouldBindJSON(&reqDiscount); err != nil {
-		ctx.JSON(http.StatusBadRequest,
-			models.GenericResponse{
-				Success: false,
-				Code:    http.StatusBadRequest,
-				Message: "Invalid data request",
-				Data:    nil,
-				Errors:  []string{err.Error()},
-			})
-		return
-	}
 
 	discount, err := c.discountService.GetDiscount(id)
 	if err != nil {
@@ -147,7 +132,7 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 // @Param discount body models.CreateDiscountRequest true "New discount"
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
-// @Router /discount [post]
+// @Router /discounts [post]
 func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 
 	var discountReq models.CreateDiscountRequest
@@ -193,10 +178,10 @@ func (c *DiscountController) CreateDiscount(ctx *gin.Context) {
 // @Tags discount
 // @Accept  json
 // @Produce  json
-// @Param discount body models.CreateDiscountRequest true "Update discount"
+// @Param discount body models.UpdateDiscountRequest true "Update discount"
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
-// @Router /discount [patch]
+// @Router /discounts [patch]
 func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 
 	var discountReq models.UpdateDiscountRequest
@@ -245,7 +230,7 @@ func (c *DiscountController) UpdateDiscount(ctx *gin.Context) {
 // @Param id path string true "Discount ID"
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
-// @Router /discount/{id}} [delete]
+// @Router /discounts/{id}} [delete]
 func (c *DiscountController) DeleteDiscount(ctx *gin.Context) {
 
 	// get user ID from URL path
