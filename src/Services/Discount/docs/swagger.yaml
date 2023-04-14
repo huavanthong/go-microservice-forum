@@ -12,7 +12,7 @@ definitions:
         example: percent | amount
         type: string
       end_date:
-        example: 25-04-2023
+        example: "2023-04-25 00:00:00"
         type: string
       percentage:
         example: 10
@@ -27,7 +27,7 @@ definitions:
         example: 100
         type: integer
       start_date:
-        example: 13-04-2023
+        example: "2023-04-13 00:00:00"
         type: string
     required:
     - discount_type

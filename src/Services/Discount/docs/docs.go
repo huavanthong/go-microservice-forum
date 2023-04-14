@@ -188,7 +188,7 @@ const docTemplate = `{
                 },
                 "end_date": {
                     "type": "string",
-                    "example": "25-04-2023"
+                    "example": "2023-04-25 00:00:00"
                 },
                 "percentage": {
                     "type": "number",
@@ -208,7 +208,7 @@ const docTemplate = `{
                 },
                 "start_date": {
                     "type": "string",
-                    "example": "13-04-2023"
+                    "example": "2023-04-13 00:00:00"
                 }
             }
         },

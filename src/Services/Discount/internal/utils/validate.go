@@ -12,7 +12,7 @@ func ValidateTime(dateStr string) bool {
 
 func ValidateStartDateEndDate(startDate, endDate string) error {
 
-	layout := "02-01-2006"
+	layout := "2006-01-02 03:04:05"
 
 	start, err := time.Parse(layout, startDate)
 	if err != nil {

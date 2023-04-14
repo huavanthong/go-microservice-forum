@@ -9,8 +9,8 @@ type CreateDiscountRequest struct {
 	Percentage   float32 `json:"percentage" example:"10"`
 	Amount       float64 `json:"amount" example:"15"`
 	Quantity     int     `json:"quantity" validate:"required" example:"100"`
-	StartDate    string  `json:"start_date" validate:"required" example:"13-04-2023"`
-	EndDate      string  `json:"end_date" validate:"required" example:"25-04-2023"`
+	StartDate    string  `json:"start_date" validate:"required" example:"2023-04-13 00:00:00"`
+	EndDate      string  `json:"end_date" validate:"required" example:"2023-04-25 00:00:00"`
 }
 
 // CreateDiscountResponse represents the response from a discount request
