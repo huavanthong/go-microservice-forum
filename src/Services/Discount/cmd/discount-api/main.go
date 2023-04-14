@@ -22,6 +22,22 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Discount/internal/services"
 )
 
+var schema = `
+CREATE TABLE IF NOT EXISTS Discount (
+	id SERIAL PRIMARY KEY,
+	product_id VARCHAR(255) NOT NULL,
+	product_name VARCHAR(255) NOT NULL,
+	description TEXT,
+	discount_type VARCHAR(255) NOT NULL,
+	percentage REAL,
+	amount FLOAT,
+	quantity INTEGER,
+	start_date DATE NOT NULL,
+	end_date DATE NOT NULL,
+	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)`
+
 // Declare global variable
 var (
 	configPath string = "./internal/config/config.yml"
@@ -59,6 +75,11 @@ func init() {
 
 	fmt.Println("PostgreSQL successfully connected...")
 
+	// exec the schema or fail; multi-statement Exec behavior varies between
+	// database drivers;  pq will exec them all, sqlite3 won't, ymmv
+	db.MustExec(schema)
+
+	fmt.Println("Create schema successfully")
 	// Set up logger
 	// logger, err := utils.NewLogger()
 	// if err != nil {

@@ -36,8 +36,8 @@ func (r *PostgresDBDiscountRepository) GetDiscount(ID int) (*models.Discount, er
 func (r *PostgresDBDiscountRepository) CreateDiscount(discount *models.Discount) (*models.Discount, error) {
 
 	result, err := r.db.NamedExec(
-		`INSERT INTO Discount (product_id, product_name, description, discount_type, percentage, amount, quantity, start_date, end_date, created_at, updated_at) 
-		VALUES (:product_id, :product_name, :description, :discount_type, :percentage, :amount, :quantity, :start_date, :end_date, :created_at, :updated_at)
+		`INSERT INTO Discount (product_id, product_name, description, discount_type, percentage, amount, quantity, start_date, end_date) 
+		VALUES (:product_id, :product_name, :description, :discount_type, :percentage, :amount, :quantity, :start_date, :end_date)
 		RETURNING id
 		`, discount)
 
@@ -73,8 +73,7 @@ func (r *PostgresDBDiscountRepository) UpdateDiscount(discount *models.Discount)
 	amount = :amount, 
 	quantity = :quantity, 
 	start_date = :start_date, 
-	end_date = :end_date, 
-	updated_at = :updated_at
+	end_date = :end_date 
 	WHERE id= :id
 	RETURNING id
 	`, discount)

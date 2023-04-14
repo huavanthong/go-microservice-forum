@@ -74,8 +74,6 @@ func convertRequestCreatetToDiscount(discountReq *models.CreateDiscountRequest) 
 		return nil, err
 	}
 
-	createdAt := time.Now()
-
 	discount := &models.Discount{
 		ProductID:    discountReq.ProductID,
 		ProductName:  discountReq.ProductName,
@@ -86,8 +84,6 @@ func convertRequestCreatetToDiscount(discountReq *models.CreateDiscountRequest) 
 		Quantity:     discountReq.Quantity,
 		StartDate:    discountReq.StartDate,
 		EndDate:      discountReq.EndDate,
-		CreatedAt:    createdAt,
-		UpdatedAt:    createdAt,
 	}
 
 	return discount, nil
