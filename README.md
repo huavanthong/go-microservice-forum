@@ -68,6 +68,10 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
 
 ### Payment microservice
 
+### Ordering microservice
+* Building Event-Driven Sourcing in Golang. Refer: [here](https://shijuvar.medium.com/building-event-driven-distributed-systems-in-go-with-grpc-nats-jetstream-and-cockroachdb-c4b899c8636d)
+* Combining DDD, CQRS, and Clean Architecture by refactoring. Refer: [here](https://threedots.tech/post/ddd-cqrs-clean-architecture-combined/)
+
 ## User microservice version 3
 
 * Microservice pattern
