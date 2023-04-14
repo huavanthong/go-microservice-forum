@@ -21,6 +21,19 @@ func NewDiscountServiceImpl(discountRepo repositories.DiscountRepository) Discou
 	}
 }
 
+// GetDiscount gets the discount based on the input parameters
+func (ds *DiscountServiceImpl) GetDiscounts() (interface{}, error) {
+
+	// Get discount from repository
+	discounts, err := ds.discountRepo.GetDiscounts()
+	if err != nil {
+
+		return nil, fmt.Errorf("Error while getting discount: %v", err)
+	}
+
+	return discounts, nil
+}
+
 // Generate response
 func generateGetDiscountResponse(discount *models.Discount) (*models.GetDiscountResponse, error) {
 

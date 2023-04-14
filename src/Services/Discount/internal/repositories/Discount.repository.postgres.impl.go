@@ -19,6 +19,20 @@ func NewPostgresDBDiscountRepository(db *sqlx.DB) DiscountRepository {
 	return &PostgresDBDiscountRepository{db: db}
 }
 
+func (r *PostgresDBDiscountRepository) GetDiscounts() (interface{}, error) {
+	var discounts []*models.Discount
+
+	err := r.db.Select(discounts, "SELECT * FROM Discount")
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("failed to get discount: %w", err)
+	}
+
+	return discounts, nil
+}
+
 func (r *PostgresDBDiscountRepository) GetDiscount(ID int) (*models.Discount, error) {
 	discount := &models.Discount{}
 
@@ -73,7 +87,8 @@ func (r *PostgresDBDiscountRepository) UpdateDiscount(discount *models.Discount)
 	amount = :amount, 
 	quantity = :quantity, 
 	start_date = :start_date, 
-	end_date = :end_date 
+	end_date = :end_date,
+	updated_at = :updated_at,
 	WHERE id= :id
 	RETURNING id
 	`, discount)

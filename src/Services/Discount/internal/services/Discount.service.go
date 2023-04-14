@@ -5,6 +5,7 @@ import (
 )
 
 type DiscountService interface {
+	GetDiscounts() (interface{}, error)
 	GetDiscount(ID string) (*models.GetDiscountResponse, error)
 	CreateDiscount(discount *models.CreateDiscountRequest) (*models.Discount, error)
 	UpdateDiscount(discount *models.UpdateDiscountRequest) (*models.Discount, error)

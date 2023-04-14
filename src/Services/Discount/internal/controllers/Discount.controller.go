@@ -20,7 +20,7 @@ func NewDiscountController(discountService services.DiscountService) DiscountCon
 	}
 }
 
-// GetDiscount godoc
+// GetAllDiscounts godoc
 // @Summary Get discount for product name
 // @Description Get discount for product name
 // @Tags discount
@@ -28,11 +28,61 @@ func NewDiscountController(discountService services.DiscountService) DiscountCon
 // @Produce  json
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
-// @Router /discount/{discountId} [get]
+// @Router /discounts [get]
+func (c *DiscountController) GetAllDiscounts(ctx *gin.Context) {
+
+	discounts, err := c.discountService.GetDiscounts()
+	if err != nil {
+		// Not found
+		if strings.Contains(err.Error(), "Id exists") {
+			ctx.JSON(http.StatusNotFound,
+				models.GenericResponse{
+					Success: false,
+					Code:    http.StatusNotFound,
+					Message: "Discount not found",
+					Data:    nil,
+					Errors:  []string{err.Error()},
+				})
+			return
+		}
+		// Internal error
+		ctx.JSON(http.StatusInternalServerError,
+			models.GenericResponse{
+				Success: false,
+				Code:    http.StatusInternalServerError,
+				Message: "Internal error",
+				Data:    nil,
+				Errors:  []string{err.Error()},
+			})
+		return
+	}
+
+	// Success
+	ctx.JSON(http.StatusOK,
+		models.GenericResponse{
+			Success: true,
+			Code:    http.StatusOK,
+			Message: "Get discount success",
+			Data:    discounts,
+			Errors:  nil,
+		})
+	return
+}
+
+// GetDiscount godoc
+// @Summary Get discount for product name
+// @Description Get discount for product name
+// @Tags discount
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Discount ID"
+// @Success 200 {object} models.GenericResponse
+// @Failure 400 {object} models.GenericResponse
+// @Router /discount/{id} [get]
 func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 
 	// get user ID from URL path
-	discountId := ctx.Param("discountId")
+	id := ctx.Param("id")
 
 	var reqDiscount *models.GetDiscountRequest
 
@@ -49,7 +99,7 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 		return
 	}
 
-	discount, err := c.discountService.GetDiscount(discountId)
+	discount, err := c.discountService.GetDiscount(id)
 	if err != nil {
 		// Not found
 		if strings.Contains(err.Error(), "Id exists") {
@@ -63,19 +113,28 @@ func (c *DiscountController) GetDiscount(ctx *gin.Context) {
 				})
 			return
 		}
-		// Success
-		ctx.JSON(http.StatusOK,
+
+		// Internal error
+		ctx.JSON(http.StatusInternalServerError,
 			models.GenericResponse{
-				Success: true,
-				Code:    http.StatusOK,
-				Message: "Get discount success",
-				Data:    discount,
-				Errors:  nil,
+				Success: false,
+				Code:    http.StatusInternalServerError,
+				Message: "Internal error",
+				Data:    nil,
+				Errors:  []string{err.Error()},
 			})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, discount)
+	// Success
+	ctx.JSON(http.StatusOK,
+		models.GenericResponse{
+			Success: true,
+			Code:    http.StatusOK,
+			Message: "Get discount success",
+			Data:    discount,
+			Errors:  nil,
+		})
 	return
 }
 
