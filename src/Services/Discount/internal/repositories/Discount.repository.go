@@ -5,7 +5,7 @@ import (
 )
 
 type DiscountRepository interface {
-	GetDiscounts() (interface{}, error)
+	GetDiscounts() ([]*models.Discount, error)
 	GetDiscount(ID int) (*models.Discount, error)
 	CreateDiscount(discount *models.Discount) (*models.Discount, error)
 	UpdateDiscount(discount *models.Discount) (*models.Discount, error)

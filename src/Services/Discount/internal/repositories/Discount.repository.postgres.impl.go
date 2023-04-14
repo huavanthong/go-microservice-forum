@@ -19,7 +19,7 @@ func NewPostgresDBDiscountRepository(db *sqlx.DB) DiscountRepository {
 	return &PostgresDBDiscountRepository{db: db}
 }
 
-func (r *PostgresDBDiscountRepository) GetDiscounts() (interface{}, error) {
+func (r *PostgresDBDiscountRepository) GetDiscounts() ([]*models.Discount, error) {
 	var discounts []*models.Discount
 
 	err := r.db.Select(discounts, "SELECT * FROM Discount")

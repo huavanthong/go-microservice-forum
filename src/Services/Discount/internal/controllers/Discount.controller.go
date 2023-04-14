@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -26,12 +27,30 @@ func NewDiscountController(discountService services.DiscountService) DiscountCon
 // @Tags discount
 // @Accept  json
 // @Produce  json
+// @Param page path string true "Page"
+// @Param limit path string true "Limit"
 // @Success 200 {object} models.GenericResponse
 // @Failure 400 {object} models.GenericResponse
 // @Router /discounts [get]
 func (c *DiscountController) GetAllDiscounts(ctx *gin.Context) {
 
-	discounts, err := c.discountService.GetDiscounts()
+	// get parameter from client
+	var page = ctx.DefaultQuery("page", "1")
+	var limit = ctx.DefaultQuery("limit", "10")
+
+	intPage, err := strconv.Atoi(page)
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
+		return
+	}
+
+	intLimit, err := strconv.Atoi(limit)
+	if err != nil {
+		ctx.JSON(http.StatusBadGateway, gin.H{"status": "fail", "message": err.Error()})
+		return
+	}
+
+	discounts, err := c.discountService.GetDiscounts(intPage, intLimit)
 	if err != nil {
 		// Not found
 		if strings.Contains(err.Error(), "Id exists") {

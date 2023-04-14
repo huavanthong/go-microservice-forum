@@ -22,7 +22,7 @@ func NewDiscountServiceImpl(discountRepo repositories.DiscountRepository) Discou
 }
 
 // GetDiscount gets the discount based on the input parameters
-func (ds *DiscountServiceImpl) GetDiscounts() (interface{}, error) {
+func (ds *DiscountServiceImpl) GetDiscounts(page int, limit int) ([]*models.Discount, error) {
 
 	// Get discount from repository
 	discounts, err := ds.discountRepo.GetDiscounts()
