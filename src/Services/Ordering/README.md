@@ -3,69 +3,121 @@
 
 # Project Structure
 ```lua 
--ordering-microservices/
-  -cmd/
-    -ordering-api/
-      -main.go
-  -internal/
-    -app/
-      -application/
-        -commands/
-          -create_order_command.go
-          -update_order_command.go
-          -cancel_order_command.go
-          -pay_order_command.go
-        -queries/
-          -get_order_query.go
-          -get_orders_by_user_query.go
-          -get_orders_query.go
-        -app.go
-      -domain/
-        -entities/
-          -order.go
-        -events/
-          -event.go
-          -order_created_event.go
-          -order_updated_event.go
-          -order_cancelled_event.go
-          -order_paid_event.go
-        -repositories/
-          -order_repository.go
-          -event_store_repository.go
-        -valueobjects/
-          -order_item.go
-          -money.go
-      -infrastructure/
-        -persistence/
-          -db/
-            -migrations/
-              -20220413_001_init.sql
-            -postgres/
-              -postgres.go
-          -eventstore/
-            -event_store.go
-        -web/
-          -controllers/
-            -order_controller.go
-          -middlewares/
-            -auth_middleware.go
-            -cors_middleware.go
-      -shared/
-        -errors/
-          -app_error.go
-          -validation_error.go
-    -pkg/
-      -config/
-        -config.go
-      -logger/
-        -logger.go
-  -configs/
-    -config.yaml
-  -docs/
-    -api/
-      -swagger.yaml
-  -scripts/
-    -run_local.sh
+order-microservice/
+├── cmd/
+│   ├── order-api/
+│   │   ├── main.go
+│   │   ├── config.go
+│   │   └── ...
+│   └── order-worker/
+│       ├── main.go
+│       ├── config.go
+│       └── ...
+├── internal/
+│   ├── api/
+│   │   ├── controllers/
+│   │   │   └── order_controller.go
+│   │   ├── middleware
+│   │   │   ├── authentication.go
+│   │   │   ├── cors_middleware.go
+│   │   │   └── logging.go
+│   │   ├── routes
+│   │   │   └── order_routes.go
+│   │   ├── models
+│   │   │   └── checkout.go
+│   ├── app/
+│   │   ├── commands/
+│   │   │   ├── handler/
+│   │   │   │   ├── create_order_handler.go
+│   │   │   │   ├── update_order_handler.go
+│   │   │   │   ├── pay_order_handler.go
+│   │   │   │   ├── cancel_order_handler.go
+│   │   │   │   ├── ...
+│   │   │   │   └── event_handler.go
+│   │   │   ├── command_bus.go
+│   │   │   ├── command_handler.go
+│   │   │   └── ...
+│   │   ├── events
+│   │   │   ├── handler/
+│   │   │   │   ├── order_created_handler.go
+│   │   │   │   ├── order_cancelled_handler.go
+│   │   │   │   └── order_cancelled_handler.go
+│   │   │   ├── event_bus.go
+│   │   │   ├── event_handler.go
+│   │   │   └── ...
+│   │   ├── queries
+│   │   │   ├── get_order_query.go
+│   │   │   ├── get_orders_by_user_query.go
+│   │   │   ├── get_orders_query.go
+│   │   │   └── ...
+│   │   ├── app.go
+│   ├── domain
+│   │   ├── entities
+│   │   │   ├── order.go
+│   │   │   ├── order_item.go
+│   │   ├── events
+│   │   │   ├── events.go
+│   │   │   ├── order_created_event.go
+│   │   │   ├── order_updated_event.go
+│   │   │   ├── order_cancelled_event.go
+│   │   │   ├── order_paid_event.go
+│   │   │   ├── ...
+│   │   ├── repositories
+│   │   │   ├── order_repository.go
+│   │   │   ├── order_item_repository.go
+│   │   │   ├── ...
+│   │   ├── services
+│   │   │   ├── email_service.go
+│   │   │   ├── payment_method.go
+│   │   │   ├── ...
+│   │   └── value_objects
+│   │       ├── order_status.go
+│   │       ├── ...
+│   │       └── payment_method.go
+│   ├── infrastructure/
+│   │   ├── configs/
+│   │   │   └── config.yaml
+│   │   ├── eventstore/
+│   │   │   ├── event_store.go
+│   │   │   ├── mysql_event_store.go
+│   │   │   └── ...
+│   │   ├── kafka/
+│   │   │   ├── kafka_producer.go
+│   │   │   ├── kafka_consumer.go
+│   │   │   └── ...
+│   │   └── persistence/
+│   │       ├── order_repository.go
+│   │       ├── ...
+│   │       └── order_item_repository.go
+│   └── shared/
+│       └── errors/
+│           ├── app_error.go
+│           └── validation_error.go
+├── pkg/
+│   ├── apperrors/
+│   │   ├── apperror.go
+│   │   └── ...
+│   ├── logging/
+│   │   ├── logger.go
+│   │   └── ...
+│   └── tracing/
+│       ├── tracer.go
+│       └── ...
+├── scripts/
+|   └── run_local.sh
+├── docs/
+│   ├── api/
+│   │   └── swagger.yml
+├── deployments/
+│   ├── kubernetes/
+│   │   ├── order-api/
+│   │   │   ├── kustomization.yaml
+│   │   │   ├── deployment.yaml
+│   │   │   └── ...
+│   │   └── order-worker/
+│   │       ├── kustomization.yaml
+│   │       ├── deployment.yaml
+│   │       └── ...
 ```
 
 Giải thích một số phần quan trọng:

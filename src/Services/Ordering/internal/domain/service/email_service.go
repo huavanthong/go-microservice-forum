@@ -1,4 +1,4 @@
-package constracts_infrastructure
+package services
 
 import (
 	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/application/models"
