@@ -19,8 +19,7 @@
           -get_order_query.go
           -get_orders_by_user_query.go
           -get_orders_query.go
-        -services/
-          -order_service.go
+        -app.go
       -domain/
         -entities/
           -order.go
@@ -68,3 +67,15 @@
   -scripts/
     -run_local.sh
 ```
+
+Giải thích một số phần quan trọng:
+
+* cmd/: Thư mục này chứa file main.go để khởi động ứng dụng và quản lý các command line arguments.
+* internal/: Thư mục chính của ứng dụng, bao gồm tất cả các package của ứng dụng.
+  * internal/app/: Package chứa tất cả các thành phần của ứng dụng, bao gồm các commands, queries, services, domain entities, repositories, value objects và các thành phần chia sẻ.
+    *  internal/app/application/commands/: Package chứa các commands để thay đổi trạng thái của ứng dụng.
+    *  internal/app/application/queries/: Package chứa các queries để truy xuất dữ liệu từ ứng dụng.
+    *  internal/app/application/services/: Package chứa các services để thực hiện các nhiệm vụ phức tạp trong ứng dụng.
+    *  internal/app/domain/: Package chứa các entities, events, repositories và value objects cho domain của ứng dụng.
+    *  internal/app/infrastructure/: Package chứa các thành phần cơ sở hạ tầng cho ứng dụng, bao gồm các thành phần lưu trữ, web, và các middlewares.
+    *  internal/app/shared/: Package chứa các thành phần chia sẻ trong ứng dụng, bao gồm các lỗi
