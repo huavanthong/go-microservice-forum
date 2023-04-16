@@ -52,6 +52,10 @@ order-microservice/
 │   │   │   └── ...
 │   │   ├── app.go
 │   ├── domain
+│   │   ├── commands
+│   │   │   ├── create_order_command.go
+│   │   │   ├── cancel_order_command.go
+│   │   |   ├── ...
 │   │   ├── entities
 │   │   │   ├── order.go
 │   │   │   ├── order_item.go
@@ -124,10 +128,46 @@ Giải thích một số phần quan trọng:
 
 * cmd/: Thư mục này chứa file main.go để khởi động ứng dụng và quản lý các command line arguments.
 * internal/: Thư mục chính của ứng dụng, bao gồm tất cả các package của ứng dụng.
-  * internal/app/: Package chứa tất cả các thành phần của ứng dụng, bao gồm các commands, queries, services, domain entities, repositories, value objects và các thành phần chia sẻ.
+* **internal/application:** Thư mục `application` chứa các command handlers, event handlers và queries dùng để handle các command, event và query được gửi tới từ các client (web, mobile, ...). Nó cũng chứa file `main.go` để khởi tạo service và các cấu hình khác liên quan đến service.
+* **internal/domain/:** Thư mục domain chứa các entities, value objects, repositories, services và các file liên quan đến các command, event và query.
+* **internal/app/infrastructure/:** Package chứa các dịch vụ hạ tầng cho ứng dụng, bao gồm cả cơ sở dữ liệu và các client gọi đến các dịch vụ bên ngoài.
+
+### Application layer
     *  internal/app/application/commands/: Package chứa các commands để thay đổi trạng thái của ứng dụng.
     *  internal/app/application/queries/: Package chứa các queries để truy xuất dữ liệu từ ứng dụng.
     *  internal/app/application/services/: Package chứa các services để thực hiện các nhiệm vụ phức tạp trong ứng dụng.
-    *  internal/app/domain/: Package chứa các entities, events, repositories và value objects cho domain của ứng dụng.
+### Domain layer
+1. **internal/app/domain/commands/:** Package commands chứa các trạng thái
+Command trong Domain được sử dụng để thay đổi trạng thái của các đối tượng trong Domain, trong khi Command trong Application được sử dụng để gửi yêu cầu đến Microservices, Services hoặc các hệ thống khác để thực hiện các tác vụ liên quan đến chức năng của ứng dụng.
+
+Về cơ bản, Command trong Domain chỉ được sử dụng trong phạm vi của Domain của mình, còn Command trong Application được sử dụng để phối hợp các hoạt động của nhiều Domain và hệ thống khác nhau. Command trong Domain chứa thông tin về những thay đổi cần được thực hiện trên đối tượng trong Domain, trong khi Command trong Application chứa thông tin về hành động cần được thực hiện trên toàn bộ ứng dụng hoặc các hệ thống khác.  
+
+Ví dụ, ta cùng xây code sau:
+```go
+type CreateOrderCommand struct {
+    OrderID    string
+    CustomerID string
+    OrderDate  time.Time
+    Total      float64
+}
+
+func (c CreateOrderCommand) Validate() error {
+    if c.OrderID == "" {
+        return fmt.Errorf("order id is required")
+    }
+    if c.CustomerID == "" {
+        return fmt.Errorf("customer id is required")
+    }
+    if c.Total <= 0 {
+        return fmt.Errorf("total must be greater than zero")
+    }
+    return nil
+}
+
+```
+
+2. **internal/app/domain/events/:** Package commands chứa các trạng 
+
+### Infrastructure layer
     *  internal/app/infrastructure/: Package chứa các thành phần cơ sở hạ tầng cho ứng dụng, bao gồm các thành phần lưu trữ, web, và các middlewares.
-    *  internal/app/shared/: Package chứa các thành phần chia sẻ trong ứng dụng, bao gồm các lỗi
+    

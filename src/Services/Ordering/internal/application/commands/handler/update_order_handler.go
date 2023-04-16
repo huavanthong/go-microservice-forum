@@ -1,18 +1,20 @@
-package command
+package handler
 
 import (
 	"errors"
 	"log"
 	"reflect"
+
+	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/domain/repository"
 )
 
 type UpdateOrderCommandHandler struct {
-	orderRepository IOrderRepository
+	orderRepository repository.OrderRepository
 	mapper          IMapper
 	logger          *log.Logger
 }
 
-func NewUpdateOrderCommandHandler(orderRepository IOrderRepository, mapper IMapper, logger *log.Logger) *UpdateOrderCommandHandler {
+func NewUpdateOrderCommandHandler(orderRepository repository.OrderRepository, mapper IMapper, logger *log.Logger) *UpdateOrderCommandHandler {
 	return &UpdateOrderCommandHandler{orderRepository: orderRepository, mapper: mapper, logger: logger}
 }
 

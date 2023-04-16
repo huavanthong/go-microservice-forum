@@ -1,16 +1,18 @@
-package command
+package handler
 
 import (
 	"log"
 	"net/http"
+
+	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/domain/repository"
 )
 
 type DeleteOrderCommandHandler struct {
-	OrderRepository IOrderRepository
+	OrderRepository repository.OrderRepository
 	Logger          *log.Logger
 }
 
-func NewDeleteOrderCommandHandler(orderRepository IOrderRepository, logger *log.Logger) *DeleteOrderCommandHandler {
+func NewDeleteOrderCommandHandler(orderRepository repository.OrderRepository, logger *log.Logger) *DeleteOrderCommandHandler {
 	return &DeleteOrderCommandHandler{
 		OrderRepository: orderRepository,
 		Logger:          logger,

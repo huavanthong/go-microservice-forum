@@ -4,6 +4,6 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/application/models"
 )
 
-type IEmailService interface {
+type EmailService interface {
 	SendEmail(email models.Email)
 }
