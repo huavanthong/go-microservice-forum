@@ -1,8 +1,8 @@
 package app
 
 import (
-	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/application/features/commands"
-	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/application/features/queris"
+	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/application/commands"
+	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/application/queris"
 )
 
 type Application struct {

@@ -1,4 +1,4 @@
-package http
+package httpserver
 
 import (
 	"net/http"
@@ -23,11 +23,17 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func (r *Router) router() http.Handler {
 	router := mux.NewRouter()
 
-	// Endpoint for creating a new discount
-	router.HandleFunc("/discounts", r.handler.CreateDiscount).Methods(http.MethodPost)
+	// Endpoint for creating a new order
+	router.HandleFunc("/ordering", r.handler.CreateOrder).Methods(http.MethodPost)
 
-	// Endpoint for retrieving a discount by code
-	router.HandleFunc("/discounts/{code}", r.handler.GetDiscount).Methods(http.MethodGet)
+	// Endpoint for retrieving a order by code
+	router.HandleFunc("/ordering/{code}", r.handler.GetOrder).Methods(http.MethodGet)
+
+	// Endpoint for updating a order
+	router.HandleFunc("/ordering", r.handler.GetOrder).Methods(http.MethodPatch)
+
+	// Endpoint for deleting a order by code
+	router.HandleFunc("/ordering/{code}", r.handler.GetOrder).Methods(http.MethodDelete)
 
 	return router
 }

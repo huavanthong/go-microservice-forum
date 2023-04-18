@@ -5,14 +5,24 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/your-username/order-microservice/internal/api/httpserver"
+	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/api/httpserver"
+
+	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/application/commands"
+	"github.com/huavanthong/microservice-golang/src/Services/Ordering/internal/application/queries"
 )
 
 func main() {
-	server := httpserver.NewServer()
+
+	// Initialize command bus
+	commandBus := commands.NewCommandBus()
+	query := queries.NewQuery()
+
+	httpHandler := httpserver.NewHttpHandler(commandBus, query)
 
 	// Kết nối router và middleware
-	router := httpserver.NewRouter(server)
+	router := httpserver.NewRouter(httpHandler)
+
+	server := httpserver.NewServer("8004")
 
 	// Khởi động server
 	addr := fmt.Sprintf(":%d", server.Port)
