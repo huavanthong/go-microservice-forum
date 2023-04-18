@@ -15,14 +15,13 @@ order-microservice/
 │       └── ...
 ├── internal/
 │   ├── api/
-│   │   ├── controllers/
-│   │   │   └── order_controller.go
+│   │   ├── httpserver/
+│   │   │   ├── order_http_handler.go
+│   │   │   └── router.go
 │   │   ├── middleware
 │   │   │   ├── authentication.go
 │   │   │   ├── cors_middleware.go
 │   │   │   └── logging.go
-│   │   ├── routes
-│   │   │   └── order_routes.go
 │   │   ├── models
 │   │   │   └── checkout.go
 │   ├── app/
