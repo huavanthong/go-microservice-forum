@@ -24,6 +24,7 @@ order-microservice/
 │   │   │   └── logging.go
 │   │   ├── models
 │   │   │   └── checkout.go
+│   │   ├── server.go
 │   ├── app/
 │   │   ├── commands/
 │   │   │   ├── handler/
