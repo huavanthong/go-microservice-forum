@@ -47,45 +47,58 @@ func initCollections(db *mongo.Database, ctx context.Context) error {
 	return err
 }
 
-func handleFlag(db *mongo.Database, ctx context.Context) {
+func HandleFlags(db *mongo.Database, ctx context.Context) error {
 
-	enableDummyData := flag.Bool("enable-data", false, "Enable dummy data for testing")
-	initData := flag.Bool("init-data", false, "Set this flag if DB should be initialized with dummy data")
-	drop := flag.Bool("drop-table", false, "Set this flag if you wan't to drop all user data in your DB")
+	cmdPtr := flag.String("cmd", "", "Command to execute (init-data, migrate)")
+	colPtr := flag.String("col", "", "Collection to migrate")
 	flag.Parse()
 
-	if *enableDummyData {
-		if *drop {
-			msg := ""
-			if err := dropCollections(db, ctx); err != nil {
-				msg = fmt.Sprintf("Error dropping table: %v", err)
-			} else {
-				msg = "Dropped all collections in DB"
-			}
-
-			fmt.Println(msg)
-			os.Exit(0)
+	switch *cmdPtr {
+	case "init":
+		// execute init-data command
+		fmt.Println("Executing init-data command...")
+		msg := ""
+		if err := initCollections(db, ctx); err != nil {
+			msg = fmt.Sprintf("Error initializing data in DB: %v", err)
+		} else {
+			msg = "Initialized data in DB."
 		}
 
-		if *initData {
-			msg := ""
-			if err := initCollections(db, ctx); err != nil {
-				msg = fmt.Sprintf("Error initializing data in DB: %v", err)
-			} else {
-				msg = "Initialized data in DB."
-			}
+		fmt.Println(msg)
+		return nil
+	case "drop":
+		// execute init-data command
+		fmt.Println("Executing drop-data command...")
 
-			fmt.Println(msg)
-			os.Exit(0)
+		msg := ""
+		if err := dropCollections(db, ctx); err != nil {
+			msg = fmt.Sprintf("Error dropping table: %v", err)
+		} else {
+			msg = "Dropped all collections in DB"
 		}
+
+		fmt.Println(msg)
+		return nil
+
+	case "migrate":
+		// execute migrate command with specified collection
+		if *colPtr == "" {
+
+			return fmt.Errorf("Error: collection name is required for migrate command")
+		}
+		fmt.Printf("Executing migrate command for collection %s...\n", *colPtr)
+		migrations(db, ctx, *colPtr)
+		return nil
+
+	default:
+		return fmt.Errorf("Error: unknown command")
 	}
-
 }
 
 // MigrationHandler is a function that migrates data for a specific collection.
 type MigrationHandler func(ctx context.Context, collection *mongo.Collection) error
 
-func Migrations(db *mongo.Database, ctx context.Context) {
+func migrations(db *mongo.Database, ctx context.Context, coll string) {
 
 	// Specify the collections to migrate
 	collections := map[string]MigrationHandler{
@@ -96,10 +109,12 @@ func Migrations(db *mongo.Database, ctx context.Context) {
 
 	// Migrate each collection
 	for name, handler := range collections {
-		collection := db.Collection(name)
-		err := handler(ctx, collection)
-		if err != nil {
-			log.Fatalf("Failed to migrate collection %s: %v", name, err)
+		if name == coll {
+			collection := db.Collection(name)
+			err := handler(ctx, collection)
+			if err != nil {
+				log.Fatalf("Failed to migrate collection %s: %v", name, err)
+			}
 		}
 		fmt.Printf("Migrated collection %s\n", name)
 	}
@@ -153,6 +168,7 @@ func migrateCategory(ctx context.Context, collection *mongo.Collection) error {
 	}
 
 	fmt.Println("Category migrated successfully! %v", categoryResult)
+	return nil
 }
 
 // migrateCategory migrates data for the category collection.
@@ -177,4 +193,5 @@ func migrateInventory(ctx context.Context, collection *mongo.Collection) error {
 	}
 
 	fmt.Println("Category migrated successfully! %v", categoryResult)
+	return nil
 }

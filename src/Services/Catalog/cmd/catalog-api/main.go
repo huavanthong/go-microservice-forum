@@ -86,7 +86,7 @@ func init() {
 	fmt.Println("MongoDB successfully connected...")
 
 	/************************ import data for testing on MongoDB  ************************/
-	migrations.Migrations(mongoclient.Database(cfg.DBName), ctx)
+	migrations.HandleFlags(mongoclient.Database(cfg.DBName), ctx)
 
 	// Initialize MongoDB
 	productCollection = mongoclient.Database(cfg.DBName).Collection(cfg.DBCollProduct)
@@ -165,6 +165,6 @@ func startGinServer(config configs.Config) {
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	log.Println("Starting server on port", config.Port)
-	log.Fatal(server.Run(":" + config.Port))
+	log.Println("Starting server on port", config.AppPort)
+	log.Fatal(server.Run(":" + config.AppPort))
 }

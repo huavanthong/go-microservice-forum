@@ -2,10 +2,8 @@ package migrations
 
 import (
 	"context"
-	"encoding/json"
-	"flag"
 	"fmt"
-	"io/ioutil"
+	"github.com/huavanthong/microservice-golang/src/Services/Catalog/migrations"
 	"log"
 	"os"
 	"testing"
@@ -20,7 +18,7 @@ import (
 var (
 	db   *mongo.Database
 	ctx  context.Context
-	host = "catalogdb"
+	host = "localhost"
 	port = "27017"
 )
 
@@ -53,46 +51,41 @@ func TestMain(m *testing.M) {
 }
 
 func TestDropCollections(t *testing.T) {
-	err := dropCollections(db, ctx)
+
+	// Create fixture
+	collections := []string{"collection1", "collection2", "collection3"}
+	for _, coll := range collections {
+		db.Collection(coll).InsertOne(context.Background(), bson.M{})
+	}
+
+	// Set the command line arguments
+	os.Args = []string{"cmd", "-cmd", "drop"}
+
+	// Run test
+	err := migrations.HandleFlags(db, ctx)
 	assert.NoError(t, err)
+
+	for _, coll := range collections {
+		count, _ := db.Collection(coll).CountDocuments(context.Background(), bson.M{})
+		assert.Equal(t, int64(0), count)
+	}
+
 }
 
 func TestInitCollections(t *testing.T) {
-	// Initialize data for Category
-	jsonFile, err := os.Open("category.json")
-	assert.NoError(t, err)
-	defer jsonFile.Close()
-
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-
-	var categories []interface{}
-	if err := json.Unmarshal(byteValue, &categories); err != nil {
-		t.Fatalf("Failed to unmarshal category data: %v", err)
-	}
-
-	// Insert category data directly into the database
-	categoryResult, err := db.Collection("category").InsertMany(ctx, categories)
-	if err != nil {
-		t.Fatalf("Failed to insert category data: %v", err)
-	}
+	// Set the command line arguments
+	os.Args = []string{"cmd", "-cmd", "init"}
 
 	// Run test
-	err = initCollections(db, ctx)
+	err := migrations.HandleFlags(db, ctx)
 	assert.NoError(t, err)
-
-	// Verify that the number of inserted documents is the same as the number of documents inserted directly into the database
-	c, err := db.Collection("category").CountDocuments(ctx, bson.M{})
-	if err != nil {
-		t.Fatalf("Failed to count documents: %v", err)
-	}
-
-	assert.Equal(t, int64(len(categories)), c)
-	assert.Equal(t, categoryResult.InsertedIDs, c)
 }
 
-func TestHandleFlag(t *testing.T) {
-	// Test enable dummy data
-	os.Args = []string{"", "-enable-data", "-init-data"}
-	handleFlag(db, ctx)
+func TestMigrationCollections(t *testing.T) {
+	// Set the command line arguments
+	os.Args = []string{"cmd", "-cmd", "drop", "-coll", "product"}
 
-	c, err
+	// Run test
+	err := migrations.HandleFlags(db, ctx)
+	assert.NoError(t, err)
+}
