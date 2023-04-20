@@ -153,7 +153,7 @@ func init() {
 	ctx = context.TODO()
 
 	// Connect to MongoDB
-	mongoconn := options.Client().ApplyURI("mongodb://localhost:27017")
+	mongoconn := options.Client().ApplyURI("mongodb://catalogdb:27017")
 	mongoclient, err := mongo.Connect(ctx, mongoconn)
 
 	if err != nil {
@@ -236,16 +236,16 @@ func startGinServer(config configs.Config) {
 
 	server.Use(cors.New(corsConfig))
 
-	docs.SwaggerInfo.BasePath = "/api/v3"
+	docs.SwaggerInfo.BasePath = "/api/v1"
 
 	/************************ Server routing  *************************/
-	router := server.Group("/api/v3")
+	router := server.Group("/api/v1")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Hello World"})
 	})
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	log.Println("Starting server on port 9090")
+	log.Println("Starting server on port", config.Port)
 	log.Fatal(server.Run(":" + config.Port))
 }
