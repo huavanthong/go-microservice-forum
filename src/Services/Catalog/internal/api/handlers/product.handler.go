@@ -15,10 +15,10 @@ import (
 
 type CatalogHandler struct {
 	log            *zap.Logger
-	catalogService *services.CatalogServiceImpl
+	catalogService services.CatalogService
 }
 
-func NewCatalogHandler(log *zap.Logger, catalogService *services.CatalogServiceImpl) CatalogHandler {
+func NewCatalogHandler(log *zap.Logger, catalogService services.CatalogService) CatalogHandler {
 	return CatalogHandler{log, catalogService}
 }
 

@@ -4,6 +4,8 @@ services:
   catalogdb:
     container_name: catalogdb
     restart: always
+    expose:
+      - 27017
     ports:
         - "27017:27017"
     volumes:

@@ -14,12 +14,12 @@ import (
 
 type CatalogServiceImpl struct {
 	log               *zap.Logger
-	catalogRepo       repositories.ProductRepositoryImpl
-	catalogSearchRepo repositories.ProductSearchRepositoryImpl
+	catalogRepo       repositories.ProductRepository
+	catalogSearchRepo repositories.ProductSearchRepository
 	ctx               context.Context
 }
 
-func NewCatalogServiceImpl(log *zap.Logger, productRepo repositories.ProductRepositoryImpl, catalogSearchRepo repositories.ProductSearchRepositoryImpl, ctx context.Context) CatalogService {
+func NewCatalogServiceImpl(log *zap.Logger, productRepo repositories.ProductRepository, catalogSearchRepo repositories.ProductSearchRepository, ctx context.Context) CatalogService {
 	return &CatalogServiceImpl{
 		log,
 		productRepo,

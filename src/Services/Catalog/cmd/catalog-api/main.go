@@ -46,8 +46,8 @@ var (
 	categoryStorage *mongodb.CategoryStorage
 
 	// Repositories setting
-	productRepo       repositories.ProductRepositoryImpl
-	productSearchRepo repositories.ProductSearchRepositoryImpl
+	productRepo       repositories.ProductRepository
+	productSearchRepo repositories.ProductSearchRepository
 	categoryRepo      repositories.CategoryRepository
 
 	// Handler setting

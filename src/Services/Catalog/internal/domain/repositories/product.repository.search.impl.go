@@ -9,7 +9,7 @@ type ProductSearchRepositoryImpl struct {
 	productStorage *mongodb.ProductStorage
 }
 
-func NewProductSearchRepositoryImpl(productStorage *mongodb.ProductStorage) *ProductSearchRepositoryImpl {
+func NewProductSearchRepositoryImpl(productStorage *mongodb.ProductStorage) ProductSearchRepository {
 	return &ProductSearchRepositoryImpl{productStorage}
 }
 
