@@ -14,17 +14,18 @@ type Product struct {
 	Summary     string             `json:"summary" bson:"summary" binding:"required,gt=0,lt=10000" example:"Iphone 14 Pro Gold"`
 	Description string             `json:"description" bson:"description" binding:"required,gt=0,lt=10000" example:"Iphone 14 Pro Gold 256GB"`
 	ImageFile   string             `json:"imageFile" bson:"imageFile" binding:"required" example:"default.png"`
-
-	// ProductCode string    `bson:"pcode" json:"pcode" binding:"required" example:"p123456789"`
-	// ProductType string    `bson:"ptype" json:"ptype" binding:"required" example:"phone"`
-	// Inventory   Inventory `json:"inventory" bson:"inventory" binding:"required"`
-	// Discount    Discount  `json:"discount" bson:"discount" binding:"required"`
-	// SKU         string    `json:"sku" bson:"sku" example:"ABC-XYZ-OXY"`
-	CreatedAt string `json:"created_at" bson:"created_at"`
-	UpdatedAt string `json:"updated_at" bson:"updated_at"`
-	DeleteAt  string `json:"deleted_at" bson:"deleted_at"`
+	CreatedAt   string             `json:"created_at" bson:"created_at"`
+	UpdatedAt   string             `json:"updated_at" bson:"updated_at"`
+	DeleteAt    string             `json:"deleted_at" bson:"deleted_at"`
 }
 
+/*
+ProductCode string    `bson:"pcode" json:"pcode" binding:"required" example:"p123456789"`
+	ProductType string    `bson:"ptype" json:"ptype" binding:"required" example:"phone"`
+	Inventory   Inventory `json:"inventory" bson:"inventory" binding:"required"`
+	Discount    Discount  `json:"discount" bson:"discount" binding:"required"`
+	SKU         string    `json:"sku" bson:"sku" example:"ABC-XYZ-OXY"`
+*/
 type ProductFilter struct {
 	Category    string
 	ProductType string

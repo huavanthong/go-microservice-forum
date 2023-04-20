@@ -6,8 +6,13 @@ import (
 
 // Configuration stores setting environment values
 type Config struct {
-	DBUri string `mapstructure:"MONGODB_LOCAL_URI"`
-	Port  string `mapstructure:"PORT"`
+	AppPort string `mapstructure:"APP_PORT"`
+
+	DBLocalUri     string `mapstructure:"MONGODB_LOCAL_URI"`
+	DBContainerUri string `mapstructure:"MONGODB_CONTAINER_URI"`
+	DBName         string `mapstructure:"MONGODB_NAME"`
+	DBCollProduct  string `mapstructure:"MONGODB_COLLECTION_PRODUCT"`
+	DBCollCategory string `mapstructure:"MONGODB_COLLECTION_CATEGORY"`
 
 	EnableLogger bool `mapstructure:"ENABLE_LOGGER"`
 }
