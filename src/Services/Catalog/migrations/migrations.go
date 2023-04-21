@@ -24,25 +24,23 @@ func dropCollections(db *mongo.Database, ctx context.Context) error {
 }
 
 func initCollections(db *mongo.Database, ctx context.Context) error {
-
-	// Read data from JSON file
-	jsonFile, err := os.Open("products.json")
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("Successfully Opened products.json")
-	defer jsonFile.Close()
-
-	// Initialize data for Category
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-
-	var products []interface{}
-	if err := json.Unmarshal(byteValue, &products); err != nil {
-		return err
+	var err error
+	// Specify the collections to migrate
+	collections := map[string]MigrationHandler{
+		"product": migrateProduct,
+		//"category": migrateCategory,
+		// "inventory": migrateInventory,
 	}
 
-	productResult, err := db.Collection("category").InsertMany(ctx, products)
-	fmt.Printf("Inserted %v documents into product collection!\n", productResult)
+	// Migrate each collection
+	for name, handler := range collections {
+		collection := db.Collection(name)
+		err = handler(ctx, collection)
+		if err != nil {
+			log.Fatalf("Failed to migrate collection %s: %v", name, err)
+		}
+		fmt.Printf("Migrated collection %s\n", name)
+	}
 
 	return err
 }
@@ -122,8 +120,17 @@ func migrations(db *mongo.Database, ctx context.Context, coll string) {
 
 // migrateProduct migrates data for the product collection.
 func migrateProduct(ctx context.Context, collection *mongo.Collection) error {
+
+	// Get the current working directory
+	wd, err := os.Getwd()
+	if err != nil {
+		fmt.Println("Error getting working directory:", err)
+		return err
+	}
+	fmt.Println("Current working directory:", wd)
+
 	// Read the data from the JSON file
-	data, err := ioutil.ReadFile("products.json")
+	data, err := ioutil.ReadFile("product.json")
 	if err != nil {
 		return fmt.Errorf("Failed to read product data: %v", err)
 	}

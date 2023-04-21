@@ -68,3 +68,27 @@ Giải thích chi tiết về từng phần:
     README.md: Tài liệu hướng dẫn sử dụng cho ứng dụng.
 
     docker-compose.yml: File cấu hình docker-compose để khởi động ứng
+# Getting Started
+This is a overview for using on project
+### Build project
+1. Docker compose up
+```
+go build -o catalog-api.exe .\cmd\catalog-api\main.go
+```
+
+
+### Test project
+1. To run test at the specific component
+```
+go test -v .\test\migrations\migrations_test.go
+```
+
+2. To run test with the specific case test
+```
+go test -v .\test\migrations\migrations_test.go -run TestInitCollections
+```
+
+
+# Docker usage
+
+1. We also to use mongodb from community. Refer: [here](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-community-with-docker/)
