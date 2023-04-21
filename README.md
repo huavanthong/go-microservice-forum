@@ -30,6 +30,15 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
     - Communication between microservice. Refer: [here](https://techdozo.dev/grpc-for-microservices-communication/)
     - Traefik with gRPC. Refer: [here](https://doc.traefik.io/traefik/user-guides/grpc/)
     - What is Traefik. Refer: [here](https://www.devopsschool.com/blog/what-is-traefik-how-to-learn-traefik/)
+
+### Basket microsrevice
+Developing Basket microservice which includes:
+* REST API principles, CRUD operations.
+* Redis DB NoSQL database connection and containerization
+* Mongo DB database for storing customer's basket.
+* Implement Basket microservice using the principles of Clean Architecture, which emphasizes separation of concerns and modularization for creating maintainable and scalable software.
+* Swagger Open API implementation.
+* Dockerfile implementation.
 ### Email microservice
 * Project
     - Example project email using **RabbitMQ**. Refer: [here](https://github.com/savsgio/microservice-email)
