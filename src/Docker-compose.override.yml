@@ -1,0 +1,42 @@
+version: '3.4'
+
+services:
+  basketdb:
+    container_name: basketdb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGODB_LOCAL_URI: mongodb://root:password123@basketdb:27017
+    ports:
+      - "27017:27017"
+    expose:
+      - 27017
+    volumes:
+        - mongo_data_basket:/data/db
+
+  basketredis:
+    container_name: basketredis
+    restart: always  
+    environment:
+      REDIS_URL: basketredis:6379
+      REDIS_HOST: basketredis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81  
+    ports:
+      - "6379:6379"
+    expose:
+      - 6379
+    command: redis-server --save 60 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes: 
+      - redis_cache_basket:/data/redis
+
+  basket.api:
+    container_name: basket.api
+    depends_on:
+      - basketdb
+      - basketredis
+    ports:
+      - "8001:8001"
+    env_file:
+    - ./Services/Basket/internal/infrastructure/config/app.env

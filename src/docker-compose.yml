@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  basketdb:
+    image: mongo
+
+  basketredis:
+    image: redis:alpine
+
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basketapi
+    build:
+      context: .
+      dockerfile: Services/Basket/Dockerfile
+
+volumes:
+  mongo_data_basket:
+  redis_cache_basket:
