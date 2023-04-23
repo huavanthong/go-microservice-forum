@@ -51,7 +51,7 @@ Developing Basket microservice which includes:
 ### User microservice
 * Project
     - Example project user-microservice. Refer: [here](https://github.com/raycad/go-microservices)
-    - Architecture for user-microserivce. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#architecture)
+    - Architecture for user-microserivce. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/reference/user-api#architecture)
     - Perfect design for user-microservice, Refer: [here](https://github.com/wpcodevo/golang-mongodb-api/tree/golang-mongodb-reset-password)
 * Validator
     - Implement validator using go-playground. Refer: [here](https://github.com/go-playground/validator)
@@ -67,8 +67,8 @@ Developing Basket microservice which includes:
     - Implement authorize role with GIN framework. Refer: [here](https://github.com/gin-contrib/authz)
     - User Management Roles and Functions. Refer: [here](https://www.ibm.com/docs/en/strategicsm/10.1.1?topic=roles-user-management-functions)
 * Security
-    - Convert user's password in plain text to bcrypt. [here](https://github.com/huavanthong/microservice-golang/blob/master/user-api/security/bcrypt.go)
-    - Avoid SQL Injection. Refer: [here](https://github.com/huavanthong/microservice-golang/blob/master/user-api/security/bcrypt.go)
+    - Convert user's password in plain text to bcrypt. [here](https://github.com/huavanthong/microservice-golang/blob/master/reference/user-api/security/bcrypt.go)
+    - Avoid SQL Injection. Refer: [here](https://github.com/huavanthong/microservice-golang/blob/master/reference/user-api/security/bcrypt.go)
 * Database.
     - MongoDB
         - Design database for user-microservice. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#design-database-for-user-microservice)   
