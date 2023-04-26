@@ -52,14 +52,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Category"
+                                "$ref": "#/definitions/entities.Category"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -90,7 +90,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/payload.RequestCreateCategory"
+                            "$ref": "#/definitions/models.RequestCreateCategory"
                         }
                     }
                 ],
@@ -98,19 +98,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.GetCategorySuccess"
+                            "$ref": "#/definitions/models.GetCategorySuccess"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -147,19 +147,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.GetProductSuccess"
+                            "$ref": "#/definitions/models.GetCategorySuccess"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -191,19 +191,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.GetCategorySuccess"
+                            "$ref": "#/definitions/models.GetCategorySuccess"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -238,19 +238,19 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -279,7 +279,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/payload.RequestUpdateProduct"
+                            "$ref": "#/definitions/models.RequestUpdateCategory"
                         }
                     },
                     {
@@ -294,19 +294,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -354,14 +354,63 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Product"
+                                "$ref": "#/definitions/entities.Product"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "User create a product",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Create a product",
+                "parameters": [
+                    {
+                        "description": "New Product",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CreateProductRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetProductSuccess"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
+                        "schema": {
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -405,19 +454,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.GetProductSuccess"
+                            "$ref": "#/definitions/models.GetProductSuccess"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -461,19 +510,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.GetProductSuccess"
+                            "$ref": "#/definitions/models.GetProductSuccess"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -512,19 +561,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.GetProductSuccess"
+                            "$ref": "#/definitions/models.GetProductSuccess"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -559,19 +608,19 @@ const docTemplate = `{
                     "204": {
                         "description": "No Content",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -600,7 +649,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/payload.RequestUpdateProduct"
+                            "$ref": "#/definitions/models.RequestUpdateProduct"
                         }
                     },
                     {
@@ -615,70 +664,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     },
                     "502": {
                         "description": "Bad Gateway",
                         "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    }
-                }
-            }
-        },
-        "/products/{productType}": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "User create a product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "products"
-                ],
-                "summary": "Create a product",
-                "parameters": [
-                    {
-                        "description": "New Product",
-                        "name": "product",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/payload.RequestCreateProduct"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/payload.GetProductSuccess"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
-                        }
-                    },
-                    "502": {
-                        "description": "Bad Gateway",
-                        "schema": {
-                            "$ref": "#/definitions/payload.Response"
+                            "$ref": "#/definitions/models.Response"
                         }
                     }
                 }
@@ -686,27 +684,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.Brand": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Category": {
+        "entities.Category": {
             "type": "object",
             "required": [
                 "ccode",
@@ -746,78 +724,23 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Discount": {
-            "type": "object",
-            "properties": {
-                "active": {
-                    "type": "boolean"
-                },
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "discountpercent": {
-                    "type": "number"
-                },
-                "id": {
-                    "type": "string",
-                    "example": "5bbdadf782ebac06a695a8e7"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Inventory": {
-            "type": "object",
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string",
-                    "example": "5bbdadf782ebac06a695a8e7"
-                },
-                "quantity": {
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Product": {
+        "entities.Product": {
             "type": "object",
             "required": [
                 "brand",
                 "category",
                 "description",
-                "discount",
                 "imageFile",
-                "inventory",
                 "name",
-                "pcode",
                 "price",
-                "ptype",
                 "summary"
             ],
             "properties": {
                 "brand": {
-                    "$ref": "#/definitions/models.Brand"
+                    "type": "string"
                 },
                 "category": {
-                    "$ref": "#/definitions/models.Category"
+                    "type": "string"
                 },
                 "created_at": {
                     "type": "string"
@@ -829,9 +752,6 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Iphone 14 Pro Gold 256GB"
                 },
-                "discount": {
-                    "$ref": "#/definitions/models.Discount"
-                },
                 "id": {
                     "type": "string",
                     "example": "5bbdadf782ebac06a695a8e7"
@@ -840,29 +760,14 @@ const docTemplate = `{
                     "type": "string",
                     "example": "default.png"
                 },
-                "inventory": {
-                    "$ref": "#/definitions/models.Inventory"
-                },
                 "name": {
                     "type": "string",
                     "example": "Iphone 14 Pro"
-                },
-                "pcode": {
-                    "type": "string",
-                    "example": "p123456789"
                 },
                 "price": {
                     "type": "number",
                     "minimum": 0.01,
                     "example": 1400
-                },
-                "ptype": {
-                    "type": "string",
-                    "example": "phone"
-                },
-                "sku": {
-                    "type": "string",
-                    "example": "ABC-XYZ-OXY"
                 },
                 "summary": {
                     "type": "string",
@@ -873,7 +778,46 @@ const docTemplate = `{
                 }
             }
         },
-        "payload.GetCategorySuccess": {
+        "models.CreateProductRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "imageFile",
+                "name",
+                "price",
+                "summary"
+            ],
+            "properties": {
+                "brandid": {
+                    "type": "string"
+                },
+                "categoryid": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Iphone 14 Pro Gold 256GB"
+                },
+                "imageFile": {
+                    "type": "string",
+                    "example": "default.png"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Iphone 14 Pro"
+                },
+                "price": {
+                    "type": "number",
+                    "minimum": 0.01,
+                    "example": 1400
+                },
+                "summary": {
+                    "type": "string",
+                    "example": "Iphone 14 Pro Gold"
+                }
+            }
+        },
+        "models.GetCategorySuccess": {
             "type": "object",
             "properties": {
                 "code": {
@@ -881,7 +825,7 @@ const docTemplate = `{
                     "example": 201
                 },
                 "data": {
-                    "$ref": "#/definitions/models.Category"
+                    "$ref": "#/definitions/entities.Category"
                 },
                 "message": {
                     "type": "string",
@@ -893,7 +837,7 @@ const docTemplate = `{
                 }
             }
         },
-        "payload.GetProductSuccess": {
+        "models.GetProductSuccess": {
             "type": "object",
             "properties": {
                 "code": {
@@ -901,7 +845,7 @@ const docTemplate = `{
                     "example": 201
                 },
                 "data": {
-                    "$ref": "#/definitions/models.Product"
+                    "$ref": "#/definitions/entities.Product"
                 },
                 "message": {
                     "type": "string",
@@ -913,7 +857,7 @@ const docTemplate = `{
                 }
             }
         },
-        "payload.RequestCreateCategory": {
+        "models.RequestCreateCategory": {
             "type": "object",
             "required": [
                 "description",
@@ -934,53 +878,30 @@ const docTemplate = `{
                 }
             }
         },
-        "payload.RequestCreateProduct": {
+        "models.RequestUpdateCategory": {
             "type": "object",
             "required": [
-                "category",
                 "description",
-                "imageFile",
                 "name",
-                "price",
-                "producttype",
-                "summary"
+                "subcategory"
             ],
             "properties": {
-                "category": {
-                    "type": "string",
-                    "example": "dien thoai"
-                },
                 "description": {
                     "type": "string",
-                    "example": "Iphone 14 Pro Gold 256GB"
-                },
-                "imageFile": {
-                    "type": "string",
-                    "example": "default.png"
+                    "example": "products relalated to phone category"
                 },
                 "name": {
                     "type": "string",
-                    "example": "Iphone 14 Pro"
-                },
-                "price": {
-                    "type": "number",
-                    "minimum": 0.01,
-                    "example": 1400
-                },
-                "producttype": {
-                    "type": "string",
                     "example": "phone"
                 },
-                "summary": {
-                    "type": "string",
-                    "example": "Iphone 14 Pro Gold"
+                "subcategory": {
+                    "type": "string"
                 }
             }
         },
-        "payload.RequestUpdateProduct": {
+        "models.RequestUpdateProduct": {
             "type": "object",
             "required": [
-                "category",
                 "description",
                 "imageFile",
                 "name",
@@ -988,7 +909,10 @@ const docTemplate = `{
                 "summary"
             ],
             "properties": {
-                "category": {
+                "brandid": {
+                    "type": "string"
+                },
+                "categoryid": {
                     "type": "string"
                 },
                 "description": {
@@ -1014,7 +938,7 @@ const docTemplate = `{
                 }
             }
         },
-        "payload.Response": {
+        "models.Response": {
             "type": "object",
             "properties": {
                 "code": {
@@ -1037,8 +961,8 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:9090",
-	BasePath:         "/api/v3",
+	Host:             "localhost:8000",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "UserManagement Service API Document",
 	Description:      "List APIs of UserManagement Service",

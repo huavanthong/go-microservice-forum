@@ -251,11 +251,11 @@ func HandlerProduct(h gin.HandlerFunc, decors ...func(gin.HandlerFunc) gin.Handl
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param product body models.RequestCreateProduct true "New Product"
+// @Param product body models.CreateProductRequest true "New Product"
 // @Failure 404 {object} models.Response
 // @Failure 502 {object} models.Response
 // @Success 200 {object} models.GetProductSuccess
-// @Router /products/{productType} [post]
+// @Router /products [post]
 func (pc *CatalogHandler) AddProduct(ctx *gin.Context) {
 
 	// prepare a post request from ctx

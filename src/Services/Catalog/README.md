@@ -88,6 +88,21 @@ go test -v .\test\migrations\migrations_test.go
 go test -v .\test\migrations\migrations_test.go -run TestInitCollections
 ```
 
+### Swagger
+1. Install swag
+```
+go install github.com/swaggo/swag/cmd/swag@latest
+```
+
+2. Generate documents for swagger
+```
+swag init -g ./cmd/catalog-api/main.go --output docs
+```
+
+3. Access swagger on catalog microservice
+```
+http://localhost:8000/api/v1/swagger/index.html
+```
 
 # Docker usage
 

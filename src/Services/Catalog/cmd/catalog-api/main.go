@@ -14,6 +14,7 @@ import (
 
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/handlers"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/routers"
+
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/services"
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/infrastructure/configs"
@@ -72,7 +73,7 @@ func init() {
 	ctx = context.TODO()
 
 	// Connect to MongoDB
-	mongoconn := options.Client().ApplyURI(cfg.DBContainerUri)
+	mongoconn := options.Client().ApplyURI(cfg.DBLocalUri)
 	mongoclient, err := mongo.Connect(ctx, mongoconn)
 
 	if err != nil {
@@ -111,13 +112,6 @@ func init() {
 
 	// Initialize middleware
 	//authMiddleware := middleware.NewAuthMiddleware()
-
-	// Initialize router
-	router := gin.Default()
-
-	// Setup routes
-	routers.SetupCategoryRouter(router, categoryHandler)
-	routers.SetupProductRouter(router, catalogHandler)
 
 	// Default returns an Engine instance with the Logger and Recovery middleware already attached.
 	server = gin.Default()
@@ -162,6 +156,10 @@ func startGinServer(config configs.Config) {
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "Hello World"})
 	})
+
+	// Setup routes
+	routers.SetupProductRouter(router, catalogHandler)
+	routers.SetupCategoryRouter(router, categoryHandler)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 

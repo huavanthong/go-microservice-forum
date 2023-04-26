@@ -7,7 +7,7 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/handlers"
 )
 
-func SetupProductRouter(router *gin.Engine, catalogHandler handlers.CatalogHandler) {
+func SetupProductRouter(router *gin.RouterGroup, catalogHandler handlers.CatalogHandler) {
 	productRouter := router.Group("/products")
 	{
 		// productRouter.Use(middleware.MiddlewareValidateProduct())

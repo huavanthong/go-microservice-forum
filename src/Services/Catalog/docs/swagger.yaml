@@ -1,19 +1,6 @@
-basePath: /api/v3
+basePath: /api/v1
 definitions:
-  models.Brand:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        type: integer
-      name:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  models.Category:
+  entities.Category:
     properties:
       ccode:
         example: c1000
@@ -41,46 +28,12 @@ definitions:
     - ccode
     - name
     type: object
-  models.Discount:
-    properties:
-      active:
-        type: boolean
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      description:
-        type: string
-      discountpercent:
-        type: number
-      id:
-        example: 5bbdadf782ebac06a695a8e7
-        type: string
-      name:
-        type: string
-      updated_at:
-        type: string
-    type: object
-  models.Inventory:
-    properties:
-      created_at:
-        type: string
-      deleted_at:
-        type: string
-      id:
-        example: 5bbdadf782ebac06a695a8e7
-        type: string
-      quantity:
-        type: integer
-      updated_at:
-        type: string
-    type: object
-  models.Product:
+  entities.Product:
     properties:
       brand:
-        $ref: '#/definitions/models.Brand'
+        type: string
       category:
-        $ref: '#/definitions/models.Category'
+        type: string
       created_at:
         type: string
       deleted_at:
@@ -88,32 +41,19 @@ definitions:
       description:
         example: Iphone 14 Pro Gold 256GB
         type: string
-      discount:
-        $ref: '#/definitions/models.Discount'
       id:
         example: 5bbdadf782ebac06a695a8e7
         type: string
       imageFile:
         example: default.png
         type: string
-      inventory:
-        $ref: '#/definitions/models.Inventory'
       name:
         example: Iphone 14 Pro
-        type: string
-      pcode:
-        example: p123456789
         type: string
       price:
         example: 1400
         minimum: 0.01
         type: number
-      ptype:
-        example: phone
-        type: string
-      sku:
-        example: ABC-XYZ-OXY
-        type: string
       summary:
         example: Iphone 14 Pro Gold
         type: string
@@ -123,22 +63,47 @@ definitions:
     - brand
     - category
     - description
-    - discount
     - imageFile
-    - inventory
     - name
-    - pcode
     - price
-    - ptype
     - summary
     type: object
-  payload.GetCategorySuccess:
+  models.CreateProductRequest:
+    properties:
+      brandid:
+        type: string
+      categoryid:
+        type: string
+      description:
+        example: Iphone 14 Pro Gold 256GB
+        type: string
+      imageFile:
+        example: default.png
+        type: string
+      name:
+        example: Iphone 14 Pro
+        type: string
+      price:
+        example: 1400
+        minimum: 0.01
+        type: number
+      summary:
+        example: Iphone 14 Pro Gold
+        type: string
+    required:
+    - description
+    - imageFile
+    - name
+    - price
+    - summary
+    type: object
+  models.GetCategorySuccess:
     properties:
       code:
         example: 201
         type: integer
       data:
-        $ref: '#/definitions/models.Category'
+        $ref: '#/definitions/entities.Category'
       message:
         example: Get category success
         type: string
@@ -146,13 +111,13 @@ definitions:
         example: success
         type: string
     type: object
-  payload.GetProductSuccess:
+  models.GetProductSuccess:
     properties:
       code:
         example: 201
         type: integer
       data:
-        $ref: '#/definitions/models.Product'
+        $ref: '#/definitions/entities.Product'
       message:
         example: Get product success
         type: string
@@ -160,7 +125,7 @@ definitions:
         example: success
         type: string
     type: object
-  payload.RequestCreateCategory:
+  models.RequestCreateCategory:
     properties:
       description:
         example: products relalated to phone category
@@ -175,42 +140,26 @@ definitions:
     - name
     - subcategory
     type: object
-  payload.RequestCreateProduct:
+  models.RequestUpdateCategory:
     properties:
-      category:
-        example: dien thoai
-        type: string
       description:
-        example: Iphone 14 Pro Gold 256GB
-        type: string
-      imageFile:
-        example: default.png
+        example: products relalated to phone category
         type: string
       name:
-        example: Iphone 14 Pro
-        type: string
-      price:
-        example: 1400
-        minimum: 0.01
-        type: number
-      producttype:
         example: phone
         type: string
-      summary:
-        example: Iphone 14 Pro Gold
+      subcategory:
         type: string
     required:
-    - category
     - description
-    - imageFile
     - name
-    - price
-    - producttype
-    - summary
+    - subcategory
     type: object
-  payload.RequestUpdateProduct:
+  models.RequestUpdateProduct:
     properties:
-      category:
+      brandid:
+        type: string
+      categoryid:
         type: string
       description:
         example: Iphone 14 Pro Gold 256GB
@@ -229,14 +178,13 @@ definitions:
         example: Iphone 14 Pro Gold
         type: string
     required:
-    - category
     - description
     - imageFile
     - name
     - price
     - summary
     type: object
-  payload.Response:
+  models.Response:
     properties:
       code:
         example: 400
@@ -248,7 +196,7 @@ definitions:
         example: failed
         type: string
     type: object
-host: localhost:9090
+host: localhost:8000
 info:
   contact: {}
   description: List APIs of UserManagement Service
@@ -279,12 +227,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Category'
+              $ref: '#/definitions/entities.Category'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       summary: List all existing categories
       tags:
       - category
@@ -299,22 +247,22 @@ paths:
         name: category
         required: true
         schema:
-          $ref: '#/definitions/payload.RequestCreateCategory'
+          $ref: '#/definitions/models.RequestCreateCategory'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.GetCategorySuccess'
+            $ref: '#/definitions/models.GetCategorySuccess'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       security:
       - ApiKeyAuth: []
       summary: Create a new category
@@ -337,15 +285,15 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       security:
       - ApiKeyAuth: []
       summary: Delete a category by ID
@@ -367,15 +315,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.GetCategorySuccess'
+            $ref: '#/definitions/models.GetCategorySuccess'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       summary: Get an category by ID
       tags:
       - category
@@ -389,7 +337,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/payload.RequestUpdateProduct'
+          $ref: '#/definitions/models.RequestUpdateCategory'
       - description: Category ID
         in: path
         name: id
@@ -401,15 +349,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       security:
       - ApiKeyAuth: []
       summary: Update a category
@@ -432,15 +380,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.GetProductSuccess'
+            $ref: '#/definitions/models.GetCategorySuccess'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       security:
       - ApiKeyAuth: []
       summary: Get category by name
@@ -474,13 +422,44 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Product'
+              $ref: '#/definitions/entities.Product'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       summary: List all existing products
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: User create a product
+      parameters:
+      - description: New Product
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetProductSuccess'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Response'
+        "502":
+          description: Bad Gateway
+          schema:
+            $ref: '#/definitions/models.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: Create a product
       tags:
       - products
   /products/{id}:
@@ -500,15 +479,15 @@ paths:
         "204":
           description: No Content
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       security:
       - ApiKeyAuth: []
       summary: Delete a post by ID
@@ -535,15 +514,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.GetProductSuccess'
+            $ref: '#/definitions/models.GetProductSuccess'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       summary: Get a product by ID
       tags:
       - products
@@ -557,7 +536,7 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/payload.RequestUpdateProduct'
+          $ref: '#/definitions/models.RequestUpdateProduct'
       - description: Product ID
         in: path
         name: id
@@ -569,50 +548,18 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       security:
       - ApiKeyAuth: []
       summary: Update a product
-      tags:
-      - products
-  /products/{productType}:
-    post:
-      consumes:
-      - application/json
-      description: User create a product
-      parameters:
-      - description: New Product
-        in: body
-        name: product
-        required: true
-        schema:
-          $ref: '#/definitions/payload.RequestCreateProduct'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/payload.GetProductSuccess'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/payload.Response'
-        "502":
-          description: Bad Gateway
-          schema:
-            $ref: '#/definitions/payload.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: Create a product
       tags:
       - products
   /products/category/{category}:
@@ -637,15 +584,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.GetProductSuccess'
+            $ref: '#/definitions/models.GetProductSuccess'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       security:
       - ApiKeyAuth: []
       summary: Get product by Category
@@ -673,15 +620,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/payload.GetProductSuccess'
+            $ref: '#/definitions/models.GetProductSuccess'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
         "502":
           description: Bad Gateway
           schema:
-            $ref: '#/definitions/payload.Response'
+            $ref: '#/definitions/models.Response'
       security:
       - ApiKeyAuth: []
       summary: Get product by name

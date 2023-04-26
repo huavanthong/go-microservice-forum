@@ -11,9 +11,10 @@ Purpose:
 	catalog-worker có nhiệm vụ khởi tạo một worker để thực hiện các tác vụ bất đồng bộ, chẳng hạn như đọc các thông tin sản phẩm từ database
 	và tạo ra các thông tin liên quan để lưu trữ trong cache.
 */
-/*
+
 package main
 
+/*
 import (
 	"log"
 

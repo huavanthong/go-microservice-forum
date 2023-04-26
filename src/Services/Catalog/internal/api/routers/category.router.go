@@ -7,7 +7,7 @@ import (
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/api/handlers"
 )
 
-func SetupCategoryRouter(router *gin.Engine, categoryHandler handlers.CategoryHandler) {
+func SetupCategoryRouter(router *gin.RouterGroup, categoryHandler handlers.CategoryHandler) {
 	categoryRouter := router.Group("/categories")
 	{
 		categoryRouter.GET("/", categoryHandler.GetAllCategories)

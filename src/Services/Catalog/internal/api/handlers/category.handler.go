@@ -236,7 +236,7 @@ func (cc *CategoryHandler) AddCategory(ctx *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param product body models.RequestUpdateProduct true "Update post"
+// @Param product body models.RequestUpdateCategory true "Update post"
 // @Param id path string true "Category ID"
 // @Failure 404 {object} models.Response
 // @Failure 502 {object} models.Response
