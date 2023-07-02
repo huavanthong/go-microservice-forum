@@ -1,2 +1,9 @@
 name: Basket Microservice Docker Image
 
+on: 
+  push:
+    branches: [ "basket-service" ]
+    tags:
+      - "*.*.*"
+  pull_request:
+    branches: [ "master" ]
