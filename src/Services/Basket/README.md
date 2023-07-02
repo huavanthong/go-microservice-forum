@@ -1,4 +1,5 @@
 # Introduction
+Basket microservice is a component of a larger system that focuses on managing the functionality related to the shopping basket or cart. Implemented using the Go programming language, this microservice handles operations such as adding items to the basket, removing items, updating quantities, and retrieving basket information. It serves as a crucial part of e-commerce platforms or any application that involves shopping functionality. Leveraging the power and efficiency of Go, the Basket microservice provides a scalable and robust solution for managing customer shopping carts in a fast and reliable manner.
 
 # Project Structure
 ```lua
@@ -106,13 +107,28 @@ docker-compose.yml: File cấu hình docker-compose để khởi động ứng
 
 
 # Getting Started
-# Docker Compose
+## Overall
+Basket microservice includes 3 service:
+* **basketdb**: It is a MongoDB database for storing data on basket microservice.
+* **basketredis**: It is a Redis Caching for storing data in caching, help your data can access quickly.
+* **basket.api**: It is a backend server to implement RESTful API for basket microservice.
+## How to run basket microservice
+There are several ways to run the basket microservice for this project:
+1. **Docker Compose**: 
+    * You can run the microservice by utilizing Docker Compose. It allows you to combine all the services in a docker-compose file and run them together as a unified stack.
+    * More details: [Method 1: Docker Compose](#method-1-docker-compose)
+2. **Local Machine**: 
+    * In certain cases, if the basket API service fails, you might need to run MongoDB locally. This ensures that the necessary database is available for the microservice to function properly.
+    * More details: [Method 2: Local Machine](#method-2-local-machine)
+
+
+## Method 1: Docker Compose
 To rebuild image for testing
 ```
 docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
 ```
-
-## Basket service
+In case if you fail any microservice inside, you can build and run it by docker command.
+### Basket service
 Build basket microservice image:
 ```
 docker build -t basket-service .
@@ -125,9 +141,13 @@ docker run -p 8001:80 --env MONGODB_LOCAL_URI=mongodb://root:password123@basketd
 docker run -p 8080:8080 --env MONGODB_LOCAL_URI=mongodb://mongodb:27017/basketdb REDIS_URL=localhost:6379 basket-service
 ```
 
-## Redis 
+### Redis 
 
-## Running app on local
+## Method 2: Local Machine
+In case basket.api microservice fail, you need to debug and test on local machine, you can follow the below steps to conduct testing basket.api for local machine.  
+**Note:**
+    * Make sure basketdb and basketredis container running on docker image.
+### Build basket microservice in local machine
 1. Buidl app
 ```
 go build -o basket-api.exe .\cmd\basket-api\main.go
@@ -137,6 +157,8 @@ go build -o basket-api.exe .\cmd\basket-api\main.go
 ```
 ./basket-api.exe
 ```
+### Build MongoDB Database on local machine.
+
 
 ## Swagger
 1. Install swag
