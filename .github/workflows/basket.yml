@@ -29,3 +29,7 @@ jobs:
         with:
           ref: basket-service
 
+      - name: Set working directory
+        run: |
+          cd ./src/Services/Basket
+
