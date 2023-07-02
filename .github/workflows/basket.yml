@@ -32,9 +32,10 @@ jobs:
       - name: Set working directory
         run: |
           cd ./src/Services/Basket
+          ls -al
 
-      - name: Fetch required Go modules
-        run:  go mod download
+      # - name: Fetch required Go modules
+      #   run:  go mod download
 
       - name: Build
         run:  go build -v ./...
