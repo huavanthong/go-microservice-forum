@@ -1,0 +1,53 @@
+name: Basket Microservice Docker Image
+
+on: 
+  push:
+    branches: [ "basket-service" ]
+    tags:
+      - "*.*.*"
+  pull_request:
+    branches: [ "master" ]
+
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.17
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: basket-service
+
+      - name: Set working directory
+        run: |
+          cd ./src/Services/Basket
+
+      - name: Fetch required Go modules
+        run:  go mod download
+
+      - name: Build
+        run:  go build -v ./...
+
+      - name: Test
+        run: go test -v ./...
+
+      - name: Build and Push Docker Image
+        id:   docker_build
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
