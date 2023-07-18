@@ -35,11 +35,12 @@ jobs:
           cd ./src/Services/Basket
           ls -al
 
-      # - name: Fetch required Go modules
-      #   run:  go mod download
+      - name: Fetch required Go modules
+        run:  go mod download
 
       - name: Build
-        run:  go build -o basket-api .\cmd\basket-api\main.go
+        run:
+          go build -o basket-api .\cmd\basket-api\main.go
 
       - name: Test
         run: go test -v ./...
@@ -79,8 +80,8 @@ jobs:
           cd ./src/Services/Basket
           dir
 
-      # - name: Fetch required Go modules
-      #   run:  go mod download
+      - name: Fetch required Go modules
+        run:  go mod download
 
       - name: Build
         run:  go build -o basket-api.exe .\cmd\basket-api\main.go
