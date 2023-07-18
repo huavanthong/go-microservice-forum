@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
+	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/repositories"
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/interfaces/persistence"
-	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/repositories"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 )
