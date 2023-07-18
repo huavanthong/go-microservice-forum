@@ -1,8 +1,8 @@
 # Table of Content
-1. [Introduction](#introduction)
-2. [Project Structure](#project-structure)
-3. [Architecture overall](#architecture-overall)
-4. [Getting Started](#getting-started)
+* [Introduction](#introduction)
+* [Project Structure](#project-structure)
+* [Architecture overall](#architecture-overall)
+* [Getting Started](#getting-started)
 
 ## Introduction
 Basket microservice is a component of a larger system that focuses on managing the functionality related to the shopping basket or cart.  
