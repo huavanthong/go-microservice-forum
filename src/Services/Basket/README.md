@@ -1,7 +1,19 @@
-# Introduction
-Basket microservice is a component of a larger system that focuses on managing the functionality related to the shopping basket or cart. Implemented using the Go programming language, this microservice handles operations such as adding items to the basket, removing items, updating quantities, and retrieving basket information. It serves as a crucial part of e-commerce platforms or any application that involves shopping functionality. Leveraging the power and efficiency of Go, the Basket microservice provides a scalable and robust solution for managing customer shopping carts in a fast and reliable manner.
+# Table of Content
+1. [Introduction](#introduction)
+2. [Project Structure](#project-structure)
+3. [Architecture overall](#architecture-overall)
+4. [Getting Started](#getting-started)
 
-# Project Structure
+## Introduction
+Basket microservice is a component of a larger system that focuses on managing the functionality related to the shopping basket or cart.  
+Implemented using the Go programming language, this microservice handles operations such as:
+* Adding items to the basket, 
+* Removing items, 
+* Updating quantities, 
+* Retrieving basket information. 
+It serves as a crucial part of e-commerce platforms or any application that involves shopping functionality. Leveraging the power and efficiency of Go, the Basket microservice provides a scalable and robust solution for managing customer shopping carts in a fast and reliable manner.
+
+## Project Structure
 ```lua
 .
 ├── cmd
@@ -68,51 +80,34 @@ Explain project structure:
 
 * internal/: Folder chính của project, chứa toàn bộ mã nguồn của project, được chia thành các lớp và module theo kiến trúc Clean Architecture.
 
-** domain/: Chứa các thành phần của lớp domain trong kiến trúc DDD, bao gồm các entities, repositories, services, và value objects.
-    
-    *** entities: định nghĩa các struct tượng trưng cho các đối tượng trong domain.
+* domain/: Chứa các thành phần của lớp domain trong kiến trúc DDD, bao gồm các entities, repositories, services, và value objects.
+* entities: định nghĩa các struct tượng trưng cho các đối tượng trong domain.
+* repositories: chứa các interface và implementation của repository pattern, định nghĩa các phương thức để truy vấn và lưu trữ dữ liệu của domain.
+* services: chứa các business logic của domain, tương tác với các repositories để thực hiện các thao tác CRUD và xử lý các luồng logic phức tạp hơn.
 
-    *** repositories: chứa các interface và implementation của repository pattern, định nghĩa các phương thức để truy vấn và lưu trữ dữ liệu của domain.
+* infrastructure/: Chứa các phần mềm và công nghệ cơ bản cho project, như cấu hình, logging, database, cache, messaging...
+* config: chứa cấu hình của ứng dụng, đọc và parse từ file config.yaml để sử dụng trong runtime.
+* database: chứa module cho database, có thể là SQL, NoSQL hay Graph Database, đi kèm với đó là các migration script để khởi tạo schema và seed data cho database.
+* logging: chứa module cho logging, cung cấp các hàm log.Error(), log.Warning(), log.Info() để ghi lại các thông tin và lỗi trong quá trình chạy ứng dụng.
+* persistence: chứa các implementation cho các interface của repository pattern, xử lý các thao tác lưu trữ dữ liệu với các công nghệ khác nhau, như MongoDB hay Redis.
 
-    *** services: chứa các business logic của domain, tương tác với các repositories để thực hiện các thao tác CRUD và xử lý các luồng logic phức tạp hơn.
+* interfaces/: chứa các API endpoints và web server, tương tác với services để xử lý các request và response.
 
-** infrastructure/: Chứa các phần mềm và công nghệ cơ bản cho project, như cấu hình, logging, database, cache, messaging...
+* api: chứa các file controller và middleware cho RESTful API, định nghĩa các endpoint và xử lý các input và output.
 
-    *** config: chứa cấu hình của ứng dụng, đọc và parse từ file config.yaml để sử dụng trong runtime.
-
-    *** database: chứa module cho database, có thể là SQL, NoSQL hay Graph Database, đi kèm với đó là các migration script để khởi tạo schema và seed data cho database.
-
-    *** logging: chứa module cho logging, cung cấp các hàm log.Error(), log.Warning(), log.Info() để ghi lại các thông tin và lỗi trong quá trình chạy ứng dụng.
-
-    *** persistence: chứa các implementation cho các interface của repository pattern, xử lý các thao tác lưu trữ dữ liệu với các công nghệ khác nhau, như MongoDB hay Redis.
-
-** interfaces/: chứa các API endpoints và web server, tương tác với services để xử lý các request và response.
-
-    *** api: chứa các file controller và middleware cho RESTful API, định nghĩa các endpoint và xử lý các input và output.
-
-        **** controllers:
-
-    *** persistence: chứa các interface cho repository pattern, làm trung gian giữa services và các implementation của persistence.
-
-
-** utils/: Chứa các hàm tiện ích cho ứng dụng.
-
+* controllers:
+* persistence: chứa các interface cho repository pattern, làm trung gian giữa services và các implementation của persistence.
+* utils/: Chứa các hàm tiện ích cho ứng dụng.
 * test/: Thư mục chứa các file liên quan đến việc kiểm thử ứng dụng.
-
-Makefile: File Makefile chứa các target để dễ dàng build và triển khai ứng dụng.
-
-README.md: Tài liệu hướng dẫn sử dụng cho ứng dụng.
-
-docker-compose.yml: File cấu hình docker-compose để khởi động ứng
-
-
-# Getting Started
-## Overall
+* Makefile: File Makefile chứa các target để dễ dàng build và triển khai ứng dụng.
+* README.md: Tài liệu hướng dẫn sử dụng cho ứng dụng.
+* docker-compose.yml: File cấu hình docker-compose để khởi động ứng
+## Architecture overall
 Basket microservice includes 3 service:
 * **basketdb**: It is a MongoDB database for storing data on basket microservice.
 * **basketredis**: It is a Redis Caching for storing data in caching, help your data can access quickly.
 * **basket.api**: It is a backend server to implement RESTful API for basket microservice.
-## How to run basket microservice
+## Getting Started
 There are several ways to run the basket microservice for this project:
 1. **Docker Compose**: 
     * You can run the microservice by utilizing Docker Compose. It allows you to combine all the services in a docker-compose file and run them together as a unified stack.
@@ -122,13 +117,13 @@ There are several ways to run the basket microservice for this project:
     * More details: [Method 2: Local Machine](#method-2-local-machine)
 
 
-## Method 1: Docker Compose
+### Method 1: Docker Compose
 To rebuild image for testing
 ```
 docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
 ```
 In case if you fail any microservice inside, you can build and run it by docker command.
-### Basket service
+#### Basket service
 Build basket microservice image:
 ```
 docker build -t basket-service .
@@ -140,10 +135,7 @@ docker run -p 8001:80 --env MONGODB_LOCAL_URI=mongodb://root:password123@basketd
 
 docker run -p 8080:8080 --env MONGODB_LOCAL_URI=mongodb://mongodb:27017/basketdb REDIS_URL=localhost:6379 basket-service
 ```
-
-### Redis 
-
-## Method 2: Local Machine
+### Method 2: Local Machine
 In case basket.api microservice fail, you need to debug and test on local machine, you can follow the below steps to conduct testing basket.api for local machine.  
 **Note:**
     * Make sure basketdb and basketredis container running on docker image.
@@ -158,6 +150,15 @@ go build -o basket-api.exe .\cmd\basket-api\main.go
 ./basket-api.exe
 ```
 ### Build MongoDB Database on local machine.
+Doing later
+#### Redis 
+Doing later
+
+## Testing
+To build test at the specific component
+```
+go test -v .\test\internal\domain\repositories\Basket.repository_test.go
+```
 
 
 ## Swagger
