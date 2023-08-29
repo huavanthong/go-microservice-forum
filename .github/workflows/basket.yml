@@ -12,7 +12,7 @@ on:
     branches: [ "master" ]
 
 env:
-  GH_TOKEN: ${{ github.token }}
+  GH_TOKEN: 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
 
 jobs:
   build-linux:
