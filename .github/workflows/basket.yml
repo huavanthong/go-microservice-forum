@@ -5,12 +5,15 @@ on:
     branches: [ "basket-service" ]
     tags:
       - "*.*.*"
+      
   pull_request:
     types:
       - opened
       - synchronize
     branches: [ "master" ]
 
+  repository_dispatch:
+  
 env:
   GH_TOKEN: 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
 
