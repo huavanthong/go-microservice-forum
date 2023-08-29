@@ -6,6 +6,9 @@ on:
     tags:
       - "*.*.*"
   pull_request:
+    types:
+      - opened
+      - synchronize
     branches: [ "master" ]
 
 
@@ -73,7 +76,7 @@ jobs:
       - name: Download logs
         run: |
           RUN_ID=${GITHUB_RUN_ID}
-          gh run download $RUN_ID --log
+          gh run download $RUN_ID
 
   build-windows:
     name: Build Basket Window
@@ -124,5 +127,5 @@ jobs:
     steps:
       - name: Download logs
         run: |
-          RUN_ID=${GITHUB_RUN_ID}
-          gh run download $RUN_ID --log
+          SET RUN_ID=%GITHUB_RUN_ID%
+          gh run download %RUN_ID%
