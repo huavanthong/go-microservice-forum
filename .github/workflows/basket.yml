@@ -11,6 +11,8 @@ on:
       - synchronize
     branches: [ "master" ]
 
+env:
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   build-linux:
