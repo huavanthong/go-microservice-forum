@@ -67,7 +67,13 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-
+  download-logs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download logs
+        run: |
+          RUN_ID=${GITHUB_RUN_ID}
+          gh run download $RUN_ID --log
 
   build-windows:
     name: Build Basket Window
@@ -112,3 +118,11 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+      
+  download-logs-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Download logs
+        run: |
+          RUN_ID=${GITHUB_RUN_ID}
+          gh run download $RUN_ID --log
