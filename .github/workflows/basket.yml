@@ -1,16 +1,25 @@
-name: Basket Microservice Docker Image
+name: workflow_02
 
 on: 
   push:
     branches: [ "basket-service" ]
     tags:
       - "*.*.*"
+      
   pull_request:
+    types:
+      - opened
+      - synchronize
     branches: [ "master" ]
 
+  repository_dispatch:
+    types: [workflow_02]
+env:
+  GH_TOKEN: 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
 
 jobs:
-  release:
+  build-linux:
+    name: Build Basket Linux
     runs-on: ubuntu-latest
     steps:
       - name: Login to Docker Hub
@@ -34,11 +43,24 @@ jobs:
           cd ./src/Services/Basket
           ls -al
 
-      # - name: Fetch required Go modules
-      #   run:  go mod download
+          # Save log to a file
+          echo "${{ steps.step_name.outputs.result }}" > mylog.txt
+          ls -al
+          echo $PWD
+          cat mylog.txt
+
+      - name: Upload Log Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: log-artifact
+          path: ${{ runner.workspace }}/microservice-golang/src/Services/Basket/mylog.txt
+
+      - name: Fetch required Go modules
+        run:  go mod download
 
       - name: Build
-        run:  go build -v ./...
+        run:
+          go build -o basket-api .\cmd\basket-api\main.go
 
       - name: Test
         run: go test -v ./...
@@ -52,3 +74,63 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+  download-logs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download logs
+        run: |
+          RUN_ID=${GITHUB_RUN_ID}
+          gh run download $RUN_ID
+
+  build-windows:
+    name: Build Basket Window
+    runs-on: windows-latest
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+      - name: Install Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.17
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: basket-service
+
+      - name: Set working directory
+        run: |
+          cd ./src/Services/Basket
+          dir
+
+      - name: Fetch required Go modules
+        run:  go mod download
+
+      - name: Build
+        run:  go build -o basket-api.exe .\cmd\basket-api\main.go
+
+      - name: Test
+        run: go test -v .\test\internal\domain\repositories\Basket.repository_test.go
+
+      - name: Build and Push Docker Image
+        id:   docker_build
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+      
+  download-logs-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Download logs
+        run: |
+          SET RUN_ID=%GITHUB_RUN_ID%
+          gh run download %RUN_ID%
