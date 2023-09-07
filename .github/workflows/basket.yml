@@ -1,4 +1,4 @@
-name: Basket Microservice Docker Image
+name: workflow_02
 
 on: 
   push:
@@ -13,7 +13,7 @@ on:
     branches: [ "master" ]
 
   repository_dispatch:
-  
+    types: [workflow_02]
 env:
   GH_TOKEN: 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
 
