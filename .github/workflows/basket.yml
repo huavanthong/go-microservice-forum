@@ -13,6 +13,8 @@ on:
     branches: [ "master" ]
 
   repository_dispatch:
+    types:
+      - Trigger Workflow
 
 env:
   GH_TOKEN: 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
@@ -28,11 +30,13 @@ jobs:
           cat $GITHUB_EVENT_PATH
 
       - name: Extract Data
+        if: github.event.action == 'Trigger Workflow'
         run: |
+          echo "This step runs when 'Trigger Workflow' is dispatched"
           # Trích xuất giá trị "repository" từ JSON payload
           repository=$(jq -r .client_payload.repository $GITHUB_EVENT_PATH)
           echo "Repository: $repository"
-          
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
