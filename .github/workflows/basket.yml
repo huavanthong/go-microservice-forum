@@ -50,10 +50,10 @@ jobs:
     needs: trigger-microservice
     if: ${{ ! failure() && ! cancelled() }}
     steps:
-      - env:
+      - run: |
           REPOSITORY: ${{needs.trigger-microservice.outputs.repository}}
           PULL_MERGE_BRANCH: ${{needs.trigger-microservice.outputs.branch}}
-        run: echo "$OUTPUT1 $OUTPUT2"
+          echo "$REPOSITORY $PULL_MERGE_BRANCH"
 
       - name: Display Event Data
         run: |
