@@ -106,7 +106,7 @@ jobs:
 
   download-logs:
     runs-on: ubuntu-latest
-    need: build-linux
+    needs: build-linux
     steps:
       - name: Download logs
         run: |
