@@ -35,8 +35,8 @@ jobs:
           # Trích xuất giá trị "repository" từ JSON payload
           repository=$(jq -r .client_payload.repository $GITHUB_EVENT_PATH)
           branch=$(jq -r .client_payload.branch $GITHUB_EVENT_PATH)
-          echo "Repository: $repository" > output.txt
-          echo "Branch: $branch" >> output.txt
+          echo "REPOSITORY=$repository" >> $GITHUB_ENV
+          echo "PULL_MERGE_BRANCH=$branch" >> $GITHUB_ENV
           ls -la
 
   build-linux:
@@ -48,7 +48,8 @@ jobs:
         run: |
           echo "Event data:"
           cat $GITHUB_EVENT_PATH
-
+          echo "Output from Extract Data: ${{ env.REPOSITORY}}"
+          echo "Output from Extract Data: ${{ env.PULL_MERGE_BRANCH}}"
      
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -116,6 +117,7 @@ jobs:
   build-windows:
     name: Build Basket Window
     runs-on: windows-latest
+    needs: trigger-microservice
     steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
