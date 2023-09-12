@@ -26,14 +26,15 @@ jobs:
     id: extract_data
     if: github.event.action == 'Trigger Workflow'
     steps:
-      run: |
-        echo "This step runs when 'Trigger Workflow' is dispatched"
-        # Trích xuất giá trị "repository" từ JSON payload
-        repository=$(jq -r .client_payload.repository $GITHUB_EVENT_PATH)
-        branch=$(jq -r .client_payload.branch $GITHUB_EVENT_PATH)
-        echo "Repository: $repository" > output.txt
-        echo "Branch: $branch" >> output.txt
-        ls -la
+      - name: Extract Data
+        run: |
+          echo "This step runs when 'Trigger Workflow' is dispatched"
+          # Trích xuất giá trị "repository" từ JSON payload
+          repository=$(jq -r .client_payload.repository $GITHUB_EVENT_PATH)
+          branch=$(jq -r .client_payload.branch $GITHUB_EVENT_PATH)
+          echo "Repository: $repository" > output.txt
+          echo "Branch: $branch" >> output.txt
+          ls -la
 
   build-linux:
     name: Build Basket Linux
