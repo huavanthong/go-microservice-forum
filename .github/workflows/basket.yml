@@ -53,6 +53,7 @@ jobs:
       - env:
           REPOSITORY: ${{needs.trigger-microservice.outputs.repository}}
           PULL_MERGE_BRANCH: ${{needs.trigger-microservice.outputs.branch}}
+        run: echo "$OUTPUT1 $OUTPUT2"
 
       - name: Display Event Data
         run: |
