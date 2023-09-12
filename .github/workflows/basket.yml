@@ -27,6 +27,9 @@ jobs:
     id: extract_data
     if: github.event.action == 'Trigger Workflow'
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        
       - name: Extract Data
         run: |
           echo "This step runs when 'Trigger Workflow' is dispatched"
