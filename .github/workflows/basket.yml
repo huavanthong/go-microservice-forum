@@ -2,7 +2,7 @@ name: Microservice Golang
 
 on: 
   push:
-    branches: [ "basket-service", "master" ]
+    branches: [ "basket-service"]
     tags:
       - "*.*.*"
       
@@ -40,7 +40,7 @@ jobs:
           repository=$(jq -r .client_payload.repository $GITHUB_EVENT_PATH)
           branch=$(jq -r .client_payload.branch $GITHUB_EVENT_PATH)
           echo "Geting value: repository: $repository and branch: $branch"
-          echo "REPOSITORY=$repository"  >> "$GITHUB_OUTPUT"
+          echo "REPOSITORY=${repository#huavanthong}"  >> "$GITHUB_OUTPUT"
           echo "PULL_MERGE_BRANCH=$branch"  >> "$GITHUB_OUTPUT"
           ls -la
 
