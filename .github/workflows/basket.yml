@@ -26,8 +26,8 @@ jobs:
     name: Extract Data
     if: github.event.action == 'Trigger Workflow'
     outputs:
-      repository: ${{ steps.step1.outputs.REPOSITORY }}
-      branch: ${{ steps.step2.outputs.PULL_MERGE_BRANCH }}
+      repository: ${{ steps.extract_data.outputs.REPOSITORY }}
+      branch: ${{ steps.extract_data.outputs.PULL_MERGE_BRANCH }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
