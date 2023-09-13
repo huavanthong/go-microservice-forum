@@ -50,13 +50,6 @@ jobs:
     needs: trigger-microservice
     if: ${{ ! failure() && ! cancelled() }}
     steps:
-      - run: |
-          REPOSITORY="${{needs.trigger-microservice.outputs.repository}}"
-          PULL_MERGE_BRANCH="${{needs.trigger-microservice.outputs.branch}}"
-          echo "$REPOSITORY $PULL_MERGE_BRANCH"
-          chmod +x update_repos.sh
-          ./update_repos.sh
-
       - name: Display Event Data
         run: |
           echo "Event data:"
@@ -82,6 +75,12 @@ jobs:
 
       - name: Set working directory
         run: |
+          REPOSITORY="${{needs.trigger-microservice.outputs.repository}}"
+          PULL_MERGE_BRANCH="${{needs.trigger-microservice.outputs.branch}}"
+          echo "$REPOSITORY $PULL_MERGE_BRANCH"
+          chmod +x update_repos.sh
+          ./update_repos.sh
+
           cd ./src/Services/Basket
           ls -al
           # Cat output file
