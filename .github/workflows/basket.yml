@@ -44,6 +44,14 @@ jobs:
           echo "PULL_MERGE_BRANCH=$branch"  >> "$GITHUB_OUTPUT"
           ls -la
 
+      - name: Wait for Repository B Pipeline
+        id: wait-for-pipeline
+        uses: actions/wait-for-pipeline@v1
+        with:
+          repository: huavanthong/CircleCI  # Thay thế bằng thông tin Repository B
+          ref: main  # Thay thế bằng nhánh bạn muốn kiểm tra
+          access-token: ${{ secrets.GITHUB_TOKEN }}
+        
   build-linux:
     name: Build Basket Linux
     runs-on: ubuntu-latest
