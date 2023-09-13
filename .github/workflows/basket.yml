@@ -54,6 +54,8 @@ jobs:
           REPOSITORY="${{needs.trigger-microservice.outputs.repository}}"
           PULL_MERGE_BRANCH="${{needs.trigger-microservice.outputs.branch}}"
           echo "$REPOSITORY $PULL_MERGE_BRANCH"
+          chmod +x update_repos.sh
+          ./update_repos.sh
 
       - name: Display Event Data
         run: |
