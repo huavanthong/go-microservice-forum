@@ -75,6 +75,7 @@ jobs:
 
       - name: Set working directory
         run: |
+          ls -al
           REPOSITORY="${{needs.trigger-microservice.outputs.repository}}"
           PULL_MERGE_BRANCH="${{needs.trigger-microservice.outputs.branch}}"
           echo "$REPOSITORY $PULL_MERGE_BRANCH"
