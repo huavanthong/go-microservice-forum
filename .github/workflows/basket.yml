@@ -2,7 +2,7 @@ name: Microservice Golang
 
 on: 
   push:
-    branches: [ "basket-service"]
+    branches: [ "basket-service" , "master" ]
     tags:
       - "*.*.*"
       
