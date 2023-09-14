@@ -133,6 +133,9 @@ jobs:
     needs: [ build-linux , build-windows ]
     if: always() 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
       - name: Download logs
         run: |
           RUN_ID=${GITHUB_RUN_ID}
@@ -200,6 +203,9 @@ jobs:
     runs-on: windows-latest
     needs: build-windows
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Download logs
         run: |
           SET RUN_ID=%GITHUB_RUN_ID%
