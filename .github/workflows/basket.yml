@@ -149,8 +149,9 @@ jobs:
           RUN_ID=${GITHUB_RUN_ID}
           echo "Job ID from job1: $RUN_ID"
 
-          jobs=$(gh api repos/huavanthong/microservice-golang/actions/runs/6146222982/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | {name, id}')
+          gh api repos/huavanthong/microservice-golang/actions/runs/$RUN_ID/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | {name, id}' > job_id.txt
           
+          jobs=$(cat job_id.txt)
           echo "Check jobs id: $jobs"
 
           for job in $jobs; do
