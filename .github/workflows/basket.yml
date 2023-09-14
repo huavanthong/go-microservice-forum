@@ -133,7 +133,19 @@ jobs:
       - name: Download logs
         run: |
           RUN_ID=${GITHUB_RUN_ID}
-          gh run download $RUN_ID
+          echo "Job ID from job1: $JOB1_JOB_ID"
+
+          jobs=$(gh api repos/huavanthong/microservice-golang/actions/runs/6146222982/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | {name, id}')
+          
+          for job in $jobs; do
+            name=$(echo $job | jq -r '.name')
+            id=$(echo $job | jq -r '.id')
+            echo "Job Name: $name"
+            echo "Job ID: $id"
+            gh run view $RUN_ID --job $id --log >> new_log.txt
+          done
+
+          cat new_log.txt
 
   build-windows:
     name: Build Basket Window
