@@ -149,25 +149,30 @@ jobs:
           RUN_ID=${GITHUB_RUN_ID}
           echo "Job ID from job1: $RUN_ID"
 
-          gh api repos/huavanthong/microservice-golang/actions/runs/$RUN_ID/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | {name, id}' > job_id.txt
+          gh api repos/huavanthong/microservice-golang/actions/runs/$RUN_ID/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | {id}' > job_id.txt
           
           jobs=$(cat job_id.txt)
           echo "Check jobs id: $jobs"
 
           echo "Start"
-          
+
           name=$(echo $job | jq -r '.name')
           id=$(echo $job | jq -r '.id')
           echo "Job Name: $name"
           echo "Job ID: $id"
 
-          for job in $jobs; do
-            name=$(echo $job | jq -r '.name')
-            id=$(echo $job | jq -r '.id')
-            echo "Job Name: $name"
-            echo "Job ID: $id"
-            gh run view $RUN_ID --job $id --log 
+          for id in $job_ids; do
+            echo "Processing job ID: $id"
+            gh run view $RUN_ID --job $id --log > new_log.txt
           done
+          
+          # for job in $jobs; do
+          #   name=$(echo $job | jq -r '.name')
+          #   id=$(echo $job | jq -r '.id')
+          #   echo "Job Name: $name"
+          #   echo "Job ID: $id"
+          #   gh run view $RUN_ID --job $id --log 
+          # done
 
           cat new_log.txt
 
