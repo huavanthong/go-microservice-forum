@@ -151,15 +151,8 @@ jobs:
 
           gh api repos/huavanthong/microservice-golang/actions/runs/$RUN_ID/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | .id' > job_id.txt
           
-          jobs=$(cat job_id.txt)
-          echo "Check jobs id: $jobs"
-
-          echo "Start"
-
-          name=$(echo $job | jq -r '.name')
-          id=$(echo $job | jq -r '.id')
-          echo "Job Name: $name"
-          echo "Job ID: $id"
+          job_ids=$(cat job_id.txt)
+          echo "Check jobs id: $job_ids"
 
           for id in $job_ids; do
             echo "Processing job ID: $id"
