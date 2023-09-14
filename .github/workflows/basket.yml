@@ -20,7 +20,7 @@ on:
       - Trigger Workflow
 
 env:
-  GH_TOKEN: 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
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   trigger-microservice:
