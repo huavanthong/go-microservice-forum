@@ -149,7 +149,7 @@ jobs:
           RUN_ID=${GITHUB_RUN_ID}
           echo "Job ID from job1: $RUN_ID"
 
-          gh api repos/huavanthong/microservice-golang/actions/runs/$RUN_ID/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | {id}' > job_id.txt
+          gh api repos/huavanthong/microservice-golang/actions/runs/$RUN_ID/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | .id' > job_id.txt
           
           jobs=$(cat job_id.txt)
           echo "Check jobs id: $jobs"
