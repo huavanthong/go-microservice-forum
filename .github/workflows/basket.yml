@@ -143,14 +143,16 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
           sudo apt-get update
           sudo apt-get install gh
-          
+
       - name: Download logs
         run: |
           RUN_ID=${GITHUB_RUN_ID}
-          echo "Job ID from job1: $JOB1_JOB_ID"
+          echo "Job ID from job1: $RUN_ID"
 
           jobs=$(gh api repos/huavanthong/microservice-golang/actions/runs/6146222982/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | {name, id}')
           
+          echo "Check jobs id: $jobs"
+
           for job in $jobs; do
             name=$(echo $job | jq -r '.name')
             id=$(echo $job | jq -r '.id')
