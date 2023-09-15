@@ -203,7 +203,17 @@ jobs:
         run:  go build -o basket-api.exe .\cmd\basket-api\main.go
 
       - name: Test
-        run: go test -v .\test\internal\domain\repositories\Basket.repository_test.go
+        run: |
+          go test -v .\test\internal\domain\repositories\Basket.repository_test.go > result.txt
+          mkdir logfile
+          mv result.txt
+      
+      - name: Upload test result as artifact
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: log-result
+          path: ${{ runner.workspace }}/**/*/logfile/*
 
       - name: Build and Push Docker Image
         id:   docker_build
