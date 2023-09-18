@@ -116,7 +116,8 @@ jobs:
           go build -o basket-api .\cmd\basket-api\main.go
 
       - name: Test
-        run: go test -v ./...
+        run: |
+          go test -v ./...
 
       - name: Build and Push Docker Image
         id:   docker_build
@@ -193,6 +194,14 @@ jobs:
 
       - name: Set working directory
         run: |
+          python hello.py 2>&1 | tee output.txt
+
+          set /a "exit_code=%errorlevel%"
+          
+          if !exit_code! equ -1 (
+              exit /b 1
+          )
+
           cd ./src/Services/Basket
           dir
 
