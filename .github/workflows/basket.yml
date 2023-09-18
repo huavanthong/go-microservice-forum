@@ -199,7 +199,7 @@ jobs:
 
           python hello.py 2>&1 | tee output.txt
 
-          set /a "exit_code=%errorlevel%"
+          set "exit_code=%errorlevel%"
           
           echo %exit_code%
 
