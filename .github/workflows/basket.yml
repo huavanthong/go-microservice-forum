@@ -197,7 +197,7 @@ jobs:
         run: |
           dir
 
-          python hello.py 2>&1 | tee output.txt
+          python hello.py 2>&1 output.txt
 
           set "exit_code=%errorlevel%"
           
