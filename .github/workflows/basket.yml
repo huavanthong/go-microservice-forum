@@ -198,7 +198,8 @@ jobs:
 
           set /a "exit_code=%errorlevel%"
           
-          if %exit_code% equ -1 (
+          if %exit_code% == 1 (
+              echo " HELLLO4"
               exit /b 1
           )
 
