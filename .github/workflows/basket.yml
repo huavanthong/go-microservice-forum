@@ -190,13 +190,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          ref: basket-service
+          ref: master
 
       - name: Set working directory
         shell: cmd
         run: |
           dir
-          
+
           python hello.py 2>&1 | tee output.txt
 
           set /a "exit_code=%errorlevel%"
