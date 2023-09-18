@@ -193,6 +193,7 @@ jobs:
           ref: basket-service
 
       - name: Set working directory
+        shell: cmd
         run: |
           python hello.py 2>&1 | tee output.txt
 
