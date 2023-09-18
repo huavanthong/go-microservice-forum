@@ -31,7 +31,7 @@ except Exception as ex:
 
 
 print("error")
-sys.exit(-1)
+sys.exit(1)
    
 # Đóng tệp tin
 # sys.stdout.close()
