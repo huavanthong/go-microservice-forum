@@ -47,7 +47,7 @@ if [ -n "$REPOSITORY"  ] && [ -n "$PULL_MERGE_BRANCH" ]; then
     	errormsg "Repository received from request not found in '$CONFIG_FILE'"
 	else
 		sed -i "s,$REPOSITORY=.*,$REPOSITORY=$PULL_MERGE_BRANCH," $CONFIG_FILE
-		echo -e "${COL_GREEN}# Updated $REPOSITORY in $CONFIG_FILE with value $PULL_REQUEST_BRANCH"
+		echo -e "${COL_GREEN}#          Updated $REPOSITORY in $CONFIG_FILE with value $PULL_MERGE_BRANCH"
 	fi
 fi
 
