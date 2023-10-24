@@ -85,8 +85,8 @@ jobs:
       - name: Set working directory
         run: |
           ls -al
-          export REPOSITORY=
-          export PULL_MERGE_BRANCH=
+          export REPOSITORY=robotframework-testsuitesmanagement
+          export PULL_MERGE_BRANCH=htv3hc/feat/trigger-other-workflow
           echo "TEST_VERSION=my/version/here" >> $GITHUB_ENV
           echo "TEST_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
 

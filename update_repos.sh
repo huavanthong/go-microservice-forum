@@ -1,9 +1,30 @@
 #!/bin/bash
 
+# Common function
+function errormsg(){
+   echo -e "${COL_RED}>>>> ERROR: $1!${COL_RESET}"
+   echo
+   exit 1
+}
+
+function goodmsg(){
+   echo -e "${COL_GREEN}>>>> $1.${COL_RESET}"
+   echo
+}
+
+function greenmsg(){
+   echo -e "${COL_GREEN}> $1.${COL_RESET}"   
+}
+
 # Khai báo giá trị mới cho REPOSITORY và PULL_MERGE_BRANCH
 
 # Đường dẫn đến tệp repository.conf
 CONFIG_FILE="./config/repositories.conf"
+
+REPOSITORY=robotframework-testsuitesmanagement
+PULL_MERGE_BRANCH=htv3hc/feat/trigger-other-workflow
+
+
 echo "Check repos: $REPOSITORY"
 echo "Check branch: $PULL_MERGE_BRANCH"
 echo "Check version: $TEST_VERSION"
@@ -23,10 +44,15 @@ echo "Test Date: $test_date"
 
 
 if [ -n "$REPOSITORY"  ] && [ -n "$PULL_MERGE_BRANCH" ]; then 
-    echo "Exist to update"
-     # Thay đổi giá trị trong tệp repository.conf
-    sed -i "s/$REPOSITORY=.*/$REPOSITORY=$PULL_MERGE_BRANCH" $CONFIG_FILE
-    echo "Updated $REPOSITORY in $CONFIG_FILE with value $PULL_MERGE_BRANCH"
+	echo -e "${COL_GREEN}#          Trigger AIO from repository: $REPOSITORY; branch: $PULL_MERGE_BRANCH    #${COL_RESET}"
+
+	cat $confile | grep $REPOSITORY
+	if [ $? -ne 0 ]; then
+    	errormsg "Repository received from request not found in '$CONFIG_FILE'"
+	else
+		sed -i "s,$REPOSITORY=.*,$REPOSITORY=$PULL_MERGE_BRANCH," $CONFIG_FILE
+		echo -e "${COL_GREEN}# Updated $REPOSITORY in $CONFIG_FILE with value $PULL_REQUEST_BRANCH"
+	fi
 fi
 
 
