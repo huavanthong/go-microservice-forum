@@ -100,6 +100,29 @@ jobs:
           ls -al
           echo $PWD
           cat mylog.txt
+      - name: Set working directory
+        run: |
+          ls -al
+          export REPOSITORY=robotframework-testsuitesmanagement
+          export PULL_MERGE_BRANCH=htv3hc/feat/trigger-other-workflow
+          echo "$REPOSITORY $PULL_MERGE_BRANCH"
+          chmod +x update_repos.sh
+          ./update_repos.sh
+          cat ./config/repositories.conf
+
+          cd ./src/Services/Basket
+          ls -al
+          # Cat output file
+          cat output.txt
+          # Save log to a file
+          echo "${{ steps.step_name.outputs.result }}" > mylog.txt
+          ls -al
+          echo $PWD
+          cat mylog.txt
+
+      - name: Check next step
+        run: |
+          echo "Check 1 here: $REPOSITORY $PULL_MERGE_BRANCH"
 
       - name: Upload Log Artifact
         uses: actions/upload-artifact@v2
