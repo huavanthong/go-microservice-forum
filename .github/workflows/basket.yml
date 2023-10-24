@@ -87,7 +87,7 @@ jobs:
           ls -al
           export REPOSITORY=robotframework-testsuitesmanagement
           export PULL_MERGE_BRANCH=htv3hc/feat/trigger-other-workflow
-          echo "{TEST_VERSION}={my/version/here}" >> $GITHUB_ENV
+          echo "TEST_VERSION=my/version/here" >> $GITHUB_ENV
           echo "TEST_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
 
           echo "$REPOSITORY $PULL_MERGE_BRANCH"
@@ -98,6 +98,7 @@ jobs:
       - name: Check next step
         run: |
           echo "Check 1 here: $REPOSITORY $PULL_MERGE_BRANCH"
+          echo "Check 2 here: $TEST_VERSION $TEST_DATE"
 
       - name: Upload Log Artifact
         uses: actions/upload-artifact@v2
