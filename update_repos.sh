@@ -7,7 +7,8 @@ CONFIG_FILE="./config/repositories.conf"
 echo "Check repos: $REPOSITORY"
 echo "Check branch: $PULL_MERGE_BRANCH"
 echo "Check version: $TEST_VERSION"
-echo "check date: $TEST_DATE"
+echo "Check date: $TEST_DATE"
+echo "Check at env - help me: $HELP_ME"
 
 package_context='{
     "test_version"          : "'"${TEST_VERSION}"'",
