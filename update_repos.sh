@@ -21,10 +21,6 @@ function greenmsg(){
 # Đường dẫn đến tệp repository.conf
 CONFIG_FILE="./config/repositories.conf"
 
-REPOSITORY=robotframework-testsuitesmanagement
-PULL_MERGE_BRANCH=htv3hc/feat/trigger-other-workflow
-
-
 echo "Check repos: $REPOSITORY"
 echo "Check branch: $PULL_MERGE_BRANCH"
 echo "Check version: $TEST_VERSION"
@@ -46,7 +42,7 @@ echo "Test Date: $test_date"
 if [ -n "$REPOSITORY"  ] && [ -n "$PULL_MERGE_BRANCH" ]; then 
 	echo -e "${COL_GREEN}#          Trigger AIO from repository: $REPOSITORY; branch: $PULL_MERGE_BRANCH    #${COL_RESET}"
 
-	cat $confile | grep $REPOSITORY
+	grep -q $REPOSITORY $CONFIG_FILE
 	if [ $? -ne 0 ]; then
     	errormsg "Repository received from request not found in '$CONFIG_FILE'"
 	else
