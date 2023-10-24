@@ -6,6 +6,20 @@
 CONFIG_FILE="./config/repositories.conf"
 echo "Check repos: $REPOSITORY"
 echo "Check branch: $PULL_MERGE_BRANCH"
+echo "Check version: $TEST_VERSION"
+echo "check date: $TEST_DATE"
+
+package_context='{
+    "test_version"          : "'"${TEST_VERSION}"'",
+    "test_date"             : "'"${TEST_DATE}"'"
+}'
+
+test_version=$(echo "$package_context" | jq -r '.test_version')
+test_date=$(echo "$package_context" | jq -r '.test_date')
+
+echo "Test Version: $test_version"
+echo "Test Date: $test_date"
+
 
 if [ -n "$REPOSITORY"  ] && [ -n "$PULL_MERGE_BRANCH" ]; then 
     echo "Exist to update"
