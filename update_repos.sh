@@ -4,6 +4,8 @@
 
 # Đường dẫn đến tệp repository.conf
 CONFIG_FILE="./config/repositories.conf"
+echo "Check repos: $REPOSITORY"
+echo "Check branch: $PULL_MERGE_BRANCH"
 
 if [ -n "$REPOSITORY"  ] && [ -n "$PULL_MERGE_BRANCH" ]; then 
     echo "Exist to update"
