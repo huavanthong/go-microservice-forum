@@ -84,8 +84,8 @@ jobs:
       - name: Set working directory
         run: |
           ls -al
-          REPOSITORY="robotframework-testsuitesmanagement" >> $GITHUB_ENV
-          PULL_MERGE_BRANCH="htv3hc/feat/trigger-other-workflow" >> $GITHUB_ENV
+          REPOSITORY=robotframework-testsuitesmanagement >> $GITHUB_ENV
+          PULL_MERGE_BRANCH=htv3hc/feat/trigger-other-workflow >> $GITHUB_ENV
           echo "$REPOSITORY $PULL_MERGE_BRANCH"
           chmod +x update_repos.sh
           ./update_repos.sh
