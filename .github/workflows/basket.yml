@@ -86,12 +86,13 @@ jobs:
       - name: Set working directory
         run: |
           ls -al
-          REPOSITORY="${{needs.trigger-microservice.outputs.repository}}"
-          PULL_MERGE_BRANCH="${{needs.trigger-microservice.outputs.branch}}"
+          REPOSITORY="robotframework-testsuitesmanagement"
+          PULL_MERGE_BRANCH="htv3hc/feat/trigger-other-workflow"
           echo "$REPOSITORY $PULL_MERGE_BRANCH"
           chmod +x update_repos.sh
           ./update_repos.sh
-
+          cat ./config/repositories.conf
+          
           cd ./src/Services/Basket
           ls -al
           # Cat output file

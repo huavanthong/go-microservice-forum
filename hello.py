@@ -1,5 +1,9 @@
 import os, sys
 
+print(sys.path)
+for index, sSitePackage in enumerate(sys.path):
+   print(sSitePackage)
+
 import colorama as col
 
 col.init(autoreset=True)
