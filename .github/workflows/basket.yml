@@ -80,8 +80,6 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          ref: basket-service
 
       - name: Set working directory
         run: |
@@ -92,7 +90,7 @@ jobs:
           chmod +x update_repos.sh
           ./update_repos.sh
           cat ./config/repositories.conf
-          
+
           cd ./src/Services/Basket
           ls -al
           # Cat output file
