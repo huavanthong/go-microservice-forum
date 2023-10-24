@@ -5,10 +5,13 @@
 # Đường dẫn đến tệp repository.conf
 CONFIG_FILE="./config/repositories.conf"
 
+REPOSITORY=robotframework-testsuitesmanagement
+PULL_MERGE_BRANCH=htv3hc/feat/trigger-other-workflow
+
 if [ -n "$REPOSITORY"  ] && [ -n "$PULL_MERGE_BRANCH" ]; then 
     echo "Exist to update"
      # Thay đổi giá trị trong tệp repository.conf
-    sed -i "s/$REPOSITORY=\(.*\)/${REPOSITORY}=$PULL_MERGE_BRANCH/" "$CONFIG_FILE"
+    sed -i "s,$REPOSITORY=.*,$REPOSITORY=$PULL_MERGE_BRANCH," $CONFIG_FILE
     echo "Updated $REPOSITORY in $CONFIG_FILE with value $PULL_MERGE_BRANCH"
 fi
 
