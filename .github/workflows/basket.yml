@@ -84,6 +84,7 @@ jobs:
 
       - name: Install dependencies and set environment variables
         run: |
+          # Environment variable for trigger process
           echo "REPOSITORY=${{needs.trigger-microservice.outputs.repository}}" >> $GITHUB_ENV
           echo "PULL_MERGE_BRANCH=${{needs.trigger-microservice.outputs.branch}}" >> $GITHUB_ENV
 
