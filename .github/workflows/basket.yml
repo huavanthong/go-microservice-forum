@@ -82,11 +82,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install dependencies and set environment variables
+        run: |
+          echo "REPOSITORY=${{needs.trigger-microservice.outputs.repository}}" >> $GITHUB_ENV
+          echo "PULL_MERGE_BRANCH=${{needs.trigger-microservice.outputs.branch}}" >> $GITHUB_ENV
+
       - name: Set working directory
         run: |
           ls -al
-          export REPOSITORY="${{needs.trigger-microservice.outputs.repository}}"
-          export PULL_MERGE_BRANCH="${{needs.trigger-microservice.outputs.branch}}"
+          # export REPOSITORY="${{needs.trigger-microservice.outputs.repository}}"
+          # export PULL_MERGE_BRANCH="${{needs.trigger-microservice.outputs.branch}}"
+          echo "Check new at here: $REPOSITORY $PULL_MERGE_BRANCH"
           echo "TEST_VERSION=my/version/here" >> $GITHUB_ENV
           echo "TEST_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
 
