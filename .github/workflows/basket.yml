@@ -134,9 +134,9 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-  download-logs:
+  download-logs-linux:
     runs-on: ubuntu-latest
-    needs: [ build-linux , build-windows ]
+    needs: [ build-linux ]
     if: always() 
     steps:
       - name: Checkout code
@@ -144,6 +144,10 @@ jobs:
       
       - name: Install GitHub CLI
         run: |
+          # Environment variable for trigger process
+          echo "REPOSITORY=${{needs.trigger-microservice.outputs.repository}}" >> $GITHUB_ENV
+          echo "PULL_MERGE_BRANCH=${{needs.trigger-microservice.outputs.branch}}" >> $GITHUB_ENV
+          echo "Check new at here 1: $REPOSITORY $PULL_MERGE_BRANCH"
           # Cài đặt GitHub CLI
           curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
           echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
@@ -152,6 +156,7 @@ jobs:
 
       - name: Download logs
         run: |
+          echo "Check new at here 2: $REPOSITORY $PULL_MERGE_BRANCH"
           RUN_ID=${GITHUB_RUN_ID}
           echo "Job ID from job1: $RUN_ID"
 
