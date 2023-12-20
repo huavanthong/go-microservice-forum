@@ -21,7 +21,6 @@ on:
 
 env:
   GH_TOKEN: ${{ github.token }}
-  HELP_ME: "Hello Thong"
 
 jobs:
   trigger-microservice:
@@ -47,17 +46,6 @@ jobs:
           echo "PULL_MERGE_BRANCH=$branch"  >> "$GITHUB_OUTPUT"
           ls -la
 
-      - name: Set Pipeline Name
-        run: echo "##[set-output name=pipeline_name]Custom Name for Pipeline"
-        
-      # - name: Wait for Repository B Pipeline
-      #   id: wait-for-pipeline
-      #   uses: actions/wait-for-pipeline@v1
-      #   with:
-      #     repository: huavanthong/CircleCI  # Thay thế bằng thông tin Repository B
-      #     ref: main  # Thay thế bằng nhánh bạn muốn kiểm tra
-      #     access-token: ${{ secrets.GITHUB_TOKEN }}
-        
   build-linux:
     name: Build Basket Linux
     runs-on: ubuntu-latest
