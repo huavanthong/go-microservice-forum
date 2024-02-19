@@ -43,7 +43,7 @@ jobs:
   build-microservice:
     name: Build Basket Linux
     uses: ./.github/workflows/build_basket.yml
-    needs: [ trigger-microservice ]
+    needs: [ bump_version ]
    
   
   prepare_release:

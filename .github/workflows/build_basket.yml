@@ -19,6 +19,12 @@ on:
     types:
       - Trigger Workflow
 
+  workflow_call:
+    inputs:
+      ref:
+        required: false
+        type: string
+
 env:
   GH_TOKEN: ${{ github.token }}
 
