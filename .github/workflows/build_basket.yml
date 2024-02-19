@@ -1,4 +1,4 @@
-name: Microservice Golang
+name: Build Basket Microservice
 
 on: 
   push:
