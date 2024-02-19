@@ -41,12 +41,6 @@ jobs:
           echo "Output from Extract Data: ${{ steps.get-ref.outputs.repository}}"
           echo "Output from Extract Data: ${{ steps.get-ref.outputs.outputs.branch }}"
      
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
       - name: Install Go
         uses: actions/setup-go@v3
         with:
@@ -55,36 +49,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies and set environment variables
-        run: |
-          # Environment variable for trigger process
-          echo "REPOSITORY=${{ steps.get-ref.outputs.repository}}" >> $GITHUB_ENV
-          echo "PULL_MERGE_BRANCH=${{ steps.get-ref.outputs.outputs.branch }}" >> $GITHUB_ENV
-
       - name: Set working directory
         run: |
           ls -al
           # export REPOSITORY="${{steps.get-ref.outputs.repository}}"
           # export PULL_MERGE_BRANCH="${{steps.get-ref.outputs.branch}}"
-          echo "Check new at here: $REPOSITORY $PULL_MERGE_BRANCH"
-          echo "TEST_VERSION=my/version/here" >> $GITHUB_ENV
-          echo "TEST_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
+          # echo "Check new at here: $REPOSITORY $PULL_MERGE_BRANCH"
+          # echo "TEST_VERSION=my/version/here" >> $GITHUB_ENV
+          # echo "TEST_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
 
-          echo "$REPOSITORY $PULL_MERGE_BRANCH"
-          chmod +x update_repos.sh
-          ./update_repos.sh
-          cat ./config/repositories.conf
+          # echo "$REPOSITORY $PULL_MERGE_BRANCH"
+          # chmod +x update_repos.sh
+          # ./update_repos.sh
+          # cat ./config/repositories.conf
 
-      - name: Check next step
-        run: |
-          echo "Check 1 here: $REPOSITORY $PULL_MERGE_BRANCH"
-          echo "Check 2 here: $TEST_VERSION $TEST_DATE"
-
-      - name: Upload Log Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: log-artifact
-          path: ${{ runner.workspace }}/microservice-golang/src/Services/Basket/mylog.txt
+          cd ./src/Services/Basket
 
       - name: Fetch required Go modules
         run:  go mod download
@@ -97,27 +76,12 @@ jobs:
         run: |
           go test -v ./...
 
-      - name: Build and Push Docker Image
-        id:   docker_build
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
 
   build-windows:
     name: Build Basket Window
     runs-on: windows-latest
     if: ${{ ! failure() && ! cancelled() }}
     steps:
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
-
       - name: Install Go
         uses: actions/setup-go@v3
         with:
@@ -131,23 +95,7 @@ jobs:
       - name: Set working directory
         shell: cmd
         run: |
-          dir
-
-          python hello.py 2>&1 output.txt
-
-          set "exit_code=%errorlevel%"
-          
-          echo %exit_code%
-
-          echo " HELLLO2"
-
-          if %exit_code% == 1 (
-              echo " HELLLO4"
-              exit /b 1
-          )
-
           cd ./src/Services/Basket
-          dir
 
       - name: Fetch required Go modules
         run:  go mod download
@@ -168,14 +116,3 @@ jobs:
         with:
           name: log-result
           path: ${{ runner.workspace }}/src/Services/Basket/logfile/*
-
-      - name: Build and Push Docker Image
-        id:   docker_build
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
-      

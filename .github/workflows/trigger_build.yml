@@ -41,7 +41,7 @@ jobs:
     with:
       ref: 
         ${{ needs.trigger-microservice.outputs.repository }}
-        ${{needs.trigger-microservice.outputs.branch}}
+        ${{ needs.trigger-microservice.outputs.branch }}
 
   download-logs-linux:
       runs-on: ubuntu-latest
