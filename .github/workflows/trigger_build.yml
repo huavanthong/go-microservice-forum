@@ -38,23 +38,46 @@ jobs:
     name: Build Basket Linux
     uses: ./.github/workflows/build_basket.yml
     needs: [ trigger-microservice ]
-    if: ${{ ! failure() && ! cancelled() }}
-  
+    with:
+      ref: 
+        ${{ needs.trigger-microservice.outputs.repository }}
+        ${{needs.trigger-microservice.outputs.branch}}
 
   download-logs-linux:
-    runs-on: ubuntu-latest
-    needs: [ trigger-microservice ]
-    if: always() 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      
-      - name: Install GitHub CLI
-        run: |
-          # Environment variable for trigger process
-          echo "REPOSITORY=${{needs.trigger-microservice.outputs.repository}}" >> $GITHUB_ENV
-          echo "PULL_MERGE_BRANCH=${{needs.trigger-microservice.outputs.branch}}" >> $GITHUB_ENV
-
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
-          sudo apt-get update
-          sudo apt-get install gh
+      runs-on: ubuntu-latest
+      needs: [ build-microservice, trigger-microservice ]
+      if: always() 
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+        
+        - name: Install GitHub CLI
+          run: |
+            # Environment variable for trigger process
+            echo "REPOSITORY=${{needs.trigger-microservice.outputs.repository}}" >> $GITHUB_ENV
+            echo "PULL_MERGE_BRANCH=${{needs.trigger-microservice.outputs.branch}}" >> $GITHUB_ENV
+            echo "Value: $REPOSITORY $PULL_MERGE_BRANCH"
+            
+            # Install Github CLI
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
+            echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list
+            sudo apt-get update
+            sudo apt-get install gh
+  
+        - name: Download logs
+          run: |
+            echo "Received value: $REPOSITORY $PULL_MERGE_BRANCH"
+            RUN_ID=${GITHUB_RUN_ID}
+            echo "Job ID from job1: $RUN_ID"
+  
+            gh api repos/huavanthong/microservice-golang/actions/runs/$RUN_ID/jobs --jq '.jobs[] | select(.name | test("(^Build|^Test)")) | .id' > job_id.txt
+            
+            job_ids=$(cat job_id.txt)
+            echo "Check jobs id: $job_ids"
+  
+            # for id in $job_ids; do
+            #   echo "Processing job ID: $id"
+            #   gh run view $RUN_ID --job $id --log > new_log.txt
+            # done
+            
+            # cat new_log.txt
