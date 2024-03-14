@@ -1,5 +1,4 @@
 texlive_packages=(
-"multirow"
 "booktabs"
 "framed"
 "fvextra"
