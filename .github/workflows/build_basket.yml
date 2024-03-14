@@ -2,7 +2,7 @@ name: Build Basket Microservice
 
 on: 
   push:
-    branches: [ "basket-service" ]
+    branches: [ "basket-service", "master" ]
     tags:
       - "*.*.*"
       
