@@ -99,7 +99,7 @@ jobs:
       - name: Install environments
         shell: powershell
         run: |
-          choco install texlive --version=2022.20221202
+          . ./requirements_windows.ps1
 
       - name: Set working directory
         shell: cmd
