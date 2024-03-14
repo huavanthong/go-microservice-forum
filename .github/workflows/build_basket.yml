@@ -99,7 +99,7 @@ jobs:
       - name: Install environments
         shell: bash
         run: |
-          choco install texlive --params="'/scheme:full'"
+          choco install texlive
 
       - name: Set working directory
         shell: cmd
