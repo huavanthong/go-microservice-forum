@@ -30,7 +30,7 @@ for package in ${texlive_packages[@]}; do
   extra_packages+="$package,"
 done
 
-TEXLIVE_DIR="C:/texlive/aio"
+TEXLIVE_DIR="D:/texlive/aio"
 
 # choco install texlive --version=2022.20221202 --params "'/collections:pictures,latex,latexextra,latexrecommended'" --execution-timeout 5400
 choco install texlive --params "'/collections:pictures,latex /InstallationPath:${TEXLIVE_DIR} /extraPackages:${extra_packages}'"
