@@ -33,6 +33,6 @@ done
 TEXLIVE_DIR="D:/texlive/aio"
 
 # choco install texlive --version=2022.20221202 --params "'/collections:pictures,latex,latexextra,latexrecommended'" --execution-timeout 5400
-choco install texlive --params "'/collections:pictures,latex /InstallationPath:${TEXLIVE_DIR} /extraPackages:${extra_packages}'"
+choco install texlive --version=2022.20221202 --params "'/collections:pictures,latex /InstallationPath:${TEXLIVE_DIR} /extraPackages:${extra_packages}'"
 
 export GENDOC_LATEXPATH="${TEXLIVE_DIR}/bin/windows"
