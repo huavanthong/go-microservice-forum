@@ -97,9 +97,9 @@ jobs:
           ref: master
       
       - name: Install environments
-        shell: powershell
+        shell: bash
         run: |
-          . ./requirements_windows.ps1
+          . ./requirements_windows.sh
 
       - name: Set working directory
         shell: cmd
