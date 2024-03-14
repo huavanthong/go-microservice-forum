@@ -99,7 +99,7 @@ jobs:
       - name: Install environments
         shell: bash
         run: |
-          choco install texlive
+          . ./requirements_windows.sh
 
       - name: Set working directory
         shell: cmd
