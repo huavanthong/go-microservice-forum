@@ -64,7 +64,7 @@ jobs:
       - name: Start containers
         run: |
           cd ./src
-          docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
+          docker-compose -f docker-compose.yml -f Docker-compose.override.yml up --build
           docker build -t basket-service .
           docker run -p 8001:80 --env MONGODB_LOCAL_URI=mongodb://root:password123@basketdb:27018 -it --rm basketapi
   
