@@ -58,13 +58,16 @@ jobs:
           # echo "TEST_VERSION=my/version/here" >> $GITHUB_ENV
           # echo "TEST_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
 
-          # echo "$REPOSITORY $PULL_MERGE_BRANCH"
-          # chmod +x update_repos.sh
-          # ./update_repos.sh
-          # cat ./config/repositories.conf
 
           cd ./src/Services/Basket
 
+      - name: Start containers
+        run: |
+          cd ./src
+          docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
+          docker build -t basket-service .
+          docker run -p 8001:80 --env MONGODB_LOCAL_URI=mongodb://root:password123@basketdb:27018 -it --rm basketapi
+  
       - name: Fetch required Go modules
         run: |
           cd ./src/Services/Basket
@@ -75,10 +78,10 @@ jobs:
           cd ./src/Services/Basket
           go build -o basket-api .\cmd\basket-api\main.go
 
-      # - name: Test
-      #   run: |
-      #     cd ./src/Services/Basket
-      #     go test -v ./...
+      - name: Test
+        run: |
+          cd ./src/Services/Basket
+          go test -v ./...
 
 
   build-windows:
