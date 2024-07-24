@@ -150,10 +150,47 @@ go build -o basket-api.exe .\cmd\basket-api\main.go
 ./basket-api.exe
 ```
 ### Build MongoDB Database on local machine.
-Doing later
-#### Redis 
-Doing later
+```
+docker run -d \
+  --name basketdb \
+  --restart always \
+  -e MONGO_INITDB_ROOT_USERNAME=root \
+  -e MONGO_INITDB_ROOT_PASSWORD=password123 \
+  -e MONGODB_LOCAL_URI=mongodb://root:password123@basketdb:27017 \
+  -p 27017:27017 \
+  --expose 27017 \
+  -v mongo_data_basket:/data/db \
+  mongo
 
+```
+#### Redis 
+```
+docker run -d \
+  --name basketredis \
+  --restart always \
+  -e REDIS_URL=basketredis:6379 \
+  -e REDIS_HOST=basketredis \
+  -e REDIS_PORT=6379 \
+  -e REDIS_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81 \
+  -p 6379:6379 \
+  --expose 6379 \
+  -v redis_cache_basket:/data/redis \
+  redis \
+  redis-server --save 60 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+
+```
+
+#### Basket API
+```
+docker run -d \
+  --name basket.api \
+  --restart always \
+  --link basketdb:basketdb \
+  --link basketredis:basketredis \
+  --env-file ./Services/Basket/internal/infrastructure/config/app.env \
+  -p 8001:8001 \
+  basket.api
+```
 ## Testing
 To build test at the specific component
 ```
