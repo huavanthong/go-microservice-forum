@@ -2,9 +2,16 @@ name: Docker
 
 on:
   push:
-      branches: [ "master" ]
-      tags:
-        - "*.*.*"
+    branches: [ "master" ]
+    tags:
+      - "*.*.*"
+    
+  pull_request:
+    types:
+      - closed
+      - opened
+      - synchronize
+    branches: [ "master" ]
         
 jobs:
   build_services:
