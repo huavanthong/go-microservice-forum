@@ -2,9 +2,11 @@ name: Test
 
 on: 
   push:
-    branches: [ "master", "basket-service" ]
+    branches: [ "master"]
     tags:
       - "*.*.*"
+    paths:
+      - 'src/Services/**'
       
   pull_request:
     types:
@@ -32,9 +34,12 @@ jobs:
   basket:
     name: Basket
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [Basket, Catalog, Discount]
     defaults:
       run:
-        working-directory: ./src/Services/Basket
+        working-directory: ./src/Services/${{ matrix.service }}
     if: ${{ ! failure() && ! cancelled() }}
     steps:
       - name: Checkout code
