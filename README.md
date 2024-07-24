@@ -82,10 +82,15 @@ Developing Basket microservice which includes:
 * Microservice pattern
     - Circuit pattern. Refer: [here](https://medium.com/nerd-for-tech/design-patterns-for-microservices-circuit-breaker-pattern-ba402a45aac2)
 
+
+## Testing 
+1. How to implement the unit test for Go program. Refer: [here](https://gobyexample.com/testing)
+
 ## Docker
 1. Connect go-app with mongo db manually. Refer: [here](https://wahyu-ehs.medium.com/golang-and-mongodb-in-docker-cab7773c04ce)
 2. Build out image Docker for Go program, and knowledge for build CI/CD. Refer to private info at: [here](https://www.meisternote.com/app/note/G1vMneveYIrP/build-image-docker-for-go)
+
+
+
 ## Github Action
 1. Apply CI/CD for project. Refer: [here](https://docs.github.com/en/actions/quickstart)
-Hello world
-Hello world

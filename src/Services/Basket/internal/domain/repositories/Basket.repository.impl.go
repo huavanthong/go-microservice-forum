@@ -27,7 +27,7 @@ func (br *BasketRepositoryImpl) CreateBasket(basket *entities.Basket) (*entities
 	userId := basket.UserID
 
 	// Log the user ID being processed
-	br.logger.Info("Creating basket for user ID %s", userId)
+	br.logger.Info("Creating basket for user ID: ", userId)
 
 	// Try to get basket from MongoDB
 	find_basket, err := br.mongoPersistence.Get(userId)
