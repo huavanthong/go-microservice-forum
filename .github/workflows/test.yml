@@ -1,4 +1,4 @@
-name: Build Basket Microservice
+name: Test
 
 on: 
   push:

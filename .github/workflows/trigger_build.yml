@@ -1,4 +1,4 @@
-name: Trigger Microservice
+name: Triggered
 
 on: 
   workflow_dispatch:

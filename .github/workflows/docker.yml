@@ -17,4 +17,4 @@ jobs:
       - name: Run Docker Compose
         run: |
           cd ./src
-          docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
+          docker-compose -f docker-compose.yml -f docker-compose.override.yml build
