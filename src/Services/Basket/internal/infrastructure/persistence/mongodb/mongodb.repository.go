@@ -35,7 +35,7 @@ func NewMongoDBBasketPersistence(logger *logrus.Entry, collection *mongo.Collect
 func (mbp *MongoDBBasketPersistence) Create(basket *entities.Basket) (*entities.Basket, error) {
 
 	// Log the user ID being processed
-	mbp.logger.Info("Creating basket by user id %s in MongoDB ", basket.UserID)
+	mbp.logger.Infof("Creating basket by user id %s in MongoDB ", basket.UserID)
 
 	// Insert to monodb
 	_, err := mbp.collection.InsertOne(context.Background(), basket)
@@ -43,7 +43,7 @@ func (mbp *MongoDBBasketPersistence) Create(basket *entities.Basket) (*entities.
 		return nil, fmt.Errorf("failed to create basket for user %s: %v", basket.UserID, err)
 	}
 
-	mbp.logger.Info("Created basket %+v for user ID %s in MongoDB", basket, basket.UserID)
+	mbp.logger.Infof("Created basket %+v for user ID %s in MongoDB", basket, basket.UserID)
 
 	return basket, nil
 }
@@ -51,7 +51,7 @@ func (mbp *MongoDBBasketPersistence) Create(basket *entities.Basket) (*entities.
 func (mbp *MongoDBBasketPersistence) Get(userId string) (*entities.Basket, error) {
 
 	// Log the user ID being processed
-	mbp.logger.Info("Getting basket by user id %s in MongoDB ", userId)
+	mbp.logger.Infof("Getting basket by user id %s in MongoDB ", userId)
 
 	// Create a filter to find the basket with the given user_name.
 	filter := bson.M{"user_id": userId}
@@ -67,7 +67,7 @@ func (mbp *MongoDBBasketPersistence) Get(userId string) (*entities.Basket, error
 		return nil, fmt.Errorf("failed to decode basket for user %s: %v", userId, err)
 	}
 
-	mbp.logger.Info("Got basket %+v for user ID %s", basket, userId)
+	mbp.logger.Infof("Got basket %+v for user ID %s", basket, userId)
 
 	return basket, nil
 }
@@ -100,7 +100,7 @@ func (mbp *MongoDBBasketPersistence) Update(basket *entities.Basket) (*entities.
 	}
 
 	// Log the basket being returned
-	mbp.logger.Info("Updated basket %+v for user ID %s", updatedBasket, updatedBasket.UserID)
+	mbp.logger.Infof("Updated basket %+v for user ID %s", updatedBasket, updatedBasket.UserID)
 
 	return basket, nil
 }
@@ -108,7 +108,7 @@ func (mbp *MongoDBBasketPersistence) Update(basket *entities.Basket) (*entities.
 func (mbp *MongoDBBasketPersistence) Delete(userId string) error {
 
 	// Log the user ID being processed
-	mbp.logger.Info("Deleting basket by user id %s in MongoDB ", userId)
+	mbp.logger.Infof("Deleting basket by user id %s in MongoDB ", userId)
 
 	// Specifies the shopping cart to be deleted based on the userName parametembp.
 	filter := bson.M{"user_id": userId}
@@ -119,7 +119,7 @@ func (mbp *MongoDBBasketPersistence) Delete(userId string) error {
 		return fmt.Errorf("failed to delete basket for user %s: %v", userId, err)
 	}
 
-	mbp.logger.Info("Deleted basket for user id %s in MongoDB", userId)
+	mbp.logger.Infof("Deleted basket for user id %s in MongoDB", userId)
 
 	return nil
 }

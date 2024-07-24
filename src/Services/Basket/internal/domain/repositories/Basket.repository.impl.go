@@ -27,7 +27,7 @@ func (br *BasketRepositoryImpl) CreateBasket(basket *entities.Basket) (*entities
 	userId := basket.UserID
 
 	// Log the user ID being processed
-	br.logger.Info("Creating basket for user ID: ", userId)
+	br.logger.Infof("Creating basket for user ID: %s", userId)
 
 	// Try to get basket from MongoDB
 	find_basket, err := br.mongoPersistence.Get(userId)
@@ -60,7 +60,7 @@ func (br *BasketRepositoryImpl) CreateBasket(basket *entities.Basket) (*entities
 	}
 
 	// Log the basket being returned
-	br.logger.Info("Created basket %+v for user ID %s", create_basket, create_basket.UserID)
+	br.logger.Infof("Created basket %+v for user ID %s", create_basket, create_basket.UserID)
 
 	return create_basket, nil
 }
@@ -68,7 +68,7 @@ func (br *BasketRepositoryImpl) CreateBasket(basket *entities.Basket) (*entities
 func (br *BasketRepositoryImpl) GetBasket(userId string) (*entities.Basket, error) {
 
 	// Log the user ID being processed
-	br.logger.Info("Getting basket for user ID %s", userId)
+	br.logger.Infof("Getting basket for user ID: %s", userId)
 
 	// Try to get basket from Redis
 	find_basket, err := br.redisPersistence.Get(userId)
@@ -96,7 +96,7 @@ func (br *BasketRepositoryImpl) GetBasket(userId string) (*entities.Basket, erro
 	}
 
 	// Log the basket being returned
-	br.logger.Info("Returned basket %+v for user ID %s ", get_basket, userId)
+	br.logger.Infof("Returned basket %+v for user ID %s ", get_basket, userId)
 
 	return get_basket, nil
 }
@@ -106,7 +106,7 @@ func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities
 	userId := basket.UserID
 
 	// Log the user ID being processed
-	br.logger.Info("Updating basket for user ID %s: ", userId)
+	br.logger.Infof("Updating basket for user ID %s: ", userId)
 
 	// Update basket in Redis
 	update_basket, err := br.redisPersistence.Update(basket)
@@ -132,7 +132,7 @@ func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities
 	}
 
 	// Log the basket being returned
-	br.logger.Info("Updated basket %+v for user ID %s", update_basket, userId)
+	br.logger.Infof("Updated basket %+v for user ID %s", update_basket, userId)
 
 	return update_basket, nil
 }
@@ -140,7 +140,7 @@ func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities
 func (br *BasketRepositoryImpl) DeleteBasket(userId string) error {
 
 	// Log the user ID being processed
-	br.logger.Info("Deleting basket for user ID %s: ", userId)
+	br.logger.Infof("Deleting basket for user ID %s: ", userId)
 
 	// Delete basket from Redis
 	if err := br.redisPersistence.Delete(userId); err != nil {
@@ -175,7 +175,7 @@ func (br *BasketRepositoryImpl) DeleteBasket(userId string) error {
 	}
 
 	// Log the basket being returned
-	br.logger.Info("Deleted basket success for user ID %s", userId)
+	br.logger.Infof("Deleted basket success for user ID %s", userId)
 
 	return nil
 }

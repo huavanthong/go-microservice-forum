@@ -46,11 +46,11 @@ func (s *Server) Start() error {
 	// Register Swagger
 	swagger.RegisterSwagger(router)
 
-	s.logger.Infof("Starting server on port", s.config.Port)
+	s.logger.Infof("Starting server on port: %s", s.config.Port)
 
 	err := server.Run(":" + s.config.Port)
 	if err != nil {
-		return fmt.Errorf("failed to listen and serve on port", s.config.Port, err)
+		return fmt.Errorf("failed to listen and serve on port: %s: %v", s.config.Port, err)
 	}
 
 	return nil
