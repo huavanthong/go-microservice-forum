@@ -29,58 +29,32 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-  build-linux:
+  basket:
     name: Build Basket Linux
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/Services/Basket
     if: ${{ ! failure() && ! cancelled() }}
     steps:
-      - name: Display Event Data
-        run: |
-          echo "Event data:"
-          cat $GITHUB_EVENT_PATH
-          echo "Output from Extract Data: ${{ steps.get-ref.outputs.repository}}"
-          echo "Output from Extract Data: ${{ steps.get-ref.outputs.outputs.branch }}"
+      - name: Checkout code
+        uses: actions/checkout@v4
      
-      - name: Install Go
-        uses: actions/setup-go@v3
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
           go-version: 1.17
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set working directory
-        run: |
-          ls -al
-          # export REPOSITORY="${{steps.get-ref.outputs.repository}}"
-          # export PULL_MERGE_BRANCH="${{steps.get-ref.outputs.branch}}"
-          # echo "Check new at here: $REPOSITORY $PULL_MERGE_BRANCH"
-          # echo "TEST_VERSION=my/version/here" >> $GITHUB_ENV
-          # echo "TEST_DATE=$(date +%m.%Y)" >> $GITHUB_ENV
-
-
-          cd ./src/Services/Basket
-
-      - name: Start containers
-        run: |
-          cd ./src
-          docker-compose -f docker-compose.yml -f Docker-compose.override.yml up --build
-          docker build -t basket-service .
-          docker run -p 8001:80 --env MONGODB_LOCAL_URI=mongodb://root:password123@basketdb:27018 -it --rm basketapi
   
-      - name: Fetch required Go modules
-        run: |
-          cd ./src/Services/Basket
-          go mod download
+      - name: Install dependencies
+        run:
+          go get .
 
-      - name: Build
-        run: |
-          cd ./src/Services/Basket
+      - name: Run Basket services
+        run: 
           go build -o basket-api .\cmd\basket-api\main.go
 
       - name: Test
-        run: |
-          cd ./src/Services/Basket
+        run: 
           go test -v ./...
 
 
@@ -92,7 +66,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.17
+          go-version: 1.20
 
       - name: Checkout code
         uses: actions/checkout@v3

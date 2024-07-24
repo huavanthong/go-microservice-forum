@@ -1,16 +1,16 @@
-FROM golang:1.17-alpine AS base
+# Base stage
+FROM golang:1.20-buster AS base
 WORKDIR /app
 EXPOSE 80
 
-
-## We specify the base image we need for our go application
-FROM golang:1.17-alpine AS build
+# Build stage
+FROM golang:1.20-buster AS build
 ## Create an directory within our image
 ## that will hold our application source files
 WORKDIR /src
 
 # Install curl
-RUN apk update && apk add --no-cache curl
+RUN apt-get update && apt-get install -y curl
 
 # Copy the go.mod and go.sum files to the working directory
 COPY ["Services/Basket/go.mod", "Services/Basket/"]
