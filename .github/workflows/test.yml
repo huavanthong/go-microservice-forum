@@ -44,19 +44,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: 1.20
-  
-      - name: Cache Go modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cache/go-build
-            $GOPATH/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
 
       - name: Install dependencies
-        run: go mod download
+        run: go mod tiny
 
       - name: Run Basket services
         run: 
