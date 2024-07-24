@@ -30,7 +30,7 @@ env:
 
 jobs:
   basket:
-    name: Build Basket Linux
+    name: build basket
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -45,6 +45,18 @@ jobs:
         with:
           go-version: 1.20
   
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            $GOPATH/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install dependencies
+        run: go mod download
 
       - name: Run Basket services
         run: 
@@ -53,54 +65,3 @@ jobs:
       - name: Test
         run: 
           go test -v ./...
-
-
-  build-windows:
-    name: Build Basket Window
-    runs-on: windows-latest
-    if: ${{ ! failure() && ! cancelled() }}
-    steps:
-      - name: Install Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.20
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: master
-      
-      - name: Install environments
-        shell: bash
-        run: |
-          choco install texlive
-
-      - name: Set working directory
-        shell: cmd
-        run: |
-          cd ./src/Services/Basket
-          go mod download
-
-      - name: Fetch required Go modules
-        run: |
-          cd ./src/Services/Basket
-          go mod download
-  
-      - name: Build
-        run: |
-          cd ./src/Services/Basket
-          go build -o basket-api.exe .\cmd\basket-api\main.go
-
-      - name: Test
-        run: |
-          go test -v .\test\internal\domain\repositories\Basket.repository_test.go > result.txt
-          mkdir logfile
-          mv result.txt
-          ls -la
-      
-      - name: Upload test result as artifact
-        if: success() || failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: log-result
-          path: ${{ runner.workspace }}/src/Services/Basket/logfile/*
