@@ -19,7 +19,7 @@ func TestCreateBasket(t *testing.T) {
 	userID := "user123"
 	basket := &entities.Basket{
 		UserID: userID,
-		// Add other necessary fields
+		// Add other necessary
 	}
 
 	// Mock the behavior of the mock persistence implementations
