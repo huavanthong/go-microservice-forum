@@ -2,11 +2,9 @@ name: Test
 
 on: 
   push:
-    branches: [ "master"]
+    branches: [ "master", "basket-service" ]
     tags:
       - "*.*.*"
-    paths:
-      - 'src/Services/**'
       
   pull_request:
     types:
@@ -31,16 +29,12 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-  basket:
+  basket-unit-test:
     name: Basket
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [Basket, Catalog, Discount]
     defaults:
       run:
-        working-directory: ./src/Services/${{ matrix.service }}
-    if: ${{ ! failure() && ! cancelled() }}
+        working-directory: ./src/Services/Basket
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
