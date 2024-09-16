@@ -2,7 +2,7 @@ name: Test
 
 on: 
   push:
-    branches: [ "master" ]
+    branches: [ "master", "basket-service" ]
     tags:
       - "*.*.*"
       
@@ -29,13 +29,12 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-  basket:
-    name: Build Basket Linux
+  basket-unit-test:
+    name: Basket
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./src/Services/Basket
-    if: ${{ ! failure() && ! cancelled() }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -43,67 +42,12 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.20
-  
-      - name: Install dependencies
-        run:
-          go mod download
+          go-version: '1.20'
 
       - name: Run Basket services
         run: 
-          go build -o basket-api .\cmd\basket-api\main.go
+          go build -v ./...
 
       - name: Test
         run: 
           go test -v ./...
-
-
-  build-windows:
-    name: Build Basket Window
-    runs-on: windows-latest
-    if: ${{ ! failure() && ! cancelled() }}
-    steps:
-      - name: Install Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.20
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: master
-      
-      - name: Install environments
-        shell: bash
-        run: |
-          choco install texlive
-
-      - name: Set working directory
-        shell: cmd
-        run: |
-          cd ./src/Services/Basket
-          go mod download
-
-      - name: Fetch required Go modules
-        run: |
-          cd ./src/Services/Basket
-          go mod download
-  
-      - name: Build
-        run: |
-          cd ./src/Services/Basket
-          go build -o basket-api.exe .\cmd\basket-api\main.go
-
-      - name: Test
-        run: |
-          go test -v .\test\internal\domain\repositories\Basket.repository_test.go > result.txt
-          mkdir logfile
-          mv result.txt
-          ls -la
-      
-      - name: Upload test result as artifact
-        if: success() || failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: log-result
-          path: ${{ runner.workspace }}/src/Services/Basket/logfile/*

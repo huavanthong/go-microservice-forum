@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   basketdb:
     container_name: basketdb
@@ -13,7 +11,7 @@ services:
     expose:
       - 27017
     volumes:
-        - mongo_data_basket:/data/db
+      - mongo_data_basket:/data/db
 
   basketredis:
     container_name: basketredis
