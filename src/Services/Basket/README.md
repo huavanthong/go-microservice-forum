@@ -136,32 +136,8 @@ docker build -t basket-service .
 ```
 
 4. To run other service with specified configuration
-```
-docker run -p 8001:80 --env MONGODB_LOCAL_URI=mongodb://root:password123@basketdb:27018 -it --rm basketapi
-
-docker run -p 8080:8080 --env MONGODB_LOCAL_URI=mongodb://mongodb:27017/basketdb REDIS_URL=localhost:6379 basket-service
-```
-### Method 2: Local Machine
-In case basket.api microservice fail, you need to debug and test on local machine, you can follow the below steps below:  
-
-1. Buidl app
-```
-go build -o basket-api.exe .\cmd\basket-api\main.go
-```
-
-2. Please remove basket-api service in Docker Compose. Then running all infranstructure
-```
-docker compose up
-```
-
-3. Run app on local machine.
-```
-./basket-api.exe
-```
-
-### Build MongoDB Database on local machine.
-```
-docker run -d \
+```bash
+$ docker run -d \
   --name basketdb \
   --restart always \
   -e MONGO_INITDB_ROOT_USERNAME=root \
@@ -172,10 +148,7 @@ docker run -d \
   -v mongo_data_basket:/data/db \
   mongo
 
-```
-#### Redis 
-```
-docker run -d \
+$ docker run -d \
   --name basketredis \
   --restart always \
   -e REDIS_URL=basketredis:6379 \
@@ -188,11 +161,7 @@ docker run -d \
   redis \
   redis-server --save 60 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
 
-```
-
-#### Basket API
-```
-docker run -d \
+$ docker run -d \
   --name basket.api \
   --restart always \
   --link basketdb:basketdb \
@@ -201,12 +170,35 @@ docker run -d \
   -p 8001:8001 \
   basket.api
 ```
+### Method 2: Local Machine
+In case basket.api microservice fail, you need to debug and test on local machine, you can follow the below steps below:  
+
+1. Buidl app
+```
+go build -o basket-api.exe .\cmd\basket-api\main.go
+```
+
+2. Please remove basket-api service in Docker Compose temporally. Then running all infranstructure
+```
+docker compose up
+```
+
+3. Modify [config.go](https://github.com/huavanthong/microservice-golang/blob/master/src/Services/Basket/internal/infrastructure/config/config.go) to point to apptestlocal.env
+```go
+	viper.SetConfigType("env")
+	viper.SetConfigName("apptestlocal")
+```
+
+4. Run app on local machine.
+```
+./basket-api.exe
+```
+
 ## Testing
 To build test at the specific component
 ```
 go test -v .\test\internal\domain\repositories\Basket.repository_test.go
 ```
-
 
 ## Swagger
 1. Install swag
