@@ -46,8 +46,8 @@ func TestCreateBasket(t *testing.T) {
 
 	basket := &entities.Basket{UserID: "user1"}
 
-	mongoMock.On("Get", "user1").Return((*entities.Basket)(nil), assert.AnError)
-	redisMock.On("Get", "user1").Return((*entities.Basket)(nil), assert.AnError)
+	mongoMock.On("Get", "user1").Return((*entities.Basket)(nil), nil)
+	redisMock.On("Get", "user1").Return((*entities.Basket)(nil), nil)
 	redisMock.On("Create", basket).Return(basket, nil)
 	mongoMock.On("Create", basket).Return(basket, nil)
 

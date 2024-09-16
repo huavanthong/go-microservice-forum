@@ -195,7 +195,12 @@ $ docker run -d \
   basket.api
 ```
 ## Testing
-To build test at the specific component
+1. To test all test case are avaiable in directory
+```
+go test -v .\...
+```
+
+2. To test a specified test case in test suites.
 ```
 go test -v .\test\internal\domain\repositories\Basket.repository_test.go
 ```

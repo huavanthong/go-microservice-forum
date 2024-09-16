@@ -31,38 +31,46 @@ func (br *BasketRepositoryImpl) CreateBasket(basket *entities.Basket) (*entities
 
 	// Try to get basket from MongoDB
 	find_basket, err := br.mongoPersistence.Get(userId)
-	create_basket := find_basket
 	if err != nil {
 		br.logger.Errorf("Failed to get basket from MongoDB: %s", err.Error())
+		return nil, err
+	}
 
+	if find_basket == nil {
 		// Try to get basket from Redis
 		if find_basket, err = br.redisPersistence.Get(userId); err != nil {
 			br.logger.Errorf("Failed to get basket from Redis: %s", err.Error())
 			return nil, err
 		}
+	}
 
-		create_basket = find_basket
-		if find_basket == nil {
-			// Basket not found in MongoDB and Redis, create a new one
-			if create_basket, err = br.redisPersistence.Create(basket); err != nil {
-				br.logger.Errorf("Failed to create basket in Redis: %s", err.Error())
-				return nil, err
-			}
-
-			// Create basket in MongoDB
-			if create_basket, err = br.mongoPersistence.Create(basket); err != nil {
-				// Rollback Redis basket creation on error
-				br.redisPersistence.Delete(userId)
-				br.logger.Errorf("Failed to create basket in MongoDB: %s", err.Error())
-				return nil, err
-			}
+	if find_basket == nil {
+		// Basket not found in both MongoDB and Redis, create a new one
+		create_basket, err := br.redisPersistence.Create(basket)
+		if err != nil {
+			br.logger.Errorf("Failed to create basket in Redis: %s", err.Error())
+			return nil, err
 		}
+		// Log the basket being returned
+		br.logger.Infof("Created basket in Redis %+v for user ID %s", create_basket, create_basket.UserID)
+
+		create_basket, err = br.mongoPersistence.Create(basket)
+		if err != nil {
+			br.redisPersistence.Delete(userId)
+			br.logger.Errorf("Failed to create basket in MongoDB: %s", err.Error())
+			return nil, err
+		}
+
+		// Log the basket being returned
+		br.logger.Infof("Created basket in MongoDB %+v for user ID %s", create_basket, create_basket.UserID)
+
+		return create_basket, nil
 	}
 
 	// Log the basket being returned
-	br.logger.Infof("Created basket %+v for user ID %s", create_basket, create_basket.UserID)
+	br.logger.Infof("Get basket %+v from exist User ID  %s", find_basket, find_basket.UserID)
 
-	return create_basket, nil
+	return find_basket, nil
 }
 
 func (br *BasketRepositoryImpl) GetBasket(userId string) (*entities.Basket, error) {
