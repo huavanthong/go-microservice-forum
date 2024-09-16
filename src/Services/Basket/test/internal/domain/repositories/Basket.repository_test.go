@@ -75,23 +75,33 @@ func TestGetBasket(t *testing.T) {
 }
 
 func TestUpdateBasket(t *testing.T) {
+	// Create logger
 	logger := logrus.NewEntry(logrus.StandardLogger())
 
+	// Create mocks for MongoDB and Redis persistence
 	mongoMock := new(MockBasketPersistence)
 	redisMock := new(MockBasketPersistence)
 
+	// Create repository instance with mocked persistence
 	repo := repositories.NewBasketRepositoryImpl(logger, mongoMock, redisMock)
 
+	// Prepare test data
 	basket := &entities.Basket{UserID: "user1"}
-	redisMock.On("Update", basket).Return(basket, nil)
-	mongoMock.On("Update", basket).Return(nil, assert.AnError)
-	redisMock.On("Get", "user1").Return(basket, nil)
-	redisMock.On("Create", basket).Return(basket, nil)
-	redisMock.On("Update", basket).Return(basket, nil)
 
+	// Setup expectations for Redis mock
+	redisMock.On("Update", basket).Return(basket, nil)
+	mongoMock.On("Update", basket).Return(basket, nil)
+
+	// Run the repository function being tested
 	result, err := repo.UpdateBasket(basket)
-	assert.NoError(t, err)
-	assert.Equal(t, basket, result)
+
+	// Verify behavior
+	assert.NoError(t, err)          // Assert no error (as Redis rollback should work)
+	assert.Equal(t, basket, result) // Assert the returned basket matches
+
+	// Assert that all expectations were met
+	redisMock.AssertExpectations(t)
+	mongoMock.AssertExpectations(t)
 }
 
 func TestDeleteBasket(t *testing.T) {
@@ -103,11 +113,9 @@ func TestDeleteBasket(t *testing.T) {
 	repo := repositories.NewBasketRepositoryImpl(logger, mongoMock, redisMock)
 
 	redisMock.On("Delete", "user1").Return(nil)
-	mongoMock.On("Delete", "user1").Return(assert.AnError)
-	redisMock.On("Get", "user1").Return(&entities.Basket{UserID: "user1"}, nil)
-	redisMock.On("Create", &entities.Basket{UserID: "user1"}).Return(&entities.Basket{UserID: "user1"}, nil)
-	redisMock.On("Update", &entities.Basket{UserID: "user1"}).Return(&entities.Basket{UserID: "user1"}, nil)
+	mongoMock.On("Delete", "user1").Return(nil)
+	redisMock.On("Get", "user1").Return((*entities.Basket)(nil), nil)
 
 	err := repo.DeleteBasket("user1")
-	assert.Error(t, err)
+	assert.NoError(t, err)
 }

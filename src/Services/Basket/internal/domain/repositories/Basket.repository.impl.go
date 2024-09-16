@@ -117,32 +117,37 @@ func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities
 	br.logger.Infof("Updating basket for user ID %s: ", userId)
 
 	// Update basket in Redis
-	update_basket, err := br.redisPersistence.Update(basket)
+	update_redis_basket, err := br.redisPersistence.Update(basket)
 	if err != nil {
 		br.logger.Errorf("Failed to update basket in Redis for user ID %s: %v", userId, err)
 		return nil, err
 	}
+	// Log the basket being returned
+	br.logger.Infof("Updated basket in Redis %+v for user ID %s", update_redis_basket, userId)
 
 	// Update basket in MongoDB
-	if _, err := br.mongoPersistence.Update(basket); err != nil {
+	updateMongoBasket, err := br.mongoPersistence.Update(basket)
+	if err != nil {
+		br.logger.Errorf("Failed to update basket in MongoDB for user ID %s: %v", userId, err)
+
 		// Rollback Redis basket update on error
-		oldCart, err := br.redisPersistence.Get(userId)
-		if err != nil {
-			br.logger.Errorf("Failed to get basket in Redis for user ID %s: %v", userId, err)
-			return nil, err
+		oldCart, getErr := br.redisPersistence.Get(userId)
+		if getErr != nil {
+			br.logger.Errorf("Failed to get basket in Redis for user ID %s during rollback: %v", userId, getErr)
+			return nil, getErr
 		}
-		if _, err := br.redisPersistence.Update(oldCart); err != nil {
-			br.logger.Errorf("Failed to update basket in Redis for user ID %s: %v", userId, err)
-			return nil, err
+
+		if _, rollbackErr := br.redisPersistence.Update(oldCart); rollbackErr != nil {
+			br.logger.Errorf("Failed to rollback basket in Redis for user ID %s: %v", userId, rollbackErr)
+			return nil, rollbackErr
 		}
 
 		return nil, err
 	}
+	br.logger.Infof("Updated basket in MongoDB %+v for user ID %s", updateMongoBasket, userId)
 
-	// Log the basket being returned
-	br.logger.Infof("Updated basket %+v for user ID %s", update_basket, userId)
-
-	return update_basket, nil
+	// Return the updated basket
+	return updateMongoBasket, nil
 }
 
 func (br *BasketRepositoryImpl) DeleteBasket(userId string) error {
