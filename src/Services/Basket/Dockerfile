@@ -22,7 +22,7 @@ COPY . .
 ## Specify directory for execution
 WORKDIR "/src/Services/Basket/"
 
-# Chỉ định cổng mà container sẽ lắng nghe các kết nối đến. 
+# Specify the port that container will listen all coming connection.
 EXPOSE 8001
 
 # Build binary file

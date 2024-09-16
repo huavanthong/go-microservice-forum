@@ -107,6 +107,8 @@ Basket microservice includes 3 service:
 * **basketdb**: It is a MongoDB database for storing data on basket microservice.
 * **basketredis**: It is a Redis Caching for storing data in caching, help your data can access quickly.
 * **basket.api**: It is a backend server to implement RESTful API for basket microservice.
+
+
 ## Getting Started
 There are several ways to run the basket microservice for this project:
 1. **Docker Compose**: 
@@ -118,37 +120,45 @@ There are several ways to run the basket microservice for this project:
 
 
 ### Method 1: Docker Compose
-To rebuild image for testing
+1. To quickly start up all services 
+```
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up
+```
+
+2. To rebuild all services container
 ```
 docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
 ```
-In case if you fail any microservice inside, you can build and run it by docker command.
-#### Basket service
-Build basket microservice image:
+
+3. To build only basket api service: 
 ```
 docker build -t basket-service .
 ```
 
-After build successully, we can run container by command:
+4. To run other service with specified configuration
 ```
 docker run -p 8001:80 --env MONGODB_LOCAL_URI=mongodb://root:password123@basketdb:27018 -it --rm basketapi
 
 docker run -p 8080:8080 --env MONGODB_LOCAL_URI=mongodb://mongodb:27017/basketdb REDIS_URL=localhost:6379 basket-service
 ```
 ### Method 2: Local Machine
-In case basket.api microservice fail, you need to debug and test on local machine, you can follow the below steps to conduct testing basket.api for local machine.  
-**Note:**
-    * Make sure basketdb and basketredis container running on docker image.
-### Build basket microservice in local machine
+In case basket.api microservice fail, you need to debug and test on local machine, you can follow the below steps below:  
+
 1. Buidl app
 ```
 go build -o basket-api.exe .\cmd\basket-api\main.go
 ```
 
-2. Run app
+2. Please remove basket-api service in Docker Compose. Then running all infranstructure
+```
+docker compose up
+```
+
+3. Run app on local machine.
 ```
 ./basket-api.exe
 ```
+
 ### Build MongoDB Database on local machine.
 ```
 docker run -d \
