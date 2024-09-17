@@ -85,28 +85,33 @@ func (br *BasketRepositoryImpl) GetBasket(userId string) (*entities.Basket, erro
 		return nil, err
 	}
 
-	get_basket := find_basket
-	if get_basket == nil {
+	// Log the basket being returned
+	br.logger.Infof("Returned basket in Redis %+v for user ID %s ", find_basket, userId)
+
+	if find_basket == nil {
 
 		// Try to get basket from MongoDB
-		get_basket, err = br.mongoPersistence.Get(userId)
+		find_basket, err = br.mongoPersistence.Get(userId)
 		if err != nil {
 			br.logger.Errorf("Failed to get basket for user ID %s: %v", userId, err)
 			return nil, err
 		}
 
+		// Log the basket being returned
+		br.logger.Infof("Returned basket in MongoDB %+v for user ID %s ", find_basket, userId)
+
 		// Cache basket in Redis
-		get_basket, err = br.redisPersistence.Update(get_basket)
+		cache_basket, err := br.redisPersistence.Update(find_basket)
 		if err != nil {
 			br.logger.Errorf("Failed to update basket in Redis for user ID %s: %v", userId, err)
 			return nil, err
 		}
+
+		// Log the basket being returned
+		br.logger.Infof("Caching basket in Redis %+v for user ID %s ", cache_basket, userId)
 	}
 
-	// Log the basket being returned
-	br.logger.Infof("Returned basket %+v for user ID %s ", get_basket, userId)
-
-	return get_basket, nil
+	return find_basket, nil
 }
 
 func (br *BasketRepositoryImpl) UpdateBasket(basket *entities.Basket) (*entities.Basket, error) {
