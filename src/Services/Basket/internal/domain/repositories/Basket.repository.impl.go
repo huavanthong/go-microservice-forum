@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"fmt"
+
 	"github.com/sirupsen/logrus"
 
 	"github.com/huavanthong/microservice-golang/src/Services/Basket/internal/domain/entities"
@@ -170,26 +172,26 @@ func (br *BasketRepositoryImpl) DeleteBasket(userId string) error {
 	if err := br.mongoPersistence.Delete(userId); err != nil {
 		// Rollback Redis basket deletion on error
 		br.logger.Warnf("Failed to delete basket in MongoDB for user ID %s, rolling back Redis deletion", userId)
+
+		// Attempt to get the basket from Redis for rollback
 		get_basket, err := br.redisPersistence.Get(userId)
 		if err != nil {
 			br.logger.Errorf("Failed to get basket in Redis for user ID %s during rollback: %v", userId, err)
-			return err
+			return fmt.Errorf("MongoDB delete failed, rollback failed: %v", err)
 		}
 		if get_basket == nil {
 			br.logger.Warnf("No basket found in Redis for user ID %s during rollback", userId)
-			return err
+			return fmt.Errorf("MongoDB delete failed, no basket in Redis to roll back")
 		}
-		if _, err := br.redisPersistence.Create(get_basket); err != nil {
-			br.logger.Errorf("Failed to create basket in Redis for user ID %s during rollback: %v", userId, err)
-			return err
-		}
+
+		// Restore the basket in Redis
 		if _, err := br.redisPersistence.Update(get_basket); err != nil {
 			br.logger.Errorf("Failed to update basket in Redis for user ID %s during rollback: %v", userId, err)
-			return err
+			return fmt.Errorf("MongoDB delete failed, Redis rollback failed: %v", err)
 		}
 
 		br.logger.Infof("Rollback succeeded for user ID %s", userId)
-		return err
+		return fmt.Errorf("MongoDB delete failed, rollback succeeded")
 	}
 
 	// Log the basket being returned
