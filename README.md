@@ -3,6 +3,8 @@
 # Getting Started
 Follow these steps to get your development environment set up: (Before Run Start the Docker Desktop)
 
+
+# Hello 
 1. Clone the repository
 2. Once Docker for Windows is installed, go to the Settings > Advanced option, from the Docker icon in the system tray, to configure the minimum amount of memory and CPU like so:
     * Memory: 4 GB
@@ -42,6 +44,15 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
     - Communication between microservice. Refer: [here](https://techdozo.dev/grpc-for-microservices-communication/)
     - Traefik with gRPC. Refer: [here](https://doc.traefik.io/traefik/user-guides/grpc/)
     - What is Traefik. Refer: [here](https://www.devopsschool.com/blog/what-is-traefik-how-to-learn-traefik/)
+
+### Basket microsrevice
+Developing Basket microservice which includes:
+* REST API principles, CRUD operations.
+* Redis DB NoSQL database connection and containerization
+* Mongo DB database for storing customer's basket.
+* Implement Basket microservice using the principles of Clean Architecture, which emphasizes separation of concerns and modularization for creating maintainable and scalable software.
+* Swagger Open API implementation.
+* Dockerfile implementation.
 ### Email microservice
 * Project
     - Example project email using **RabbitMQ**. Refer: [here](https://github.com/savsgio/microservice-email)
@@ -54,7 +65,7 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
 ### User microservice
 * Project
     - Example project user-microservice. Refer: [here](https://github.com/raycad/go-microservices)
-    - Architecture for user-microserivce. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#architecture)
+    - Architecture for user-microserivce. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/reference/user-api#architecture)
     - Perfect design for user-microservice, Refer: [here](https://github.com/wpcodevo/golang-mongodb-api/tree/golang-mongodb-reset-password)
 * Validator
     - Implement validator using go-playground. Refer: [here](https://github.com/go-playground/validator)
@@ -70,8 +81,8 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
     - Implement authorize role with GIN framework. Refer: [here](https://github.com/gin-contrib/authz)
     - User Management Roles and Functions. Refer: [here](https://www.ibm.com/docs/en/strategicsm/10.1.1?topic=roles-user-management-functions)
 * Security
-    - Convert user's password in plain text to bcrypt. [here](https://github.com/huavanthong/microservice-golang/blob/master/user-api/security/bcrypt.go)
-    - Avoid SQL Injection. Refer: [here](https://github.com/huavanthong/microservice-golang/blob/master/user-api/security/bcrypt.go)
+    - Convert user's password in plain text to bcrypt. [here](https://github.com/huavanthong/microservice-golang/blob/master/reference/user-api/security/bcrypt.go)
+    - Avoid SQL Injection. Refer: [here](https://github.com/huavanthong/microservice-golang/blob/master/reference/user-api/security/bcrypt.go)
 * Database.
     - MongoDB
         - Design database for user-microservice. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#design-database-for-user-microservice)   
@@ -84,3 +95,16 @@ gRPC is a modern open source high performance Remote Procedure Call (RPC) framew
 
 * Microservice pattern
     - Circuit pattern. Refer: [here](https://medium.com/nerd-for-tech/design-patterns-for-microservices-circuit-breaker-pattern-ba402a45aac2)
+
+
+## Testing 
+1. How to implement the unit test for Go program. Refer: [here](https://gobyexample.com/testing)
+
+## Docker
+1. Connect go-app with mongo db manually. Refer: [here](https://wahyu-ehs.medium.com/golang-and-mongodb-in-docker-cab7773c04ce)
+2. Build out image Docker for Go program, and knowledge for build CI/CD. Refer to private info at: [here](https://www.meisternote.com/app/note/G1vMneveYIrP/build-image-docker-for-go)
+
+
+
+## Github Action
+1. Apply CI/CD for project. Refer: [here](https://docs.github.com/en/actions/quickstart)
