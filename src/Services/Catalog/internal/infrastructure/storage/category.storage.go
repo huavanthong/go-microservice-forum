@@ -1,8 +1,6 @@
 package storage
 
 import (
-	"Services/Catalog/internal/domain/entities"
-
 	"github.com/huavanthong/microservice-golang/src/Services/Catalog/internal/domain/entities"
 )
 
