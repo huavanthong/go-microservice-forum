@@ -2,7 +2,12 @@ name: Test
 
 on: 
   push:
-    branches: [ "master", "basket-service" ]
+    branches: 
+      - master
+      - catalog-service
+      - user-service
+      - basket-service
+      - "*-service"
     tags:
       - "*.*.*"
       
@@ -39,6 +44,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
      
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.20'
+
+      - name: Run Basket services
+        run: 
+          go build -v ./...
+
+      - name: Test
+        run: 
+          go test -v ./...
+
+  catalog-unit-test:
+    name: Catalog
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./src/Services/Catalog
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
