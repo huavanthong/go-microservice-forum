@@ -1,7 +1,6 @@
-# go-microservice-forum
+# E-Commerce introduction
+There is a couple of microservices which implemented e-commerce modules over Catalog, Basket, Discount and Ordering microservices with NoSQL (MongoDB, Redis) and Relational databases (PostgreSQL, Sql Server) with communicating over gRPC and RabbitMQ Event Driven Communication and using Ocelot API Gateway.
 
-# Hello 
-## Reference
 ## Design with Golang
 * How to design
     - Tutorial for designing on Golang. Refer: [here](https://github.com/techschool/simplebank)
