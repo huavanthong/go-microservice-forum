@@ -67,8 +67,9 @@ Developing Basket microservice which includes:
     - Implement authorize role with GIN framework. Refer: [here](https://github.com/gin-contrib/authz)
     - User Management Roles and Functions. Refer: [here](https://www.ibm.com/docs/en/strategicsm/10.1.1?topic=roles-user-management-functions)
 * Security
-    - Convert user's password in plain text to bcrypt. [here](https://github.com/huavanthong/microservice-golang/blob/master/reference/user-api/security/bcrypt.go)
-    - Avoid SQL Injection. Refer: [here](https://github.com/huavanthong/microservice-golang/blob/master/reference/user-api/security/bcrypt.go)
+    - Convert user's password in plain text to bcrypt. Avoid storing the sensitive info. Refer: [here](https://github.com/huavanthong/microservice-golang/blob/f772dbdae9be30e4c772a8b455239b62f4cc1702/reference/user-api/security/bcrypt.go#L16)
+    - Avoid SQL Injection. Refer: [here](https://github.com/huavanthong/microservice-golang/blob/f772dbdae9be30e4c772a8b455239b62f4cc1702/reference/user-api/security/bcrypt.go#L27)
+    - Avoid attack by Cross-Site Request Forgery (CSRF). Refer: [here](https://github.com/huavanthong/microservice-golang/blob/f772dbdae9be30e4c772a8b455239b62f4cc1702/reference/user-api/controllers/googleuser.go#L169)
 * Database.
     - MongoDB
         - Design database for user-microservice. Refer: [here](https://github.com/huavanthong/microservice-golang/tree/master/user-api#design-database-for-user-microservice)   
