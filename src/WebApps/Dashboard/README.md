@@ -64,6 +64,17 @@ Run dashboard
 ```
 yarn start
 ```
+
+## Running with Docker
+Build
+```
+docker build -t dashboard .
+```
+
+Run with docker
+```
+docker run -p 80:4000 -it dashboard
+```
 ## Demo
 
 - [Dashboard](http://localhost:4000/dashboard)
